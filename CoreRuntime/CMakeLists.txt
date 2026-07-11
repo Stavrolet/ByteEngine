@@ -11,45 +11,45 @@ endif()
 find_package(quill CONFIG REQUIRED)
 
 add_library(CoreRuntime STATIC 
-	"Code/Include/ByteEngine/Core/Base/Application.h"
-	"Code/Include/ByteEngine/Core/Base/MainWindow.h"
-	"Code/Include/ByteEngine/Core/Base/Singleton.h"
-	"Code/Include/ByteEngine/Core/EventSystem/Delegate.h"
-	"Code/Include/ByteEngine/Core/EventSystem/MulticastDelegate.h"
-	"Code/Include/ByteEngine/Core/Input/Input.h"
-	"Code/Include/ByteEngine/Core/Input/KeyCode.h"
-	"Code/Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
+	"Include/ByteEngine/Core/Base/Application.h"
+	"Include/ByteEngine/Core/Base/MainWindow.h"
+	"Include/ByteEngine/Core/Base/Singleton.h"
+	"Include/ByteEngine/Core/EventSystem/Delegate.h"
+	"Include/ByteEngine/Core/EventSystem/MulticastDelegate.h"
+	"Include/ByteEngine/Core/Input/Input.h"
+	"Include/ByteEngine/Core/Input/KeyCode.h"
+	"Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
 	
-	"Code/Include/ByteEngine/Math/Math.h"
-	"Code/Include/ByteEngine/Math/Quaternion.h"
-	"Code/Include/ByteEngine/Math/Vector2.h"
-	"Code/Include/ByteEngine/Math/Vector3.h"
-	"Code/Include/ByteEngine/Math/Vector4.h"
-	"Code/Include/ByteEngine/Utilities/BitFlagsHelper.h"
-	"Code/Include/ByteEngine/Utilities/EnumFlagsOperators.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/LeanAndMean.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoAll.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoGdi.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoInput.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoIO.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoLocalization.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoSys.h"
-	"Code/Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"
+	"Include/ByteEngine/Math/Math.h"
+	"Include/ByteEngine/Math/Quaternion.h"
+	"Include/ByteEngine/Math/Vector2.h"
+	"Include/ByteEngine/Math/Vector3.h"
+	"Include/ByteEngine/Math/Vector4.h"
+	"Include/ByteEngine/Utilities/BitFlagsHelper.h"
+	"Include/ByteEngine/Utilities/EnumFlagsOperators.h"
+	"Include/ByteEngine/WinApiExcludingDefs/LeanAndMean.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoAll.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoGdi.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoInput.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoIO.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoLocalization.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoSys.h"
+	"Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"
 	
-	"Code/Include/ByteEngine/Debug.h"
-	"Code/Include/ByteEngine/GameTime.h"
-	"Code/Include/ByteEngine/Primitives.h"
-	"Code/Source/Core/Base/Application.cpp"
-	"Code/Source/Core/Input/Input.cpp"
-	"Code/Source/Math/Math.cpp"
-	"Code/Source/Math/Quaternion.cpp"
+	"Include/ByteEngine/Debug.h"
+	"Include/ByteEngine/GameTime.h"
+	"Include/ByteEngine/Primitives.h"
+	"Source/Core/Base/Application.cpp"
+	"Source/Core/Input/Input.cpp"
+	"Source/Math/Math.cpp"
+	"Source/Math/Quaternion.cpp"
 	
- "Code/Include/ByteEngine/Math/Matrix4x4F.h" "Code/Source/Math/Matrix4x4F.cpp" "Code/Source/Core/Graphics/GraphicsDevice.h" "Code/Include/ByteEngine/Math/Rotation.h" "Code/Source/Math/Rotation.cpp" "Code/Include/ByteEngine/Math/Color.h" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" "Code/Include/ByteEngine/Utilities/Utils.h" "Code/Source/Debug.cpp")
+ "Include/ByteEngine/Math/Matrix4x4F.h" "Source/Math/Matrix4x4F.cpp" "Source/Core/Graphics/GraphicsDevice.h" "Include/ByteEngine/Math/Rotation.h" "Source/Math/Rotation.cpp" "Include/ByteEngine/Math/Color.h" "Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" "Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" "Include/ByteEngine/Utilities/Utils.h" "Source/Debug.cpp")
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
 target_link_libraries(CoreRuntime PUBLIC quill::quill)
-target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Code/Include")
-target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Code/Source")
+target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include")
+target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 target_compile_definitions(CoreRuntime PRIVATE $<$<PLATFORM_ID:Windows>:UNICODE;_UNICODE> QUILL_DISABLE_NON_PREFIXED_MACROS)
 
 if(WIN32)
