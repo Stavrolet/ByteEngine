@@ -16,5 +16,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _In
     MainWindow::SetInstance(&window);
 
     Application app;    
-    return app.Run(window);
+    Application::Error error = app.Initialize();
+
+    if (error != Application::Error::Success)
+        return static_cast<int>(error);
+
+    return app.Run();
 }

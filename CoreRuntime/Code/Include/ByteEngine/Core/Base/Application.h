@@ -4,11 +4,6 @@
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Primitives.h"
 
-#ifdef BE_WINDOWS_MAIN
-struct HINSTANCE__;
-using HINSTANCE = HINSTANCE__*;
-#endif
-
 namespace ByteEngine
 {
     using namespace EventSystem;
@@ -21,6 +16,14 @@ namespace ByteEngine
         friend int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
 #endif
 
+    public:
+        enum class Error : int32
+        {
+            Success,
+            GenericError,
+            Unsupported,
+        };
+
     private:
         int32 exitCode = 0;
         bool isRunning = true;
@@ -32,6 +35,7 @@ namespace ByteEngine
         Delegate<bool>& QuitRequest() { return quitRequest; }
 
     private:
-        int32 Run(MainWindow& mainWindow);
+        Error Initialize();
+        int32 Run();
     };
 }
