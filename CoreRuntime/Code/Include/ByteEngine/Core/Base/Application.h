@@ -4,7 +4,7 @@
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Primitives.h"
 
-#ifdef _WINDOWS
+#ifdef BE_WINDOWS_MAIN
 struct HINSTANCE__;
 using HINSTANCE = HINSTANCE__*;
 #endif
@@ -17,8 +17,8 @@ namespace ByteEngine
 
     class Application : public Singleton<Application>
     {
-#ifdef _WINDOWS
-        friend extern int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
+#ifdef BE_WINDOWS_MAIN
+        friend int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
 #endif
 
     private:

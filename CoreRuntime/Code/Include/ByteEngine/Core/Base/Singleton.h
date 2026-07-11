@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#ifdef _WINDOWS
+#ifdef BE_WINDOWS_MAIN
 struct HINSTANCE__;
 using HINSTANCE = HINSTANCE__*;
 #endif
@@ -11,8 +11,9 @@ namespace ByteEngine
     class Singleton
     {
         friend class Application;
-#ifdef _WINDOWS
-        friend extern int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
+
+#ifdef BE_WINDOWS_MAIN
+        friend int __stdcall ::WinMain(HINSTANCE, HINSTANCE, char*, int);
 #endif
 
     private:

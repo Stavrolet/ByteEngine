@@ -4,7 +4,7 @@
 
 #include "resources.h"
 #include "Win32Window.h"
-#include "ByteEngine/DebugLogHelper.h"
+#include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Utilities/BitFlagsHelper.h"
 
@@ -205,7 +205,7 @@ namespace ByteEngine::WindowsLauncher
                 else if (wParam == SIZE_MAXIMIZED)
                 {
                     mode = WindowMode::Mazimized;
-                    DebugHelper::LogDebugMessage("WM_SIZE received. wParam = SIZE_MAXIMIZED");
+                    BE_LOG_INFO("WM_SIZE received. wParam = SIZE_MAXIMIZED");
                 }
                 else if (wParam == SIZE_RESTORED)
                 {
@@ -219,16 +219,12 @@ namespace ByteEngine::WindowsLauncher
         case WM_ACTIVATE:
             if (LOWORD(wParam) == WA_INACTIVE)
             {
-                DebugHelper::LogDebugMessage("Window lost focus");
-
                 hasFocus = false;
                 if (mode == WindowMode::ExclusiveFullscreen)
                     SetWindowMode(WindowMode::Minimized);
             }
             else
             {
-                DebugHelper::LogDebugMessage("Window gained focus");
-
                 hasFocus = true;
                 if (mode == WindowMode::Minimized)
                     SetWindowMode(previousMode);
@@ -300,7 +296,7 @@ namespace ByteEngine::WindowsLauncher
             char keyNameBuffer[MAX_PATH] = { };
             GetKeyNameTextA((LONG)MAKELPARAM(0, (HIBYTE(scanCode) ? KF_EXTENDED : 0x00) | LOBYTE(scanCode)), keyNameBuffer, MAX_PATH);
 
-            DebugHelper::LogDebugMessage("Key pressed. Name: {}, is pressed = {}", keyNameBuffer, isKeyPressed);
+            BE_LOG_INFO("Key pressed. Name: {}, is pressed = {}", keyNameBuffer, isKeyPressed);
         }
         else if (raw->header.dwType == RIM_TYPEMOUSE)
         {
@@ -377,7 +373,7 @@ namespace ByteEngine::WindowsLauncher
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {
-                    DebugHelper::LogDebugError(GetLastError());
+                    BE_LOG_DEBUG("SetWindowLongPtr error: {}", GetLastError());
                     return;
                 }
             }
@@ -405,7 +401,7 @@ namespace ByteEngine::WindowsLauncher
                 }
                 else
                 {
-                    DebugHelper::LogDebugError(GetLastError());
+                    BE_LOG_DEBUG("GetMonitorInfo error: {}", GetLastError());
                     width = GetSystemMetrics(SM_CXSCREEN);
                     height = GetSystemMetrics(SM_CYSCREEN);
                 }
@@ -417,13 +413,13 @@ namespace ByteEngine::WindowsLauncher
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {
-                    DebugHelper::LogDebugError(GetLastError());
+                    BE_LOG_DEBUG("SetWindowLongPtr error: {}", GetLastError());
                     return;
                 }
 
                 if (SetWindowPos(static_cast<HWND>(handle), nullptr, posX, posY, width, height, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
                 {
-                    DebugHelper::LogDebugError(GetLastError());
+                    BE_LOG_DEBUG("SetWindowPos error: {}", GetLastError());
                     return;
                 }
             }

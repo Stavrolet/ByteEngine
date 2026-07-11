@@ -8,6 +8,8 @@ if(WIN32)
 	find_package(directxtk CONFIG REQUIRED)
 endif()
 
+find_package(quill CONFIG REQUIRED)
+
 add_library(CoreRuntime STATIC 
 	"Code/Include/ByteEngine/Core/Base/Application.h"
 	"Code/Include/ByteEngine/Core/Base/MainWindow.h"
@@ -16,7 +18,6 @@ add_library(CoreRuntime STATIC
 	"Code/Include/ByteEngine/Core/EventSystem/MulticastDelegate.h"
 	"Code/Include/ByteEngine/Core/Input/Input.h"
 	"Code/Include/ByteEngine/Core/Input/KeyCode.h"
-	"Code/Include/ByteEngine/Core/Renderer/RenderContext.h"
 	"Code/Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
 	
 	"Code/Include/ByteEngine/Math/Math.h"
@@ -35,21 +36,21 @@ add_library(CoreRuntime STATIC
 	"Code/Include/ByteEngine/WinApiExcludingDefs/NoSys.h"
 	"Code/Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"
 	
-	"Code/Include/ByteEngine/DebugLogHelper.h"
+	"Code/Include/ByteEngine/Debug.h"
 	"Code/Include/ByteEngine/GameTime.h"
 	"Code/Include/ByteEngine/Primitives.h"
 	"Code/Source/Core/Base/Application.cpp"
 	"Code/Source/Core/Input/Input.cpp"
-	"Code/Source/Core/Renderer/RenderContext.cpp"
 	"Code/Source/Math/Math.cpp"
 	"Code/Source/Math/Quaternion.cpp"
-	"Code/Source/DebugLogHelper.cpp"
- "Code/Include/ByteEngine/Math/Matrix4x4F.h" "Code/Source/Math/Matrix4x4F.cpp" "Code/Source/Core/Graphics/GraphicsDevice.h" "Code/Include/ByteEngine/Math/Rotation.h" "Code/Source/Math/Rotation.cpp" "Code/Include/ByteEngine/Math/Color.h" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" "Code/Include/ByteEngine/Utilities/Utils.h")
+	
+ "Code/Include/ByteEngine/Math/Matrix4x4F.h" "Code/Source/Math/Matrix4x4F.cpp" "Code/Source/Core/Graphics/GraphicsDevice.h" "Code/Include/ByteEngine/Math/Rotation.h" "Code/Source/Math/Rotation.cpp" "Code/Include/ByteEngine/Math/Color.h" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" "Code/Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" "Code/Include/ByteEngine/Utilities/Utils.h" "Code/Source/Debug.cpp")
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
+target_link_libraries(CoreRuntime PUBLIC quill::quill)
 target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Code/Include")
 target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Code/Source")
-target_compile_definitions(CoreRuntime PRIVATE $<$<PLATFORM_ID:Windows>:UNICODE;_UNICODE> BYTEENGINE_EXPORTS)
+target_compile_definitions(CoreRuntime PRIVATE $<$<PLATFORM_ID:Windows>:UNICODE;_UNICODE> QUILL_DISABLE_NON_PREFIXED_MACROS)
 
 if(WIN32)
 	target_link_libraries(CoreRuntime PRIVATE WIL::WIL Microsoft::DirectXTK)

@@ -11,6 +11,7 @@
       "name": "directxtk",
       "platform": "windows"
     },
-    "gtest"
+    "gtest",
+    "quill"
   ]
 }

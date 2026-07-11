@@ -8,7 +8,7 @@
 #include "ByteEngine/Core/Renderer/RenderContext.h"
 
 #include "ByteEngine/Core/Base/MainWindow.h"
-#include "ByteEngine/DebugLogHelper.h"
+#include "ByteEngine/Debug.h"
 
 using namespace ByteEngine::Math;
 
@@ -74,15 +74,14 @@ namespace ByteEngine
         );
 
         if (FAILED(hResult))
-            DebugHelper::LogCriticalError("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly.", hResult);
+            BE_LOG_CRITICAL("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly. Error code: {}", hResult);
 
         hResult = baseDevice->QueryInterface(__uuidof(ID3D11Device1), device.put_void());
         if (FAILED(hResult))
-            DebugHelper::LogCriticalError("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly.", hResult);
-
+            BE_LOG_CRITICAL("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly. Error code: {}", hResult);
         hResult = baseDeviceContext->QueryInterface(__uuidof(ID3D11DeviceContext1), deviceContext.put_void());
         if (FAILED(hResult))
-            DebugHelper::LogCriticalError("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly.\n", hResult);
+            BE_LOG_CRITICAL("Failed to start the graphics system.\nCheck if your GPU supports DirectX 11.1 or if your GPU driver is working properly. Error code: {}", hResult);
     }
 
     void RenderingContext::CreateDebugLayer()
@@ -91,7 +90,7 @@ namespace ByteEngine
         HRESULT hResult = device->QueryInterface(__uuidof(ID3D11Debug), debug.put_void());
         if (FAILED(hResult))
         {
-            DebugHelper::LogDebugError(hResult);
+            BE_LOGV_ERROR(hResult);
             return;
         }
 

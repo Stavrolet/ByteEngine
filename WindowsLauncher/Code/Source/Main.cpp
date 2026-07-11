@@ -1,4 +1,6 @@
-﻿#define WIN32_LEAN_AND_MEAN
+﻿#define BE_WINDOWS_MAIN
+
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #include "ByteEngine/Core/Base/Application.h"
@@ -13,7 +15,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _In
     window.Initialize("ByteEnigne", hInstance);
     MainWindow::SetInstance(&window);
 
-    Application app;
-    app.Run(window);
-    return 0;
+    Application app;    
+    return app.Run(window);
 }

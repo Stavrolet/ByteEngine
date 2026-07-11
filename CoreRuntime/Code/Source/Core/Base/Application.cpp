@@ -7,7 +7,7 @@
 #include "ByteEngine/Core/Input/Input.h"
 #include "ByteEngine/Core/Renderer/RenderContext.h"
 #include "ByteEngine/Utilities/BitFlagsHelper.h"
-#include "ByteEngine/DebugLogHelper.h"
+#include "ByteEngine/Debug.h"
 #include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
 
 using namespace ByteEngine::Graphics;
@@ -23,10 +23,14 @@ namespace ByteEngine
     int32 Application::Run(MainWindow& mainWindow)
     {
         Application::SetInstance(this);
+        
+        Debug debug;
+        debug.Initialize();
+        Debug::SetInstance(&debug);
 
         GraphicsDeviceD3D11 graphicsDeviceD3D11;
 
-#ifdef _DEBUG
+#ifdef BE_DEBUG
         GraphicsDevice::Error error = graphicsDeviceD3D11.Initialize(true);
 #else
         GraphicsDevice::Error error = graphicsDeviceD3D11.Initialize(false);
@@ -34,7 +38,7 @@ namespace ByteEngine
 
         if (error != GraphicsDevice::Error::Success)
         {
-            DebugHelper::LogDebugMessage("Failed to initialize graphics device. Error code: " + std::to_string(static_cast<int>(error)));
+            BE_LOG_ERROR("Failed to initialize graphics device. Error code: {}", static_cast<int>(error));
             return -1;
         }
 
@@ -53,19 +57,19 @@ namespace ByteEngine
                 {
                     if (quitRequest.Invoke())
                     {
-                        DebugHelper::LogDebugMessage("Quit request was approved. Closing application.");
+                        BE_LOG_INFO("Quit request was approved. Closing application.");
                         mainWindow.Close();
                         break;
                     }
                     else
                     {
-                        DebugHelper::LogDebugMessage("Quit request was denied. Continuing application execution.");
+                        BE_LOG_INFO("Quit request was denied. Continuing application execution.");
                         mainWindow.closeRequested = false;
                     }
                 }
                 else
                 {
-                    DebugHelper::LogDebugMessage("Quit request was approved. Closing application.");
+                    BE_LOG_INFO("Quit request was approved. Closing application.");
                     mainWindow.Close();
                     break;
                 }
@@ -74,7 +78,7 @@ namespace ByteEngine
             input.Update();
         }
 
-        DebugHelper::LogDebugMessage("Application is closing");
+        BE_LOG_INFO("Application is closing");
 
         return exitCode;
     }

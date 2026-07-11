@@ -16,6 +16,7 @@ set(WINDOWS_DEFINES
     _WINDOWS
     WIN32
     _HAS_EXCEPTIONS=0
+    BE_WINDOWS
 )
 
 set(COMMON_DEFINES $<$<PLATFORM_ID:Windows>:${WINDOWS_DEFINES}>)
@@ -33,8 +34,8 @@ target_compile_options(project_options INTERFACE
 )
 
 target_compile_definitions(project_options INTERFACE
-    $<$<CONFIG:Debug>:_DEBUG>
-    $<$<CONFIG:Release>:NDEBUG>
+    $<$<CONFIG:Debug>:_DEBUG;BE_DEBUG>
+    $<$<CONFIG:Release>:NDEBUG;BE_RELEASE>
     ${COMMON_DEFINES}
 )
 

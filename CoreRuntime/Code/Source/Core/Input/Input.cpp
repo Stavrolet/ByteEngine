@@ -2,7 +2,7 @@
 
 #include "ByteEngine/Core/Base/MainWindow.h"
 #include "ByteEngine/Core/Input/Input.h"
-#include "ByteEngine/DebugLogHelper.h"
+#include "ByteEngine/Debug.h"
 
 namespace ByteEngine
 {
@@ -211,7 +211,7 @@ namespace ByteEngine
     {
         POINT pos = { };
         if (GetCursorPos(&pos) == false)
-            DebugHelper::LogDebugError(GetLastError());
+            BE_LOG_ERROR("Failed to get cursor position. Error code: {:X}", GetLastError());
 
         return Vector2(static_cast<float>(pos.x), static_cast<float>(pos.y));
     }
