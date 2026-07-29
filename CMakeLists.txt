@@ -8,6 +8,7 @@ project(ByteEngineD3D11 CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(${CMAKE_SOURCE_DIR}/GlobalBuildConfigs.cmake)
 
@@ -16,4 +17,3 @@ enable_testing()
 add_subdirectory(CoreRuntime)
 add_subdirectory(WindowsLauncher)
 add_subdirectory(Tests)
-add_subdirectory(MyLocalTests)

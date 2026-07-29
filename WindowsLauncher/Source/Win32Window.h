@@ -4,9 +4,11 @@
 #undef NOSYSMETRICS
 #undef NOVIRTUALKEYCODES
 
-#include <Windows.h>
-
 #include "ByteEngine/Core/Base/MainWindow.h"
+
+#include <Windows.h>
+#undef min
+#undef max
 
 using namespace ByteEngine::Math;
 
@@ -14,13 +16,13 @@ namespace ByteEngine::WindowsLauncher
 {
     class Win32Window : public MainWindow
     {
-        friend extern int WINAPI ::WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPTSTR, _In_ int);
+        friend int WINAPI ::WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPTSTR, _In_ int);
 
     private:
         Vector2I accumulatedMouseDelta;
         float accumulatedHorizontalWheelDelta = 0.0f;
         float accumulatedVerticalWheelDelta = 0.0f;
-        
+
     public:
         ~Win32Window() override;
 
@@ -45,4 +47,4 @@ namespace ByteEngine::WindowsLauncher
         void HandleRawInputMessage(HRAWINPUT handle);
         void HandleWindowModeChangeMessage(WindowMode modeToSet);
     };
-}
+} // namespace ByteEngine::WindowsLauncher

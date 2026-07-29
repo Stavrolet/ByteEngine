@@ -22,7 +22,6 @@
     },
     {
       "name": "windows-debug",
-      "hidden": true,
       "inherits": "windows-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -30,7 +29,6 @@
     },
     {
       "name": "windows-release",
-      "hidden": true,
       "inherits": "windows-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"

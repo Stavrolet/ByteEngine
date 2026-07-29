@@ -1,0 +1,69 @@
+﻿Language: Cpp
+BasedOnStyle: Microsoft
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 0
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+AlignAfterOpenBracket: BlockIndent
+ContinuationIndentWidth: 4
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignOperands: Align
+AlignTrailingComments: true
+PointerAlignment: Left
+ReferenceAlignment: Pointer
+DerivePointerAlignment: false
+SpaceAfterCStyleCast: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowAllArgumentsOnNextLine: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyBlock: true
+SpaceInEmptyParentheses: false
+IndentCaseLabels: false
+NamespaceIndentation: All 
+Cpp11BracedListStyle: Block
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+BreakBeforeCloseBracketBracedList: true
+SortIncludes:
+  Enabled: true
+  IgnoreCase: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:    '^".*"'
+    Priority: 1
+  - Regex:    '^<.*>'
+    Priority: 2
+  - Regex: '.*WinApiExcludingDefs.*'
+    Priority: 2
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+PackConstructorInitializers: CurrentLine
+BreakConstructorInitializers: AfterColon
+SpaceInEmptyBraces: Always

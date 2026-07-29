@@ -1,12 +1,13 @@
-﻿#include <format>
-#include <Windows.h>
-#include <hidusage.h>
+﻿#include "Win32Window.h"
 
-#include "resources.h"
-#include "Win32Window.h"
 #include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Utilities/BitFlagsHelper.h"
+#include "resources.h"
+
+#include <Windows.h>
+#include <format>
+#include <hidusage.h>
 
 #define WM_MODECHANGE (WM_APP + 1)
 
@@ -29,12 +30,8 @@ namespace ByteEngine::WindowsLauncher
         RegisterClassEx(&winClass);
 
         handle = CreateWindowEx(
-            WS_EX_APPWINDOW,
-            windowName.data(),
-            windowName.data(),
-            WS_POPUP | WS_VISIBLE,
-            0, 0, 640, 480,
-            nullptr, nullptr, hInstance, this
+            WS_EX_APPWINDOW, windowName.data(), windowName.data(), WS_POPUP | WS_VISIBLE, 0, 0, 640,
+            480, nullptr, nullptr, hInstance, this
         );
 
         ShowWindow(static_cast<HWND>(handle), SW_MAXIMIZE);
@@ -49,26 +46,20 @@ namespace ByteEngine::WindowsLauncher
         int32 height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
 
         SetWindowPos(
-            static_cast<HWND>(handle), nullptr,
-            monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,
-            width, height,
+            static_cast<HWND>(handle), nullptr, monitorInfo.rcMonitor.left,
+            monitorInfo.rcMonitor.top, width, height,
             SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW
         );
 
-        RAWINPUTDEVICE rids[] =
-        {
-            {
-                .usUsagePage = HID_USAGE_PAGE_GENERIC,
-                .usUsage = HID_USAGE_GENERIC_KEYBOARD,
-                .dwFlags = 0,
-                .hwndTarget = static_cast<HWND>(handle)
-            },
-            {
-                .usUsagePage = HID_USAGE_PAGE_GENERIC,
-                .usUsage = HID_USAGE_GENERIC_MOUSE,
-                .dwFlags = 0,
-                .hwndTarget = static_cast<HWND>(handle)
-            }
+        RAWINPUTDEVICE rids[] = {
+            { .usUsagePage = HID_USAGE_PAGE_GENERIC,
+              .usUsage = HID_USAGE_GENERIC_KEYBOARD,
+              .dwFlags = 0,
+              .hwndTarget = static_cast<HWND>(handle) },
+            { .usUsagePage = HID_USAGE_PAGE_GENERIC,
+              .usUsage = HID_USAGE_GENERIC_MOUSE,
+              .dwFlags = 0,
+              .hwndTarget = static_cast<HWND>(handle) }
         };
 
         RegisterRawInputDevices(rids, 2, sizeof(rids[0]));
@@ -108,8 +99,7 @@ namespace ByteEngine::WindowsLauncher
     void Win32Window::SetWindowSize(int32 width, int32 height)
     {
         SetWindowPos(
-            static_cast<HWND>(handle), nullptr,
-            0, 0, width, height,
+            static_cast<HWND>(handle), nullptr, 0, 0, width, height,
             SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW | SWP_NOMOVE
         );
 
@@ -120,8 +110,7 @@ namespace ByteEngine::WindowsLauncher
     void Win32Window::SetWindowPosition(int32 x, int32 y)
     {
         SetWindowPos(
-            static_cast<HWND>(handle), nullptr,
-            x, y, 0, 0,
+            static_cast<HWND>(handle), nullptr, x, y, 0, 0,
             SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW | SWP_NOSIZE
         );
 
@@ -129,10 +118,7 @@ namespace ByteEngine::WindowsLauncher
         position.y = y;
     }
 
-    void Win32Window::SetFocus()
-    {
-        SetForegroundWindow(static_cast<HWND>(handle));
-    }
+    void Win32Window::SetFocus() { SetForegroundWindow(static_cast<HWND>(handle)); }
 
     void Win32Window::PollEvents()
     {
@@ -287,14 +273,19 @@ namespace ByteEngine::WindowsLauncher
             {
                 uint16 scanCode = MAKEWORD(
                     keyboard.MakeCode & 0x7f,
-                    (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E0) ? 0xe0 : (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E1) ? 0xe1 : 0x00))
+                    (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E0)
+                         ? 0xe0
+                         : (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E1) ? 0xe1 : 0x00))
                 );
 
                 keyStateChanged.Invoke(static_cast<KeyCode>(scanCode), isKeyPressed);
             }
 
             char keyNameBuffer[MAX_PATH] = { };
-            GetKeyNameTextA((LONG)MAKELPARAM(0, (HIBYTE(scanCode) ? KF_EXTENDED : 0x00) | LOBYTE(scanCode)), keyNameBuffer, MAX_PATH);
+            GetKeyNameTextA(
+                (LONG)MAKELPARAM(0, (HIBYTE(scanCode) ? KF_EXTENDED : 0x00) | LOBYTE(scanCode)),
+                keyNameBuffer, MAX_PATH
+            );
 
             BE_LOG_INFO("Key pressed. Name: {}, is pressed = {}", keyNameBuffer, isKeyPressed);
         }
@@ -378,7 +369,10 @@ namespace ByteEngine::WindowsLauncher
                 }
             }
 
-            ShowWindow(static_cast<HWND>(handle), modeToSet == WindowMode::Windowed ? SW_RESTORE : SW_MAXIMIZE);
+            ShowWindow(
+                static_cast<HWND>(handle),
+                modeToSet == WindowMode::Windowed ? SW_RESTORE : SW_MAXIMIZE
+            );
             break;
         case WindowMode::BorderlessFullscreen:
         case WindowMode::ExclusiveFullscreen:
@@ -392,7 +386,10 @@ namespace ByteEngine::WindowsLauncher
                 int32 posX = 0;
                 int32 posY = 0;
 
-                if (GetMonitorInfo(MonitorFromWindow(static_cast<HWND>(handle), MONITOR_DEFAULTTONEAREST), &monInfo) != 0)
+                if (GetMonitorInfo(
+                        MonitorFromWindow(static_cast<HWND>(handle), MONITOR_DEFAULTTONEAREST),
+                        &monInfo
+                    ) != 0)
                 {
                     width = monInfo.rcMonitor.right - monInfo.rcMonitor.left;
                     height = monInfo.rcMonitor.bottom - monInfo.rcMonitor.top;
@@ -417,7 +414,10 @@ namespace ByteEngine::WindowsLauncher
                     return;
                 }
 
-                if (SetWindowPos(static_cast<HWND>(handle), nullptr, posX, posY, width, height, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
+                if (SetWindowPos(
+                        static_cast<HWND>(handle), nullptr, posX, posY, width, height,
+                        SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW
+                    ) == 0)
                 {
                     BE_LOG_DEBUG("SetWindowPos error: {}", GetLastError());
                     return;
@@ -432,4 +432,4 @@ namespace ByteEngine::WindowsLauncher
         mode = modeToSet;
         modeChanged.Invoke(modeToSet);
     }
-}
+} // namespace ByteEngine::WindowsLauncher

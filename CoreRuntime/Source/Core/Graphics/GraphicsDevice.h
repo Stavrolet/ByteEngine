@@ -5,8 +5,6 @@
 
 namespace ByteEngine::Graphics
 {
-    DECLARE_HANDLE(Texture2D);
-
     class GraphicsDevice : public Singleton<GraphicsDevice>
     {
     public:

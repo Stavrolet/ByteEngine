@@ -18,8 +18,7 @@ add_library(CoreRuntime STATIC
 	"Include/ByteEngine/Core/EventSystem/MulticastDelegate.h"
 	"Include/ByteEngine/Core/Input/Input.h"
 	"Include/ByteEngine/Core/Input/KeyCode.h"
-	"Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
-	
+	"Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h"	
 	"Include/ByteEngine/Math/Math.h"
 	"Include/ByteEngine/Math/Quaternion.h"
 	"Include/ByteEngine/Math/Vector2.h"
@@ -34,17 +33,25 @@ add_library(CoreRuntime STATIC
 	"Include/ByteEngine/WinApiExcludingDefs/NoIO.h"
 	"Include/ByteEngine/WinApiExcludingDefs/NoLocalization.h"
 	"Include/ByteEngine/WinApiExcludingDefs/NoSys.h"
-	"Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"
-	
+	"Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"	
 	"Include/ByteEngine/Debug.h"
 	"Include/ByteEngine/GameTime.h"
 	"Include/ByteEngine/Primitives.h"
 	"Source/Core/Base/Application.cpp"
 	"Source/Core/Input/Input.cpp"
 	"Source/Math/Math.cpp"
-	"Source/Math/Quaternion.cpp"
-	
- "Include/ByteEngine/Math/Matrix4x4F.h" "Source/Math/Matrix4x4F.cpp" "Source/Core/Graphics/GraphicsDevice.h" "Include/ByteEngine/Math/Rotation.h" "Source/Math/Rotation.cpp" "Include/ByteEngine/Math/Color.h" "Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" "Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" "Include/ByteEngine/Utilities/Utils.h" "Source/Debug.cpp")
+	"Source/Math/Quaternion.cpp"	
+ 	"Include/ByteEngine/Math/Matrix4x4F.h"
+	"Source/Math/Matrix4x4F.cpp"
+	"Source/Core/Graphics/GraphicsDevice.h"
+	"Include/ByteEngine/Math/Rotation.h" 
+	"Source/Math/Rotation.cpp" 
+	"Include/ByteEngine/Math/Color.h" 
+	"Source/Platform/Core/Graphics/GraphicsDeviceD3D11.cpp" 
+	"Source/Platform/Core/Graphics/GraphicsDeviceD3D11.h" 
+	"Include/ByteEngine/Utilities/Utils.h" 
+	"Source/Debug.cpp"
+)
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
 target_link_libraries(CoreRuntime PUBLIC quill::quill)

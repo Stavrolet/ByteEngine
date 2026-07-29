@@ -1,10 +1,5 @@
 ﻿#pragma once
 
-#ifdef BE_WINDOWS_MAIN
-struct HINSTANCE__;
-using HINSTANCE = HINSTANCE__*;
-#endif
-
 namespace ByteEngine
 {
     template <typename T>

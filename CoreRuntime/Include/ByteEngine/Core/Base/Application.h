@@ -38,4 +38,4 @@ namespace ByteEngine
         Error Initialize();
         int32 Run();
     };
-}
+} // namespace ByteEngine
