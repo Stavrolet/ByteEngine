@@ -5,6 +5,7 @@
 #include "ByteEngine/Math/Math.h"
 
 using namespace ByteEngine::Math;
+using namespace ByteEngine::Math::Literals;
 
 class QuaternionTest : public ::testing::Test
 {

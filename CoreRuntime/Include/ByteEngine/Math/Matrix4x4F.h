@@ -95,7 +95,7 @@ namespace ByteEngine::Math
             };
         }
 
-        constexpr [[nodiscard]] Matrix4x4F Transposed() const
+        [[nodiscard]] constexpr Matrix4x4F Transposed() const
         {
             return Matrix4x4F {
                 m00, m10, m20, m30,

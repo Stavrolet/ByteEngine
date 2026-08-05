@@ -6,6 +6,7 @@
 #include "ByteEngine/Math/VectorConversions.h"
 
 using namespace ByteEngine::Math;
+using namespace ByteEngine::Math::Literals;
 
 template <typename T>
 class Vector2tTest : public ::testing::Test

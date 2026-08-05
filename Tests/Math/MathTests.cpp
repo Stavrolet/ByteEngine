@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 using namespace ByteEngine::Math;
+using namespace ByteEngine::Math::Literals;
 
 TEST(MathTest, ConstantsAndConversions)
 {

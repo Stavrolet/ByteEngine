@@ -6,6 +6,7 @@
 #include "ByteEngine/Math/Quaternion.h"
 
 using namespace ByteEngine::Math;
+using namespace ByteEngine::Math::Literals;
 
 // ─────────────────────────────────────────────
 // Helpers

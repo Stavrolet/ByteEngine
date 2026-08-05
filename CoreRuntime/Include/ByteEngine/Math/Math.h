@@ -211,19 +211,24 @@ namespace ByteEngine::Math
     using DegreeF = DegreeT<float>;
     using DegreeD = DegreeT<double>;
 
-    consteval RadianF operator""_rf(long double value) { return RadianF(static_cast<float>(value)); }
-    consteval RadianD operator""_rd(long double value) { return RadianD(static_cast<double>(value)); }
-    consteval DegreeF operator""_df(long double value) { return DegreeF(static_cast<float>(value)); }
-    consteval DegreeD operator""_dd(long double value) { return DegreeD(static_cast<double>(value)); }
+    namespace Literals
+    {
+        consteval RadianF operator""_rf(long double value) { return RadianF(static_cast<float>(value)); }
+        consteval RadianD operator""_rd(long double value) { return RadianD(static_cast<double>(value)); }
+        consteval DegreeF operator""_df(long double value) { return DegreeF(static_cast<float>(value)); }
+        consteval DegreeD operator""_dd(long double value) { return DegreeD(static_cast<double>(value)); }
 
-    consteval RadianF operator""_rf(unsigned long long value) { return RadianF(static_cast<float>(value)); }
-    consteval RadianD operator""_rd(unsigned long long value) { return RadianD(static_cast<double>(value)); }
-    consteval DegreeF operator""_df(unsigned long long value) { return DegreeF(static_cast<float>(value)); }
-    consteval DegreeD operator""_dd(unsigned long long value) { return DegreeD(static_cast<double>(value)); }
+        consteval RadianF operator""_rf(unsigned long long value) { return RadianF(static_cast<float>(value)); }
+        consteval RadianD operator""_rd(unsigned long long value) { return RadianD(static_cast<double>(value)); }
+        consteval DegreeF operator""_df(unsigned long long value) { return DegreeF(static_cast<float>(value)); }
+        consteval DegreeD operator""_dd(unsigned long long value) { return DegreeD(static_cast<double>(value)); }
+    } // namespace Literals
 } // namespace ByteEngine::Math
 
 namespace ByteEngine::Math::Mathf
 {
+    using namespace ::ByteEngine::Math::Literals;
+
     namespace Internal
     {
         template <typename... Args>
@@ -535,7 +540,7 @@ namespace ByteEngine::Math::Mathf
         return currentF + Sign(targetF - currentF) * maxDeltaF;
     }
 
-    template<Arithmetic T, Arithmetic U, Arithmetic V>
+    template <Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] inline auto SmoothStep(T edge0, U edge1, V x) noexcept
     {
         using Float = FloatT<std::common_type_t<T, U, V>>;
