@@ -9,15 +9,15 @@ namespace ByteEngine::Math
 {
     const Quaternion Quaternion::Identity { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    float Quaternion::Length() const { return Math::Sqrt(LengthSquared()); }
+    float Quaternion::Length() const { return Mathf::Sqrt(LengthSquared()); }
 
     void Quaternion::Normalize()
     {
         float length = LengthSquared();
 
-        if (length > Math::Epsilon)
+        if (length > Mathf::Epsilon)
         {
-            float invLength = 1.0f / Math::Sqrt(length);
+            float invLength = 1.0f / Mathf::Sqrt(length);
             x *= invLength;
             y *= invLength;
             z *= invLength;
@@ -41,7 +41,7 @@ namespace ByteEngine::Math
         float ySq = y * y;
         float zSq = z * z;
 
-        return EulerRad { Math::Asin(2 * (w * x - y * z)), Math::Atan2(2 * (w * y + x * z), num + ySq - zSq), Math::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
+        return EulerRad { Mathf::Asin(2 * (w * x - y * z)), Mathf::Atan2(2 * (w * y + x * z), num + ySq - zSq), Mathf::Atan2(2 * (w * z + x * y), num - ySq + zSq) };
     }
 
     EulerRad Quaternion::GetEuler() const
@@ -56,7 +56,7 @@ namespace ByteEngine::Math
         float sinr = 2.0f * (w * z + x * y);
         float cosr = 1.0f - 2.0f * (x * x + z * z);
 
-        return EulerRad { Math::Asin(sinp), Math::Atan2(siny, cosy), Math::Atan2(sinr, cosr) };
+        return EulerRad { Mathf::Asin(sinp), Mathf::Atan2(siny, cosy), Mathf::Atan2(sinr, cosr) };
     }
 
     EulerDeg Quaternion::GetEulerInDegrees() const
@@ -69,18 +69,18 @@ namespace ByteEngine::Math
     // Source: Quaternion::get_axis
     Vector3F Quaternion::GetAxis() const
     {
-        if (Math::Abs(w) > 1 - Math::Epsilon)
+        if (Mathf::Abs(w) > 1 - Mathf::Epsilon)
             return Vector3F(x, y, z);
 
-        float invRoot = 1.0f / Math::Sqrt(1 - w * w);
+        float invRoot = 1.0f / Mathf::Sqrt(1 - w * w);
         return Vector3F(x * invRoot, y * invRoot, z * invRoot);
     }
 
     // GetAngle implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::get_angle
-    RadianF Quaternion::GetAngle() const { return 2 * Math::Acos(w); }
+    RadianF Quaternion::GetAngle() const { return 2 * Mathf::Acos(w); }
 
-    RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Math::Acos(Math::Abs(Dot(a, b))); }
+    RadianF Quaternion::AngleBetween(Quaternion a, Quaternion b) { return 2 * Mathf::Acos(Mathf::Abs(Dot(a, b))); }
 
     // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
     // Source: Quaternion::Quaternion(const Vector3f &p_axis, real_t p_angle)
@@ -91,14 +91,14 @@ namespace ByteEngine::Math
 
         float length = axis.Length();
 
-        if (Math::IsEqualApproximetly(length, 0.0f))
+        if (Mathf::IsEqualApproximetly(length, 0.0f))
         {
             return Quaternion(0.0f);
         }
         else
         {
             float sin, cos;
-            Math::SinCos(sin, cos, angle * 0.5f);
+            Mathf::SinCos(sin, cos, angle * 0.5f);
 
             float s = sin / length;
             return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos);
@@ -119,7 +119,7 @@ namespace ByteEngine::Math
 
     Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
-        if (Math::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
+        if (Mathf::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
             return Identity;
 
         XMVECTOR forward = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&direction));
@@ -144,15 +144,15 @@ namespace ByteEngine::Math
         from.Normalize();
         to.Normalize();
 
-        float dot = Math::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
+        float dot = Mathf::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
 
-        if (dot >= 1.0f || Math::IsEqualApproximetly(dot, 0.0f))
+        if (dot >= 1.0f || Mathf::IsEqualApproximetly(dot, 0.0f))
             return Identity;
         else if (dot <= -1.0f)
-            return FromAngleAxis(static_cast<RadianF>(Math::PI), Vector3F(0.0f, 1.0f, 0.0f));
+            return FromAngleAxis(static_cast<RadianF>(Mathf::PI), Vector3F(0.0f, 1.0f, 0.0f));
 
         Vector3F axis = Vector3F::Cross(from, to);
-        float root = Math::Sqrt((1.0f + dot) * 2.0f);
+        float root = Mathf::Sqrt((1.0f + dot) * 2.0f);
         float invRoot = 1.0f / root;
 
         return Quaternion(axis.x * invRoot, axis.y * invRoot, axis.z * invRoot, root * 0.5f);
@@ -181,12 +181,12 @@ namespace ByteEngine::Math
             to1 = to;
         }
 
-        if ((1.0f - cosom) > Math::Epsilon)
+        if ((1.0f - cosom) > Mathf::Epsilon)
         {
-            omega = Math::Acos(cosom);
-            sinom = Math::Sin(omega);
-            scale0 = Math::Sin(static_cast<RadianF>((1.0f - t) * omega)) / sinom;
-            scale1 = Math::Sin(static_cast<RadianF>(t * omega)) / sinom;
+            omega = Mathf::Acos(cosom);
+            sinom = Mathf::Sin(omega);
+            scale0 = Mathf::Sin(static_cast<RadianF>((1.0f - t) * omega)) / sinom;
+            scale1 = Mathf::Sin(static_cast<RadianF>(t * omega)) / sinom;
         }
         else
         {
@@ -204,11 +204,11 @@ namespace ByteEngine::Math
 
     Quaternion Quaternion::SlerpClamped(Quaternion from, Quaternion to, float t)
     {
-        return Slerp(from, to, Math::Clamp(t));
+        return Slerp(from, to, Mathf::Clamp(t));
     }
 
     bool Quaternion::IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance)
     {
-        return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance) && Math::IsEqualApproximetly(a.w, b.w, tolerance);
+        return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance) && Mathf::IsEqualApproximetly(a.w, b.w, tolerance);
     }
 }

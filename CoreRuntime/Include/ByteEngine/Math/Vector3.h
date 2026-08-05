@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "ByteEngine/Math/Math.h"
+#include "ByteEngine/Primitives.h"
 
 namespace ByteEngine::Math
 {
@@ -42,16 +43,16 @@ namespace ByteEngine::Math
             : x(x), y(y), z(z)
         { }
 
-        FloatT Length() const { return Math::Sqrt(LengthSquared()); }
+        FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z; }
 
         void Normalize() requires std::floating_point<T>
         {
             FloatT length = LengthSquared();
 
-            if (length > Math::Epsilon)
+            if (length > Mathf::Epsilon)
             {
-                FloatT invLength = 1 / Math::Sqrt(length);
+                FloatT invLength = 1 / Mathf::Sqrt(length);
                 *this *= invLength;
             }
             else
@@ -69,7 +70,7 @@ namespace ByteEngine::Math
 
         bool IsNormalized() const requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Math::UnitSizeEpsilon));
+            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
         }
 
         void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
@@ -77,7 +78,7 @@ namespace ByteEngine::Math
             FloatT currentLength = LengthSquared();
 
             if (currentLength > maxLength * maxLength)
-                *this *= maxLength / Math::Sqrt(currentLength);
+                *this *= maxLength / Mathf::Sqrt(currentLength);
         }
 
         void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) requires std::floating_point<T>
@@ -88,15 +89,15 @@ namespace ByteEngine::Math
 
             if constexpr (std::is_same_v<FloatT, float>)
             {
-                Math::SinCos(sin, cos, -angle);
+                Mathf::SinCos(sin, cos, -angle);
             }
             else
             {
-                sin = Math::Sin(-angle);
-                cos = Math::Cos(-angle);
+                sin = Mathf::Sin(-angle);
+                cos = Mathf::Cos(-angle);
             }
 
-            if (rotationAxis.LengthSquared() < Math::Epsilon)
+            if (rotationAxis.LengthSquared() < Mathf::Epsilon)
                 return;
 
             *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
@@ -116,8 +117,8 @@ namespace ByteEngine::Math
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
             Vector3T cross = Cross(from, to);
-            RadianT<T> unsignedAngle = Math::Atan2(cross.Length(), Dot(from, to));
-            FloatT sign = Math::Sign(Dot(cross, rotationAxis));
+            RadianT<T> unsignedAngle = Mathf::Atan2(cross.Length(), Dot(from, to));
+            FloatT sign = Mathf::Sign(Dot(cross, rotationAxis));
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
@@ -125,10 +126,10 @@ namespace ByteEngine::Math
         // Source: Vector3::angle_to
         static RadianT<FloatT> UnsigedAngleBetween(Vector3T from, Vector3T to) requires std::floating_point<T>
         {
-            return Math::Atan2(Cross(from, to).Length(), Dot(from, to));
+            return Mathf::Atan2(Cross(from, to).Length(), Dot(from, to));
         }
 
-        static FloatT Distcance(Vector3T a, Vector3T b) { return Math::Sqrt(DistcanceSquared(a, b)); }
+        static FloatT Distcance(Vector3T a, Vector3T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector3T a, Vector3T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
 
         static Vector3T Direction(Vector3T from, Vector3T to)
@@ -162,7 +163,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector3T LerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
         {
-            return from + (to - from) * Math::Clamp(t);
+            return from + (to - from) * Mathf::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -171,18 +172,18 @@ namespace ByteEngine::Math
         {
             FloatT startLengthSq = from.LengthSquared();
             FloatT endLengthSq = to.LengthSquared();
-            if (Math::IsEqualApproximetly(startLengthSq, FloatT(0)) || Math::IsEqualApproximetly(endLengthSq, FloatT(0)))
+            if (Mathf::IsEqualApproximetly(startLengthSq, FloatT(0)) || Mathf::IsEqualApproximetly(endLengthSq, FloatT(0)))
                 return Lerp(from, to, t);
 
             Vector3T axis = Cross(from, to);
             FloatT axisLengthSq = axis.LengthSquared();
 
-            if (Math::IsEqualApproximetly(axisLengthSq, FloatT(0)))
+            if (Mathf::IsEqualApproximetly(axisLengthSq, FloatT(0)))
                 return Lerp(from, to, t);
 
-            axis *= FloatT(1) / Math::Sqrt(axisLengthSq);
-            FloatT startLength = Math::Sqrt(startLengthSq);
-            FloatT resultLength = Math::Lerp(startLength, Math::Sqrt(endLengthSq), t);
+            axis *= FloatT(1) / Mathf::Sqrt(axisLengthSq);
+            FloatT startLength = Mathf::Sqrt(startLengthSq);
+            FloatT resultLength = Mathf::Lerp(startLength, Mathf::Sqrt(endLengthSq), t);
             RadianT<FloatT> angle = UnsigedAngleBetween(from, to);
 
             return axis.RotatedBy(angle * t) * (resultLength / startLength);
@@ -190,7 +191,7 @@ namespace ByteEngine::Math
 
         static Vector3T SlerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
         {
-            return Slerp(from, to, Math::Clamp(t));
+            return Slerp(from, to, Mathf::Clamp(t));
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -200,7 +201,7 @@ namespace ByteEngine::Math
             Vector3T direction = target - current;
             FloatT distance = direction.Length();
 
-            if (distance <= maxDelta || distance < Math::Epsilon)
+            if (distance <= maxDelta || distance < Mathf::Epsilon)
                 return target;
             else
                 return current + direction / distance * maxDelta;
@@ -210,7 +211,7 @@ namespace ByteEngine::Math
         {
             T dot = Dot(vec, projectOnto);
 
-            if (dot < Math::Epsilon)
+            if (dot < Mathf::Epsilon)
                 return Zero();
 
             return projectOnto * (dot / projectOnto.LengthSquared());
@@ -227,29 +228,29 @@ namespace ByteEngine::Math
             return vec - 2 * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Math::Epsilon) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon) requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance);
+            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance);
         }
 
         static constexpr Vector3T Min(Vector3T a, Vector3T b)
         {
-            return Vector3T(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z));
+            return Vector3T(Mathf::Min(a.x, b.x), Mathf::Min(a.y, b.y), Mathf::Min(a.z, b.z));
         }
 
         static constexpr Vector3T Min(Vector3T a, Vector3T b, Vector3T c)
         {
-            return Vector3T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(c.z, c.z, c.z));
+            return Vector3T(Mathf::Min(a.x, b.x, c.x), Mathf::Min(a.y, b.y, c.y), Mathf::Min(c.z, c.z, c.z));
         }
 
         static constexpr Vector3T Max(Vector3T a, Vector3T b)
         {
-            return Vector3T(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z));
+            return Vector3T(Mathf::Max(a.x, b.x), Mathf::Max(a.y, b.y), Mathf::Max(a.z, b.z));
         }
 
         static constexpr Vector3T Max(Vector3T a, Vector3T b, Vector3T c)
         {
-            return Vector3T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z));
+            return Vector3T(Mathf::Max(a.x, b.x, c.x), Mathf::Max(a.y, b.y, c.y), Mathf::Max(a.z, b.z, c.z));
         }
 
         static constexpr Vector3T Zero() { return Vector3T(0); }

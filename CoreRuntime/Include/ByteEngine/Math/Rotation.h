@@ -64,23 +64,23 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static Rotation FromQuaternion(Quaternion q);
 
-        [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Math::AngleEpsilon.ToDegree());
+        [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Mathf::AngleEpsilon.ToDegree());
 
         [[nodiscard]] constexpr static Rotation Lerp(Rotation from, Rotation to, float t)
         {
             return Rotation {
-                DegreeF { Math::Lerp(from.pitch.value, to.pitch.value, t) },
-                DegreeF { Math::Lerp(from.yaw.value, to.yaw.value, t) },
-                DegreeF { Math::Lerp(from.roll.value, to.roll.value, t) }
+                DegreeF { Mathf::Lerp(from.pitch.value, to.pitch.value, t) },
+                DegreeF { Mathf::Lerp(from.yaw.value, to.yaw.value, t) },
+                DegreeF { Mathf::Lerp(from.roll.value, to.roll.value, t) }
             };
         }
 
         [[nodiscard]] constexpr static Rotation LerpClamped(Rotation from, Rotation to, float t)
         {
             return Rotation {
-                DegreeF { Math::LerpClamped(from.pitch.value, to.pitch.value, t) },
-                DegreeF { Math::LerpClamped(from.yaw.value, to.yaw.value, t) },
-                DegreeF { Math::LerpClamped(from.roll.value, to.roll.value, t) }
+                DegreeF { Mathf::LerpClamped(from.pitch.value, to.pitch.value, t) },
+                DegreeF { Mathf::LerpClamped(from.yaw.value, to.yaw.value, t) },
+                DegreeF { Mathf::LerpClamped(from.roll.value, to.roll.value, t) }
             };
         }
 

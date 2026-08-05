@@ -2,16 +2,13 @@
 
 #include <cassert>
 #include <cmath>
-#include <compare>
 #include <concepts>
 #include <limits>
 #include <ranges>
-#include <vector>
 
 #undef min
 #undef max
 
-#include "ByteEngine/Primitives.h"
 #include "ByteEngine/Math/Concepts.h"
 
 namespace ByteEngine::Math
@@ -218,7 +215,7 @@ namespace ByteEngine::Math
     consteval DegreeD operator""_dd(unsigned long long value) { return DegreeD(static_cast<double>(value)); }
 }
 
-namespace ByteEngine::Math::Math
+namespace ByteEngine::Math::Mathf
 {
     namespace Internal
     {
@@ -338,7 +335,7 @@ namespace ByteEngine::Math::Math
 
     // SinCos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarSinCos
-    [[nodiscard]] constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
+    constexpr void SinCos(float& sin, float& cos, RadianF rad) noexcept
     {
         // Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
         float quotient = 1.0f / (PI * 2.0f) * rad.value;
@@ -475,7 +472,6 @@ namespace ByteEngine::Math::Math
         requires Internal::AnyFloating<T, U>
     [[nodiscard]] inline auto PingPong(T t, U length) noexcept
     {
-        using Common = std::common_type_t<T, U>;
         return (length != 0.0f) ? Abs(Fract((t - length) / (length * 2.0f)) * length * 2.0f - length) : 0.0f;
     }
 
@@ -608,17 +604,17 @@ namespace ByteEngine::Math
     constexpr DegreeT<T> RadianT<T>::ToDegree() const
     {
         if constexpr (std::is_same_v<T, float>)
-            return DegreeT<T>(value * (180.0f / Math::PI));
+            return DegreeT<T>(value * (180.0f / Mathf::PI));
         else
-            return DegreeT<T>(value * (180.0 / Math::PI_D));
+            return DegreeT<T>(value * (180.0 / Mathf::PI_D));
     }
 
     template<std::floating_point T>
     constexpr RadianT<T> DegreeT<T>::ToRadian() const
     {
         if constexpr (std::is_same_v<T, float>)
-            return RadianT<T>(value * (Math::PI / 180.0f));
+            return RadianT<T>(value * (Mathf::PI / 180.0f));
         else
-            return RadianT<T>(value * (Math::PI_D / 180.0));
+            return RadianT<T>(value * (Mathf::PI_D / 180.0));
     }
 }

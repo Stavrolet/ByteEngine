@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "ByteEngine/Primitives.h"
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
@@ -47,16 +48,16 @@ namespace ByteEngine::Math
             : x(x), y(y)
         { }
 
-        FloatT Length() const { return Math::Sqrt(LengthSquared()); }
+        FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
         void Normalize() requires std::floating_point<T>
         {
             FloatT lengthSq = LengthSquared();
 
-            if (lengthSq > Math::Epsilon)
+            if (lengthSq > Mathf::Epsilon)
             {
-                FloatT invLength = 1 / Math::Sqrt(lengthSq);
+                FloatT invLength = 1 / Mathf::Sqrt(lengthSq);
                 *this *= invLength;
             }
             else
@@ -74,7 +75,7 @@ namespace ByteEngine::Math
 
         bool IsNormalized() const requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Math::UnitSizeEpsilon));
+            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -85,12 +86,12 @@ namespace ByteEngine::Math
 
             if constexpr (std::is_same_v<FloatT, float>)
             {
-                Math::SinCos(sin, cos, angle);
+                Mathf::SinCos(sin, cos, angle);
             }
             else
             {
-                sin = Math::Sin(angle);
-                cos = Math::Cos(angle);
+                sin = Mathf::Sin(angle);
+                cos = Mathf::Cos(angle);
             }
 
             T oldX = x;
@@ -111,7 +112,7 @@ namespace ByteEngine::Math
 
             if (currentLength > maxLength * maxLength)
             {
-                currentLength = Math::Sqrt(currentLength);
+                currentLength = Mathf::Sqrt(currentLength);
                 *this *= maxLength / currentLength;
             }
         }
@@ -120,15 +121,15 @@ namespace ByteEngine::Math
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
-            return Math::Atan2(cross, dot);
+            return Mathf::Atan2(cross, dot);
         }
 
         static RadianT<FloatT> UnsigedAngleBetween(Vector2T from, Vector2T to) requires std::floating_point<T>
         {
-            return RadianT<T>(Math::Abs(AngleBetween(from, to).value));
+            return RadianT<T>(Mathf::Abs(AngleBetween(from, to).value));
         }
 
-        static T Distcance(Vector2T a, Vector2T b) { return Math::Sqrt(static_cast<FloatT>(DistcanceSquared(a, b))); }
+        static T Distcance(Vector2T a, Vector2T b) { return Mathf::Sqrt(static_cast<FloatT>(DistcanceSquared(a, b))); }
         static constexpr T DistcanceSquared(Vector2T a, Vector2T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y); }
 
         static Vector2T Direction(Vector2T from, Vector2T to)
@@ -157,12 +158,12 @@ namespace ByteEngine::Math
 
             if constexpr (std::is_same_v<FloatT, float>)
             {
-                Math::SinCos(vec.x, vec.y, angle);
+                Mathf::SinCos(vec.x, vec.y, angle);
             }
             else
             {
-                vec.x = Math::Cos(angle);
-                vec.y = Math::Sin(angle);
+                vec.x = Mathf::Cos(angle);
+                vec.y = Mathf::Sin(angle);
             }
 
             return vec;
@@ -180,7 +181,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector2T LerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
-            return from + (to - from) * Math::Clamp(t);
+            return from + (to - from) * Mathf::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -193,8 +194,8 @@ namespace ByteEngine::Math
             if (startLength == 0 || endLength == 0)
                 return Lerp(from, to, t);
 
-            startLength = Math::Sqrt(startLength);
-            FloatT resultLength = Math::Lerp(startLength, Math::Sqrt(endLength), t);
+            startLength = Mathf::Sqrt(startLength);
+            FloatT resultLength = Mathf::Lerp(startLength, Mathf::Sqrt(endLength), t);
             RadianT<T> angle = AngleBetween(from, to);
 
             from.RotateBy(angle * t);
@@ -203,7 +204,7 @@ namespace ByteEngine::Math
 
         static Vector2T SlerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
         {
-            return Slerp(from, to, Math::Clamp(t));
+            return Slerp(from, to, Mathf::Clamp(t));
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -213,7 +214,7 @@ namespace ByteEngine::Math
             Vector2T direction = target - current;
             FloatT distance = direction.Length();
 
-            if (distance <= maxDelta || distance < Math::Epsilon)
+            if (distance <= maxDelta || distance < Mathf::Epsilon)
                 return target;
             else
                 return current + direction / distance * maxDelta;
@@ -222,7 +223,7 @@ namespace ByteEngine::Math
         static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto) requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
-            if (dot < Math::Epsilon)
+            if (dot < Mathf::Epsilon)
                 return Zero();
 
             return projectOnto * (dot / projectOnto.LengthSquared());
@@ -240,13 +241,13 @@ namespace ByteEngine::Math
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Math::Epsilon) requires std::floating_point<T> { return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance); }
+        static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon) requires std::floating_point<T> { return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance); }
 
-        static constexpr Vector2T Min(Vector2T a, Vector2T b) { return Vector2T(Math::Min(a.x, b.x), Math::Min(a.y, b.y)); }
-        static constexpr Vector2T Min(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y)); }
+        static constexpr Vector2T Min(Vector2T a, Vector2T b) { return Vector2T(Mathf::Min(a.x, b.x), Mathf::Min(a.y, b.y)); }
+        static constexpr Vector2T Min(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Mathf::Min(a.x, b.x, c.x), Mathf::Min(a.y, b.y, c.y)); }
 
-        static constexpr Vector2T Max(Vector2T a, Vector2T b) { return Vector2T(Math::Max(a.x, b.x), Math::Max(a.y, b.y)); }
-        static constexpr Vector2T Max(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y)); }
+        static constexpr Vector2T Max(Vector2T a, Vector2T b) { return Vector2T(Mathf::Max(a.x, b.x), Mathf::Max(a.y, b.y)); }
+        static constexpr Vector2T Max(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Mathf::Max(a.x, b.x, c.x), Mathf::Max(a.y, b.y, c.y)); }
 
         static constexpr Vector2T Zero() { return Vector2T(0); }
         static constexpr Vector2T One() { return Vector2T(1); }

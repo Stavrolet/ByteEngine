@@ -1,6 +1,6 @@
 ﻿#include "ByteEngine/Math/Math.h"
 
-namespace ByteEngine::Math::Math
+namespace ByteEngine::Math::Mathf
 {
     double Sin(RadianD rad) { return std::sin(rad.value); }
     double Cos(RadianD rad) { return std::cos(rad.value); }

@@ -44,16 +44,16 @@ namespace ByteEngine::Math
             : x(x), y(y), z(z), w(w)
         { }
 
-        FloatT Length() const { return Math::Sqrt(LengthSquared()); }
+        FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
         void Normalize() requires std::floating_point<T>
         {
             FloatT length = LengthSquared();
 
-            if (length > Math::Epsilon)
+            if (length > Mathf::Epsilon)
             {
-                FloatT invLength = 1 / Math::Sqrt(length);
+                FloatT invLength = 1 / Mathf::Sqrt(length);
                 *this *= invLength;
             }
             else
@@ -71,7 +71,7 @@ namespace ByteEngine::Math
 
         bool IsNormalized() const requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Math::UnitSizeEpsilon));
+            return Mathf::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Mathf::UnitSizeEpsilon));
         }
 
         void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
@@ -79,10 +79,10 @@ namespace ByteEngine::Math
             FloatT currentLength = LengthSquared();
 
             if (currentLength > maxLength * maxLength)
-                *this *= maxLength / Math::Sqrt(currentLength);
+                *this *= maxLength / Mathf::Sqrt(currentLength);
         }
 
-        static FloatT Distcance(Vector4T a, Vector4T b) { return Math::Sqrt(DistcanceSquared(a, b)); }
+        static FloatT Distcance(Vector4T a, Vector4T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
 
         static Vector4T Direction(Vector4T from, Vector4T to)
@@ -104,7 +104,7 @@ namespace ByteEngine::Math
 
         static constexpr Vector4T LerpClamped(Vector4T from, Vector4T to, FloatT t) requires std::floating_point<T>
         {
-            return from + (to - from) * Math::Clamp(t);
+            return from + (to - from) * Mathf::Clamp(t);
         }
 
         static Vector4T MoveTowards(Vector4T current, Vector4T target, FloatT maxDelta) requires std::floating_point<T>
@@ -112,35 +112,35 @@ namespace ByteEngine::Math
             Vector4T direction = target - current;
             FloatT distance = direction.Length();
 
-            if (distance <= maxDelta || distance < Math::Epsilon)
+            if (distance <= maxDelta || distance < Mathf::Epsilon)
                 return target;
             else
                 return current + direction / distance * maxDelta;
         }
 
-        static bool IsEqualApproximetly(Vector4T a, Vector4T b, FloatT tolerance = Math::Epsilon) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector4T a, Vector4T b, FloatT tolerance = Mathf::Epsilon) requires std::floating_point<T>
         {
-            return Math::IsEqualApproximetly(a.x, b.x, tolerance) && Math::IsEqualApproximetly(a.y, b.y, tolerance) && Math::IsEqualApproximetly(a.z, b.z, tolerance) && Math::IsEqualApproximetly(a.w, b.w, tolerance);
+            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance) && Mathf::IsEqualApproximetly(a.w, b.w, tolerance);
         }
 
         static constexpr Vector4T Min(Vector4T a, Vector4T b)
         {
-            return Vector4T(Math::Min(a.x, b.x), Math::Min(a.y, b.y), Math::Min(a.z, b.z), Math::Min(a.w, b.w));
+            return Vector4T(Mathf::Min(a.x, b.x), Mathf::Min(a.y, b.y), Mathf::Min(a.z, b.z), Mathf::Min(a.w, b.w));
         }
 
         static constexpr Vector4T Min(Vector4T a, Vector4T b, Vector4T c)
         {
-            return Vector4T(Math::Min(a.x, b.x, c.x), Math::Min(a.y, b.y, c.y), Math::Min(a.z, b.z, c.z), Math::Min(a.w, b.w, c.w));
+            return Vector4T(Mathf::Min(a.x, b.x, c.x), Mathf::Min(a.y, b.y, c.y), Mathf::Min(a.z, b.z, c.z), Mathf::Min(a.w, b.w, c.w));
         }
 
         static constexpr Vector4T Max(Vector4T a, Vector4T b)
         {
-            return Vector4T(Math::Max(a.x, b.x), Math::Max(a.y, b.y), Math::Max(a.z, b.z), Math::Max(a.w, b.w));
+            return Vector4T(Mathf::Max(a.x, b.x), Mathf::Max(a.y, b.y), Mathf::Max(a.z, b.z), Mathf::Max(a.w, b.w));
         }
 
         static constexpr Vector4T Max(Vector4T a, Vector4T b, Vector4T c)
         {
-            return Vector4T(Math::Max(a.x, b.x, c.x), Math::Max(a.y, b.y, c.y), Math::Max(a.z, b.z, c.z), Math::Max(a.w, b.w, c.w));
+            return Vector4T(Mathf::Max(a.x, b.x, c.x), Mathf::Max(a.y, b.y, c.y), Mathf::Max(a.z, b.z, c.z), Mathf::Max(a.w, b.w, c.w));
         }
 
         static constexpr Vector4T Zero() { return Vector4T(0); }

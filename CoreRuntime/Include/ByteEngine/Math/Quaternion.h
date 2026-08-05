@@ -61,7 +61,7 @@ namespace ByteEngine::Math
 
         void Normalize();
         [[nodiscard]] Quaternion Normalized() const;
-        [[nodiscard]] bool IsNormalized() const { return Math::IsEqualApproximetly(LengthSquared(), 1.0f, Math::UnitSizeEpsilon); }
+        [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximetly(LengthSquared(), 1.0f, Mathf::UnitSizeEpsilon); }
 
         void Inverse()
         {
@@ -103,7 +103,7 @@ namespace ByteEngine::Math
         [[nodiscard]] static Quaternion Slerp(Quaternion from, Quaternion to, float t);
         [[nodiscard]] static Quaternion SlerpClamped(Quaternion from, Quaternion to, float t);
 
-        [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Math::Epsilon);
+        [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Mathf::Epsilon);
 
         [[nodiscard]] constexpr Quaternion operator+() const { return Quaternion(+x, +y, +z, +w); }
         [[nodiscard]] constexpr Quaternion operator-() const { return Quaternion(-x, -y, -z, -w); }
