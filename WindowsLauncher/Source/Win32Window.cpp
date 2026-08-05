@@ -2,7 +2,6 @@
 
 #include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Vector2.h"
-#include "ByteEngine/Utilities/BitFlagsHelper.h"
 #include "resources.h"
 
 #include <Windows.h>
@@ -258,7 +257,7 @@ namespace ByteEngine::WindowsLauncher
         {
             const RAWKEYBOARD& keyboard = raw->data.keyboard;
             uint16 scanCode = 0;
-            bool isKeyPressed = !BitFlags::HasOneFlag(keyboard.Flags, (uint16)RI_KEY_BREAK);
+            bool isKeyPressed = !(keyboard.Flags & RI_KEY_BREAK);
 
             if (keyboard.MakeCode == KEYBOARD_OVERRUN_MAKE_CODE)
                 return;
@@ -273,9 +272,9 @@ namespace ByteEngine::WindowsLauncher
             {
                 uint16 scanCode = MAKEWORD(
                     keyboard.MakeCode & 0x7f,
-                    (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E0)
-                         ? 0xe0
-                         : (BitFlags::HasOneFlag(keyboard.Flags, (USHORT)RI_KEY_E1) ? 0xe1 : 0x00))
+                    (keyboard.Flags & RI_KEY_E0)
+                        ? 0xe0
+                        : ((keyboard.Flags & RI_KEY_E1) ? 0xe1 : 0x00)
                 );
 
                 keyStateChanged.Invoke(static_cast<KeyCode>(scanCode), isKeyPressed);
@@ -293,10 +292,10 @@ namespace ByteEngine::WindowsLauncher
         {
             const RAWMOUSE& mouse = raw->data.mouse;
 
-            if (BitFlags::HasOneFlag(mouse.usFlags, (uint16)MOUSE_MOVE_RELATIVE))
+            if (mouse.usFlags & MOUSE_MOVE_RELATIVE)
                 accumulatedMouseDelta += Vector2I(mouse.lLastX, mouse.lLastY);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_WHEEL))
+            if (mouse.usButtonFlags & RI_MOUSE_WHEEL)
             {
                 float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
                 accumulatedVerticalWheelDelta += delta;
@@ -306,7 +305,7 @@ namespace ByteEngine::WindowsLauncher
                 else
                     keyStateChanged.Invoke(KeyCode::MouseWheelDown, true);
             }
-            else if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_HWHEEL))
+            else if (mouse.usButtonFlags & RI_MOUSE_HWHEEL)
             {
                 float delta = static_cast<int16>(mouse.usButtonData) / (float)WHEEL_DELTA;
                 accumulatedHorizontalWheelDelta += delta;
@@ -317,34 +316,34 @@ namespace ByteEngine::WindowsLauncher
                     keyStateChanged.Invoke(KeyCode::MouseWheelLeft, true);
             }
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_DOWN))
+            if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN)
                 keyStateChanged.Invoke(KeyCode::MouseLeft, true);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_LEFT_BUTTON_UP))
+            if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP)
                 keyStateChanged.Invoke(KeyCode::MouseLeft, false);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_DOWN))
+            if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN)
                 keyStateChanged.Invoke(KeyCode::MouseRight, true);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_RIGHT_BUTTON_UP))
+            if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP)
                 keyStateChanged.Invoke(KeyCode::MouseRight, false);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_DOWN))
+            if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
                 keyStateChanged.Invoke(KeyCode::MouseMiddle, true);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_MIDDLE_BUTTON_UP))
+            if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP)
                 keyStateChanged.Invoke(KeyCode::MouseMiddle, false);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_DOWN))
+            if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN)
                 keyStateChanged.Invoke(KeyCode::MouseExtended1, true);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_4_UP))
+            if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_UP)
                 keyStateChanged.Invoke(KeyCode::MouseExtended1, false);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_DOWN))
+            if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN)
                 keyStateChanged.Invoke(KeyCode::MouseExtended2, true);
 
-            if (BitFlags::HasOneFlag(mouse.usButtonFlags, (uint16)RI_MOUSE_BUTTON_5_UP))
+            if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_UP)
                 keyStateChanged.Invoke(KeyCode::MouseExtended2, false);
         }
     }
@@ -359,8 +358,8 @@ namespace ByteEngine::WindowsLauncher
             {
                 DWORD style = static_cast<DWORD>(GetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE));
 
-                BitFlags::ClearFlags(style, WS_POPUP | WS_VISIBLE);
-                BitFlags::SetFlags(style, WS_OVERLAPPEDWINDOW);
+                style &= ~(WS_POPUP | WS_VISIBLE);
+                style |= WS_OVERLAPPEDWINDOW;
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {
@@ -405,8 +404,8 @@ namespace ByteEngine::WindowsLauncher
 
                 DWORD style = static_cast<DWORD>(GetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE));
 
-                BitFlags::ClearFlags(style, WS_OVERLAPPEDWINDOW);
-                BitFlags::SetFlags(style, WS_POPUP);
+                style &= ~(WS_OVERLAPPEDWINDOW);
+                style |= WS_POPUP;
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {

@@ -24,7 +24,6 @@ add_library(CoreRuntime STATIC
 	"Include/ByteEngine/Math/Vector2.h"
 	"Include/ByteEngine/Math/Vector3.h"
 	"Include/ByteEngine/Math/Vector4.h"
-	"Include/ByteEngine/Utilities/BitFlagsHelper.h"
 	"Include/ByteEngine/Utilities/EnumFlagsOperators.h"
 	"Include/ByteEngine/WinApiExcludingDefs/LeanAndMean.h"
 	"Include/ByteEngine/WinApiExcludingDefs/NoAll.h"

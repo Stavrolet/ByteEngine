@@ -3,7 +3,6 @@
 #include "ByteEngine/Core/Base/Application.h"
 #include "ByteEngine/Core/Base/MainWindow.h"
 #include "ByteEngine/Core/Input/Input.h"
-#include "ByteEngine/Utilities/BitFlagsHelper.h"
 #include "ByteEngine/Debug.h"
 #include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
 
