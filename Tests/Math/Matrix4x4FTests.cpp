@@ -639,7 +639,7 @@ TEST(Matrix4x4FMultiplyTest, MultiplyVectorIgnoresTranslation)
 TEST(Matrix4x4FMultiplyTest, MultiplyVectorAppliesRotation)
 {
     // 90° around Z: (1,0,0) → (0,1,0) (right-hand convention)
-    Quaternion q = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.f), Vector3F::Forward());
+    Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.f), Vector3F::Forward());
     Matrix4x4F m = Matrix4x4F::CreateRotation(q);
     Vector3F v = m.MultiplyVector(Vector3F(1.f, 0.f, 0.f));
     // Length is preserved
@@ -705,7 +705,7 @@ TEST(Matrix4x4FFactoryTest, CreateRotationIdentityQuaternionGivesIdentityMatrix)
 
 TEST(Matrix4x4FFactoryTest, CreateRotation180DegAroundXFlipsYZ)
 {
-    Quaternion q = Quaternion::FromAngleAxis(RadianF(Math::PI), Vector3F::Right());
+    Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI), Vector3F::Right());
     Matrix4x4F m = Matrix4x4F::CreateRotation(q);
     Vector3F v = m.MultiplyVector(Vector3F(0.f, 1.f, 0.f));
     EXPECT_NEAR(v.x, 0.f, kEps);
@@ -746,7 +746,7 @@ TEST(Matrix4x4FFactoryTest, CreateTRSIdentityEqualsIdentity)
 TEST(Matrix4x4FProjectionTest, PerspectiveDiagonalElementsAreFiniteAndPositive)
 {
     Matrix4x4F m = Matrix4x4F::CreatePerspectiveProjection(
-        Math::PI / 2.f, 16.f / 9.f, 0.1f, 1000.f
+        Mathf::PI / 2.f, 16.f / 9.f, 0.1f, 1000.f
     );
     EXPECT_TRUE(std::isfinite(m.m00)); EXPECT_GT(m.m00, 0.f);
     EXPECT_TRUE(std::isfinite(m.m11)); EXPECT_GT(m.m11, 0.f);
@@ -756,8 +756,8 @@ TEST(Matrix4x4FProjectionTest, PerspectiveDiagonalElementsAreFiniteAndPositive)
 
 TEST(Matrix4x4FProjectionTest, PerspectiveNarrowFovHasLargerM11)
 {
-    Matrix4x4F wide = Matrix4x4F::CreatePerspectiveProjection(Math::PI / 2.f, 1.f, 0.1f, 100.f);
-    Matrix4x4F narrow = Matrix4x4F::CreatePerspectiveProjection(Math::PI / 4.f, 1.f, 0.1f, 100.f);
+    Matrix4x4F wide = Matrix4x4F::CreatePerspectiveProjection(Mathf::PI / 2.f, 1.f, 0.1f, 100.f);
+    Matrix4x4F narrow = Matrix4x4F::CreatePerspectiveProjection(Mathf::PI / 4.f, 1.f, 0.1f, 100.f);
     EXPECT_GT(narrow.m11, wide.m11);
 }
 

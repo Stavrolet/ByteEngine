@@ -56,12 +56,12 @@ TYPED_TEST(Vector2tFloatTypesTest, Rotation)
     using RadianT = RadianT<typename Vec2::FloatT>;
 
     Vec2 v(1.0, 0.0);
-    v.RotateBy(RadianT(Math::PI_D / 2.0));
+    v.RotateBy(RadianT(Mathf::PI_D / 2.0));
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 1.0, 1e-5);
 
     Vec2 v2(1.0, 0.0);
-    Vec2 rotated = v2.RotatedBy(static_cast<RadianT>(Math::PI / 2.0));
+    Vec2 rotated = v2.RotatedBy(static_cast<RadianT>(Mathf::PI / 2.0));
     EXPECT_NEAR(rotated.x, 0.0, 1e-5);
     EXPECT_NEAR(rotated.y, 1.0, 1e-5);
 }
@@ -72,8 +72,8 @@ TYPED_TEST(Vector2tFloatTypesTest, AngleMethods)
     Vec2 a(1.0, 0.0);
     Vec2 b(0.0, 1.0);
 
-    EXPECT_NEAR(Vec2::AngleBetween(a, b).value, Math::PI / 2.0f, 1e-4);
-    EXPECT_NEAR(Vec2::UnsigedAngleBetween(a, b).value, Math::PI / 2.0f, 1e-4);
+    EXPECT_NEAR(Vec2::AngleBetween(a, b).value, Mathf::PI / 2.0f, 1e-4);
+    EXPECT_NEAR(Vec2::UnsigedAngleBetween(a, b).value, Mathf::PI / 2.0f, 1e-4);
 }
 
 TYPED_TEST(Vector2tTest, AlgebraMethods)
@@ -263,11 +263,11 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, VectorNormalization)
     zero.Normalize();
     EXPECT_TRUE(zero.x == 0 && zero.y == 0);
 
-    Vec2 inf(Math::Infinity, Math::Infinity);
+    Vec2 inf(Mathf::Infinity, Mathf::Infinity);
     inf.Normalize();
     EXPECT_TRUE(std::isnan(inf.x) && std::isnan(inf.y));
 
-    inf = Vec2(Math::Infinity, 1213);
+    inf = Vec2(Mathf::Infinity, 1213);
     inf.Normalize();
     EXPECT_TRUE(std::isnan(inf.x) && inf.y == 0);
 
@@ -369,9 +369,9 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, RotateByPrecision)
     EXPECT_NEAR(rot.y, 0.0, 1e-8);
 
     if constexpr (std::is_same_v<decltype(v.x), float>)
-        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0f * (2 * Math::PI)));
+        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0f * (2 * Mathf::PI)));
     else if constexpr (std::is_same_v<decltype(v.x), double>)
-        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0 * (2 * Math::PI_D)));
+        rot = v.RotatedBy(RadianT<typename Vec2::FloatT>(10000.0 * (2 * Mathf::PI_D)));
     
     EXPECT_NEAR(rot.x, 1.0, 1.3e-2);
     EXPECT_NEAR(rot.y, 0.0, 1.3e-2);

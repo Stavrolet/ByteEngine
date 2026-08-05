@@ -59,7 +59,7 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 
-    v.RotateBy(RadianT(Math::PI_D / 2.0f), axis);
+    v.RotateBy(RadianT(Mathf::PI_D / 2.0f), axis);
 
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);
@@ -97,8 +97,8 @@ TYPED_TEST(Vector3tFloatTypesTest, AngleMethods)
     Vec3 b(0.0, 1.0, 0.0);
     Vec3 axis(0.0, 0.0, 1.0);
 
-    EXPECT_NEAR(Vec3::AngleBetween(a, b, axis).value, Math::PI / 2.0f, 1e-4);
-    EXPECT_NEAR(Vec3::UnsigedAngleBetween(a, b).value, Math::PI / 2.0f, 1e-4);
+    EXPECT_NEAR(Vec3::AngleBetween(a, b, axis).value, Mathf::PI / 2.0f, 1e-4);
+    EXPECT_NEAR(Vec3::UnsigedAngleBetween(a, b).value, Mathf::PI / 2.0f, 1e-4);
 }
 
 TYPED_TEST(Vector3tTest, AlgebraMethods)
@@ -274,11 +274,11 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
     zero.Normalize();
     EXPECT_TRUE(zero.x == 0 && zero.y == 0 && zero.z == 0);
 
-    Vec3 inf(Math::Infinity, Math::Infinity, Math::Infinity);
+    Vec3 inf(Mathf::Infinity, Mathf::Infinity, Mathf::Infinity);
     inf.Normalize();
     EXPECT_TRUE(std::isnan(inf.x) && std::isnan(inf.y) && std::isnan(inf.z));
 
-    Vec3 mixed(Math::Infinity, 1213, 0);
+    Vec3 mixed(Mathf::Infinity, 1213, 0);
     mixed.Normalize();
     EXPECT_TRUE(std::isnan(mixed.x) && mixed.y == 0 && mixed.z == 0);
 
@@ -294,7 +294,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 zeroAxis(0.0, 0.0, 0.0);
 
-    v.RotateBy(RadianT(Math::PI_D / 2.0f), zeroAxis);
+    v.RotateBy(RadianT(Mathf::PI_D / 2.0f), zeroAxis);
 
     EXPECT_NEAR(v.x, 1.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);
@@ -308,7 +308,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 
-    Vec3 rotated1 = v.RotatedBy(RadianT(Math::PI_D * 2.0f * 10000), axis);
+    Vec3 rotated1 = v.RotatedBy(RadianT(Mathf::PI_D * 2.0f * 10000), axis);
 
     EXPECT_NEAR(rotated1.x, 1.0f, 1.4e-2f);
     EXPECT_NEAR(rotated1.y, 0.0f, 1.4e-2f);
@@ -367,7 +367,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, AngleBetweenZeroVectors)
     EXPECT_EQ(angle.value, 0);
 
     angle = Vec3::AngleBetween(axis, normal, zero);
-    EXPECT_NEAR(angle.value, Math::PI / 2, 1e-4f);
+    EXPECT_NEAR(angle.value, Mathf::PI / 2, 1e-4f);
 }
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)

@@ -155,11 +155,11 @@ TYPED_TEST(Vector4tFloatTypesRobustnessTest, NormalizationRobustness)
     zero.Normalize();
     EXPECT_TRUE(zero.x == 0 && zero.y == 0 && zero.z == 0 && zero.w == 0);
 
-    Vec4 inf(Math::Infinity);
+    Vec4 inf(Mathf::Infinity);
     inf.Normalize();
     EXPECT_TRUE(std::isnan(inf.x) && std::isnan(inf.y) && std::isnan(inf.z));
 
-    Vec4 mixed(Math::Infinity, 1213, 0, 1);
+    Vec4 mixed(Mathf::Infinity, 1213, 0, 1);
     mixed.Normalize();
     EXPECT_TRUE(std::isnan(mixed.x) && mixed.y == 0 && mixed.z == 0);
 

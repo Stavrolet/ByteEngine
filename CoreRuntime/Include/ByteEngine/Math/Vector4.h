@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "ByteEngine/Math/Math.h"
+#include "ByteEngine/Primitives.h"
 
 namespace ByteEngine::Math
 {

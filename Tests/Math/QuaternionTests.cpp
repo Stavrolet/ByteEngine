@@ -165,7 +165,7 @@ TEST_F(QuaternionTest, FromAngleAxisDegree)
 
 TEST_F(QuaternionTest, GetAxis)
 {
-    Quaternion q = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Vector3 axis = q.GetAxis();
     EXPECT_NEAR(axis.x, 0.0f, EPSILON);
     EXPECT_NEAR(std::abs(axis.y), 1.0f, EPSILON);
@@ -174,9 +174,9 @@ TEST_F(QuaternionTest, GetAxis)
 
 TEST_F(QuaternionTest, GetAngle)
 {
-    Quaternion q = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     RadianF angle = q.GetAngle();
-    EXPECT_NEAR(angle.value, Math::PI / 2.0f, EPSILON);
+    EXPECT_NEAR(angle.value, Mathf::PI / 2.0f, EPSILON);
 }
 
 TEST_F(QuaternionTest, Dot)
@@ -346,7 +346,7 @@ TEST_F(QuaternionTest, CastToVector2)
 TEST_F(QuaternionTest, SlerpAtZero)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion result = Quaternion::Slerp(q1, q2, 0.0f);
     EXPECT_NEAR(result.x, q1.x, EPSILON);
     EXPECT_NEAR(result.y, q1.y, EPSILON);
@@ -357,7 +357,7 @@ TEST_F(QuaternionTest, SlerpAtZero)
 TEST_F(QuaternionTest, SlerpAtOne)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion result = Quaternion::Slerp(q1, q2, 1.0f);
     EXPECT_NEAR(result.x, q2.x, EPSILON);
     EXPECT_NEAR(result.y, q2.y, EPSILON);
@@ -368,7 +368,7 @@ TEST_F(QuaternionTest, SlerpAtOne)
 TEST_F(QuaternionTest, SlerpClampedAtZero)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion result = Quaternion::SlerpClamped(q1, q2, 0.0f);
     EXPECT_NEAR(result.x, q1.x, EPSILON);
     EXPECT_NEAR(result.y, q1.y, EPSILON);
@@ -379,7 +379,7 @@ TEST_F(QuaternionTest, SlerpClampedAtZero)
 TEST_F(QuaternionTest, SlerpClampedAtOne)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion result = Quaternion::SlerpClamped(q1, q2, 1.0f);
     EXPECT_NEAR(result.x, q2.x, EPSILON);
     EXPECT_NEAR(result.y, q2.y, EPSILON);
@@ -390,7 +390,7 @@ TEST_F(QuaternionTest, SlerpClampedAtOne)
 TEST_F(QuaternionTest, SlerpClampedClamps)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));
-    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Math::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
+    Quaternion q2 = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.0f), Vector3(0.0f, 1.0f, 0.0f));
     Quaternion result = Quaternion::SlerpClamped(q1, q2, 1.5f);
     EXPECT_NEAR(result.x, q2.x, EPSILON);
     EXPECT_NEAR(result.y, q2.y, EPSILON);

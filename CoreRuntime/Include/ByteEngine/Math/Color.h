@@ -49,57 +49,57 @@ namespace ByteEngine::Math
 
         constexpr void ToLinear()
         {
-            r = Math::GammaToLinearSpace(r);
-            g = Math::GammaToLinearSpace(g);
-            b = Math::GammaToLinearSpace(b);
+            r = Mathf::GammaToLinearSpace(r);
+            g = Mathf::GammaToLinearSpace(g);
+            b = Mathf::GammaToLinearSpace(b);
         }
 
         [[nodiscard]] constexpr ColorT AsLinear() const
         {
             return ColorT {
-                Math::GammaToLinearSpace(r),
-                Math::GammaToLinearSpace(g),
-                Math::GammaToLinearSpace(b),
+                Mathf::GammaToLinearSpace(r),
+                Mathf::GammaToLinearSpace(g),
+                Mathf::GammaToLinearSpace(b),
                 a
             };
         }
 
         constexpr void ToGamma()
         {
-            r = Math::LinearToGammaSpace(r);
-            g = Math::LinearToGammaSpace(g);
-            b = Math::LinearToGammaSpace(b);
+            r = Mathf::LinearToGammaSpace(r);
+            g = Mathf::LinearToGammaSpace(g);
+            b = Mathf::LinearToGammaSpace(b);
         }
 
         [[nodiscard]] constexpr ColorT AsGamma() const
         {
             return ColorT {
-                Math::LinearToGammaSpace(r),
-                Math::LinearToGammaSpace(g),
-                Math::LinearToGammaSpace(b),
+                Mathf::LinearToGammaSpace(r),
+                Mathf::LinearToGammaSpace(g),
+                Mathf::LinearToGammaSpace(b),
                 a
             };
         }
 
         constexpr void Clamp(T min = 0, T max = 1)
         {
-            r = Math::Clamp(r, min, max);
-            g = Math::Clamp(g, min, max);
-            b = Math::Clamp(b, min, max);
-            a = Math::Clamp(a, min, max);
+            r = Mathf::Clamp(r, min, max);
+            g = Mathf::Clamp(g, min, max);
+            b = Mathf::Clamp(b, min, max);
+            a = Mathf::Clamp(a, min, max);
         }
 
         [[nodiscard]] constexpr ColorT Clamped(T min = 0, T max = 1) const
         {
             return ColorT {
-                Math::Clamp(r, min, max),
-                Math::Clamp(g, min, max),
-                Math::Clamp(b, min, max),
-                Math::Clamp(a, min, max)
+                Mathf::Clamp(r, min, max),
+                Mathf::Clamp(g, min, max),
+                Mathf::Clamp(b, min, max),
+                Mathf::Clamp(a, min, max)
             };
         }
 
-        [[nodiscard]] constexpr T MaxColorComponent() const { return Math::Max(r, g, b); }
+        [[nodiscard]] constexpr T MaxColorComponent() const { return Mathf::Max(r, g, b); }
 
         [[nodiscard]] std::optional<std::string> ToString() const
         {
@@ -110,10 +110,10 @@ namespace ByteEngine::Math
         {
             if (format[0] == 'H')
             {
-                uint8 r8 = static_cast<uint8>(Math::Round(Math::Clamp(r * 255, 0, 255)));
-                uint8 g8 = static_cast<uint8>(Math::Round(Math::Clamp(g * 255, 0, 255)));
-                uint8 b8 = static_cast<uint8>(Math::Round(Math::Clamp(b * 255, 0, 255)));
-                uint8 a8 = static_cast<uint8>(Math::Round(Math::Clamp(a * 255, 0, 255)));
+                uint8 r8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(r * 255, 0, 255)));
+                uint8 g8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(g * 255, 0, 255)));
+                uint8 b8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(b * 255, 0, 255)));
+                uint8 a8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(a * 255, 0, 255)));
 
                 if (format.size() > 1 && format[1] == 'A')
                     return std::format("#{0:02X}{1:02X}{2:02X}{3:02X}", r8, g8, b8, a8);
@@ -168,9 +168,9 @@ namespace ByteEngine::Math
             }
             else
             {
-                h = Math::IsEqualApproximetly(h, T(360)) ? 0 : h / T(60);
+                h = Mathf::IsEqualApproximetly(h, T(360)) ? 0 : h / T(60);
 
-                int32 i = static_cast<int32>(Math::Floor(h));
+                int32 i = static_cast<int32>(Mathf::Floor(h));
 
                 T f = h - i;
                 T p = v * (T(1) - s);
@@ -203,13 +203,13 @@ namespace ByteEngine::Math
 
         static void RgbToHsv(ColorT color, T& h, T& s, T& v)
         {
-            T max = Math::Max(color.r, color.g, color.b);
-            T min = Math::Min(color.r, color.g, color.b);
+            T max = Mathf::Max(color.r, color.g, color.b);
+            T min = Mathf::Min(color.r, color.g, color.b);
 
             v = max;
             T delta = max - min;
 
-            if (delta < Math::Epsilon)
+            if (delta < Mathf::Epsilon)
             {
                 h = T(0);
                 s = T(0);
@@ -288,21 +288,21 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static ColorT LerpClamped(ColorT from, ColorT to, T t)
         {
-            return from + (to - from) * Math::Clamp(t);
+            return from + (to - from) * Mathf::Clamp(t);
         }
 
-        [[nodiscard]] static constexpr bool IsEqualApproximetly(ColorT a, ColorT b, T tolerance = Math::Epsilon)
+        [[nodiscard]] static constexpr bool IsEqualApproximetly(ColorT a, ColorT b, T tolerance = Mathf::Epsilon)
         {
-            return Math::IsEqualApproximetly(a.r, b.r, tolerance) && Math::IsEqualApproximetly(a.g, b.g, tolerance) && Math::IsEqualApproximetly(a.b, b.b, tolerance) && Math::IsEqualApproximetly(a.a, b.a, tolerance);
+            return Mathf::IsEqualApproximetly(a.r, b.r, tolerance) && Mathf::IsEqualApproximetly(a.g, b.g, tolerance) && Mathf::IsEqualApproximetly(a.b, b.b, tolerance) && Mathf::IsEqualApproximetly(a.a, b.a, tolerance);
         }
 
         [[nodiscard]] static constexpr ColorT Min(ColorT a, ColorT b)
         {
             return ColorT {
-                Math::Min(a.r, b.r),
-                Math::Min(a.g, b.g),
-                Math::Min(a.b, b.b),
-                Math::Min(a.a, b.a)
+                Mathf::Min(a.r, b.r),
+                Mathf::Min(a.g, b.g),
+                Mathf::Min(a.b, b.b),
+                Mathf::Min(a.a, b.a)
             };
         }
 
@@ -314,10 +314,10 @@ namespace ByteEngine::Math
         [[nodiscard]] static constexpr ColorT Max(ColorT a, ColorT b)
         {
             return ColorT {
-                Math::Max(a.r, b.r),
-                Math::Max(a.g, b.g),
-                Math::Max(a.b, b.b),
-                Math::Max(a.a, b.a)
+                Mathf::Max(a.r, b.r),
+                Mathf::Max(a.g, b.g),
+                Mathf::Max(a.b, b.b),
+                Mathf::Max(a.a, b.a)
             };
         }
 

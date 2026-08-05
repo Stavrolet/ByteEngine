@@ -42,7 +42,7 @@ TEST(RotationConstructionTest, DegreeConstructor)
 TEST(RotationConstructionTest, RadianConstructorConvertsCorrectly)
 {
     // PI/2 rad == 90 degrees
-    Rotation r(RadianF(Math::PI / 2.f), RadianF(Math::PI), RadianF(0.f));
+    Rotation r(RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI), RadianF(0.f));
     EXPECT_NEAR(r.pitch.value, 90.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 180.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 0.0f, kLooseEps);
@@ -59,7 +59,7 @@ TEST(RotationConstructionTest, DegreeArrayConstructor)
 
 TEST(RotationConstructionTest, RadianArrayConstructor)
 {
-    RadianF arr[3] = { RadianF(0.f), RadianF(Math::PI / 2.f), RadianF(Math::PI) };
+    RadianF arr[3] = { RadianF(0.f), RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI) };
     Rotation r(arr);
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 90.0f, kLooseEps);
@@ -77,7 +77,7 @@ TEST(RotationConstructionTest, EulerDegConstructor)
 
 TEST(RotationConstructionTest, EulerRadConstructor)
 {
-    EulerRad euler { RadianF(0.f), RadianF(Math::PI / 2.f), RadianF(Math::PI) };
+    EulerRad euler { RadianF(0.f), RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI) };
     Rotation r(euler);
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 90.0f, kLooseEps);
@@ -396,8 +396,8 @@ TEST(RotationConversionTest, ToEulerRad)
     Rotation r(0.0_df, 90.0_df, 180.0_df);
     EulerRad euler = r.ToEulerRad();
     EXPECT_NEAR(euler.pitch.value, 0.0f, kLooseEps);
-    EXPECT_NEAR(euler.yaw.value, Math::PI / 2.f, kLooseEps);
-    EXPECT_NEAR(euler.roll.value, Math::PI, kLooseEps);
+    EXPECT_NEAR(euler.yaw.value, Mathf::PI / 2.f, kLooseEps);
+    EXPECT_NEAR(euler.roll.value, Mathf::PI, kLooseEps);
 }
 
 // ─────────────────────────────────────────────
