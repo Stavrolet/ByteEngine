@@ -5,13 +5,13 @@
 
 namespace ByteEngine::Math
 {
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector2T;
 
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector4T;
 
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector3T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
@@ -35,18 +35,23 @@ namespace ByteEngine::Math
             T data[3];
         };
 
-        explicit constexpr Vector3T(T xyz = 0)
-            : x(xyz), y(xyz), z(xyz)
+        constexpr Vector3T() :
+            x(0), y(0), z(0)
         { }
 
-        constexpr Vector3T(T x, T y, T z)
-            : x(x), y(y), z(z)
+        explicit constexpr Vector3T(T xyz) :
+            x(xyz), y(xyz), z(xyz)
+        { }
+
+        constexpr Vector3T(T x, T y, T z) :
+            x(x), y(y), z(z)
         { }
 
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z; }
 
-        void Normalize() requires std::floating_point<T>
+        void Normalize()
+            requires std::floating_point<T>
         {
             FloatT length = LengthSquared();
 
@@ -61,19 +66,22 @@ namespace ByteEngine::Math
             }
         }
 
-        Vector3T Normalized() const requires std::floating_point<T>
+        Vector3T Normalized() const
+            requires std::floating_point<T>
         {
             Vector3T copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        bool IsNormalized() const requires std::floating_point<T>
+        bool IsNormalized() const
+            requires std::floating_point<T>
         {
             return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
         }
 
-        void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
+        void LimitLength(FloatT maxLength = 1)
+            requires std::floating_point<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -81,7 +89,8 @@ namespace ByteEngine::Math
                 *this *= maxLength / Mathf::Sqrt(currentLength);
         }
 
-        void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) requires std::floating_point<T>
+        void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
+            requires std::floating_point<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
@@ -103,7 +112,8 @@ namespace ByteEngine::Math
             *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
         }
 
-        Vector3T RotatedBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) const requires std::floating_point<T>
+        Vector3T RotatedBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) const
+            requires std::floating_point<T>
         {
             Vector3T copy = *this;
             copy.RotateBy(angle, rotationAxis);
@@ -112,7 +122,8 @@ namespace ByteEngine::Math
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
-        static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis) requires std::floating_point<T>
+        static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis)
+            requires std::floating_point<T>
         {
             assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
@@ -124,7 +135,8 @@ namespace ByteEngine::Math
 
         // UnsigedAngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::angle_to
-        static RadianT<FloatT> UnsigedAngleBetween(Vector3T from, Vector3T to) requires std::floating_point<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector3T from, Vector3T to)
+            requires std::floating_point<T>
         {
             return Mathf::Atan2(Cross(from, to).Length(), Dot(from, to));
         }
@@ -142,7 +154,8 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr Vector3T Cross(Vector3T a, Vector3T b) requires std::floating_point<T>
+        static constexpr Vector3T Cross(Vector3T a, Vector3T b)
+            requires std::floating_point<T>
         {
             return Vector3T(
                 a.y * b.z - a.z * b.y,
@@ -151,24 +164,28 @@ namespace ByteEngine::Math
             );
         }
 
-        static constexpr FloatT Dot(Vector3T a, Vector3T b) requires std::floating_point<T>
+        static constexpr FloatT Dot(Vector3T a, Vector3T b)
+            requires std::floating_point<T>
         {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t)
+            requires std::floating_point<T>
         {
             return from + (to - from) * t;
         }
 
-        static constexpr Vector3T LerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector3T LerpClamped(Vector3T from, Vector3T to, FloatT t)
+            requires std::floating_point<T>
         {
             return from + (to - from) * Mathf::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::slerp
-        static Vector3T Slerp(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        static Vector3T Slerp(Vector3T from, Vector3T to, FloatT t)
+            requires std::floating_point<T>
         {
             FloatT startLengthSq = from.LengthSquared();
             FloatT endLengthSq = to.LengthSquared();
@@ -189,14 +206,16 @@ namespace ByteEngine::Math
             return axis.RotatedBy(angle * t) * (resultLength / startLength);
         }
 
-        static Vector3T SlerpClamped(Vector3T from, Vector3T to, FloatT t) requires std::floating_point<T>
+        static Vector3T SlerpClamped(Vector3T from, Vector3T to, FloatT t)
+            requires std::floating_point<T>
         {
             return Slerp(from, to, Mathf::Clamp(t));
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::move_toward
-        static Vector3T MoveTowards(Vector3T current, Vector3T target, FloatT maxDelta) requires std::floating_point<T>
+        static Vector3T MoveTowards(Vector3T current, Vector3T target, FloatT maxDelta)
+            requires std::floating_point<T>
         {
             Vector3T direction = target - current;
             FloatT distance = direction.Length();
@@ -207,7 +226,8 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto) requires std::floating_point<T>
+        static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto)
+            requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
 
@@ -217,18 +237,21 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static constexpr Vector3T ProjectNormalized(Vector3T vec, Vector3T projectOnto) requires std::floating_point<T>
+        static constexpr Vector3T ProjectNormalized(Vector3T vec, Vector3T projectOnto)
+            requires std::floating_point<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static constexpr Vector3T Reflect(Vector3T vec, Vector3T normal) requires std::floating_point<T>
+        static constexpr Vector3T Reflect(Vector3T vec, Vector3T normal)
+            requires std::floating_point<T>
         {
             return vec - 2 * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon) requires std::floating_point<T>
+        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon)
+            requires std::floating_point<T>
         {
             return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance);
         }
@@ -356,20 +379,23 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector3T<U>() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
+        operator Vector3T<U>() const
+        {
+            return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z));
+        }
 
         operator Vector2T<T>() const;
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
         operator Vector2T<U>() const;
 
         operator Vector4T<T>() const;
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
         operator Vector4T<U>() const;
     };
 
@@ -377,4 +403,4 @@ namespace ByteEngine::Math
     using Vector3D = Vector3T<double>;
     using Vector3I = Vector3T<int32>;
     using Vector3 = Vector3F;
-}
+} // namespace ByteEngine::Math

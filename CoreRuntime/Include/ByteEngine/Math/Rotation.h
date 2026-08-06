@@ -19,36 +19,36 @@ namespace ByteEngine::Math
             DegreeF data[3];
         };
 
-        constexpr Rotation()
-            : pitch(0), yaw(0), roll(0)
+        constexpr Rotation() :
+            pitch(0), yaw(0), roll(0)
         { }
 
-        constexpr Rotation(DegreeF pitch, DegreeF yaw, DegreeF roll)
-            : pitch(pitch), yaw(yaw), roll(roll)
+        constexpr Rotation(DegreeF pitch, DegreeF yaw, DegreeF roll) :
+            pitch(pitch), yaw(yaw), roll(roll)
         { }
 
-        constexpr Rotation(RadianF pitch, RadianF yaw, RadianF roll)
-            : pitch(pitch.ToDegree()), yaw(yaw.ToDegree()), roll(roll.ToDegree())
+        constexpr Rotation(RadianF pitch, RadianF yaw, RadianF roll) :
+            pitch(pitch.ToDegree()), yaw(yaw.ToDegree()), roll(roll.ToDegree())
         { }
 
-        explicit constexpr Rotation(const DegreeF arr[3])
-            : pitch(arr[0]), yaw(arr[1]), roll(arr[2])
+        explicit constexpr Rotation(const DegreeF arr[3]) :
+            pitch(arr[0]), yaw(arr[1]), roll(arr[2])
         { }
 
-        explicit constexpr Rotation(const RadianF arr[3])
-            : pitch(arr[0].ToDegree()), yaw(arr[1].ToDegree()), roll(arr[2].ToDegree())
+        explicit constexpr Rotation(const RadianF arr[3]) :
+            pitch(arr[0].ToDegree()), yaw(arr[1].ToDegree()), roll(arr[2].ToDegree())
         { }
 
-        explicit constexpr Rotation(const EulerDeg& euler)
-            : pitch(euler.pitch), yaw(euler.yaw), roll(euler.roll)
+        explicit constexpr Rotation(const EulerDeg& euler) :
+            pitch(euler.pitch), yaw(euler.yaw), roll(euler.roll)
         { }
 
-        explicit constexpr Rotation(const EulerRad& euler)
-            : pitch(euler.pitch.ToDegree()), yaw(euler.yaw.ToDegree()), roll(euler.roll.ToDegree())
+        explicit constexpr Rotation(const EulerRad& euler) :
+            pitch(euler.pitch.ToDegree()), yaw(euler.yaw.ToDegree()), roll(euler.roll.ToDegree())
         { }
 
-        explicit constexpr Rotation(const Quaternion& q)
-            : Rotation(q.GetEulerInDegrees())
+        explicit constexpr Rotation(const Quaternion& q) :
+            Rotation(q.GetEulerInDegrees())
         { }
 
         void Normalize();
@@ -136,4 +136,4 @@ namespace ByteEngine::Math
             return data[index];
         }
     };
-}
+} // namespace ByteEngine::Math

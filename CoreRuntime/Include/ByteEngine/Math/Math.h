@@ -28,11 +28,13 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct RadianT
     {
-        T value;
+        T value = 0;
 
-        explicit constexpr RadianT(T value = 0) : value(value)
-        {
-        }
+        constexpr RadianT() = default;
+
+        explicit constexpr RadianT(T value) :
+            value(value)
+        { }
 
         constexpr DegreeT<T> ToDegree() const;
 
@@ -118,11 +120,13 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct DegreeT
     {
-        T value;
+        T value = 0;
 
-        explicit constexpr DegreeT(T value = 0) : value(value)
-        {
-        }
+        constexpr DegreeT() = default;
+
+        explicit constexpr DegreeT(T value) :
+            value(value)
+        { }
 
         constexpr RadianT<T> ToRadian() const;
 
@@ -235,18 +239,22 @@ namespace ByteEngine::Math::Mathf
         concept AnyFloating = (std::floating_point<Args> || ...);
     }
 
+    // NOLINTBEGIN
     constexpr float Infinity = std::numeric_limits<float>::infinity();
     constexpr double InfinityD = std::numeric_limits<double>::infinity();
     constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
     constexpr double NegativeInfinityD = -std::numeric_limits<double>::infinity();
+    // NOLINTEND
 
     constexpr float PI = 3.141592654f;
     constexpr double PI_D = 3.141592653589793;
 
     constexpr float Epsilon = 1e-5f;
     constexpr double EpsilonD = 1e-8f;
+    // NOLINTBEGIN
     constexpr RadianF AngleEpsilon = RadianF(1e-4f);
     constexpr float UnitSizeEpsilon = 1e-4f;
+    // NOLINTEND
 
     // Sin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarSin

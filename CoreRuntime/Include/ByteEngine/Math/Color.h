@@ -1,17 +1,17 @@
 ﻿#pragma once
 
+#include "ByteEngine/Math/Math.h"
+#include "ByteEngine/Math/Vector4.h"
+
 #include <charconv>
 #include <concepts>
 #include <format>
 #include <optional>
 #include <string>
 
-#include "ByteEngine/Math/Math.h"
-#include "ByteEngine/Math/Vector4.h"
-
 namespace ByteEngine::Math
 {
-    template<std::floating_point T>
+    template <std::floating_point T>
     struct ColorT
     {
         union
@@ -27,24 +27,28 @@ namespace ByteEngine::Math
             T data[4];
         };
 
-        explicit constexpr ColorT(T rgb, T a = 1)
-            : r(rgb), g(rgb), b(rgb), a(a)
+        constexpr ColorT() :
+            r(0), g(0), b(0), a(1)
         { }
 
-        constexpr ColorT(T r, T g, T b, T a = 1)
-            : r(r), g(g), b(b), a(a)
+        explicit constexpr ColorT(T rgb, T a = 1) :
+            r(rgb), g(rgb), b(rgb), a(a)
         { }
 
-        constexpr ColorT(uint8 r, uint8 g, uint8 b, uint8 a = 255)
-            : r(r / T(255)), g(g / T(255)), b(b / T(255)), a(a / T(255))
+        constexpr ColorT(T r, T g, T b, T a = 1) :
+            r(r), g(g), b(b), a(a)
         { }
 
-        explicit constexpr ColorT(const T arr[4])
-            : r(arr[0]), g(arr[1]), b(arr[2]), a(arr[3])
+        constexpr ColorT(uint8 r, uint8 g, uint8 b, uint8 a = 255) :
+            r(r / T(255)), g(g / T(255)), b(b / T(255)), a(a / T(255))
         { }
 
-        explicit constexpr ColorT(const uint8 arr[4])
-            : r(arr[0] / T(255)), g(arr[1] / T(255)), b(arr[2] / T(255)), a(arr[3] / T(255))
+        explicit constexpr ColorT(const T arr[4]) :
+            r(arr[0]), g(arr[1]), b(arr[2]), a(arr[3])
+        { }
+
+        explicit constexpr ColorT(const uint8 arr[4]) :
+            r(arr[0] / T(255)), g(arr[1] / T(255)), b(arr[2] / T(255)), a(arr[3] / T(255))
         { }
 
         constexpr void ToLinear()
@@ -390,11 +394,14 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        template<std::floating_point U>
-            requires (!std::is_same_v<T, U>)
-        [[nodiscard]] constexpr operator ColorT<U>() const { return ColorT<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
+        template <std::floating_point U>
+            requires(!std::is_same_v<T, U>)
+        [[nodiscard]] constexpr operator ColorT<U>() const
+        {
+            return ColorT<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a));
+        }
 
-        template<std::floating_point U>
+        template <std::floating_point U>
         [[nodiscard]] constexpr operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
 
         static const ColorT Black;
@@ -404,22 +411,22 @@ namespace ByteEngine::Math
         static const ColorT Blue;
     };
 
-    template<std::floating_point T>
+    template <std::floating_point T>
     inline constexpr ColorT<T> ColorT<T>::Black { 0 };
 
-    template<std::floating_point T>
+    template <std::floating_point T>
     inline constexpr ColorT<T> ColorT<T>::White { 1 };
 
-    template<std::floating_point T>
+    template <std::floating_point T>
     inline constexpr ColorT<T> ColorT<T>::Red { 1, 0, 0 };
 
-    template<std::floating_point T>
+    template <std::floating_point T>
     inline constexpr ColorT<T> ColorT<T>::Green { 0, 1, 0 };
 
-    template<std::floating_point T>
+    template <std::floating_point T>
     inline constexpr ColorT<T> ColorT<T>::Blue { 0, 0, 1 };
 
     using ColorF = ColorT<float>;
     using ColorD = ColorT<double>;
     using Color = ColorF;
-}
+} // namespace ByteEngine::Math

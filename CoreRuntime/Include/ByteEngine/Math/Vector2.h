@@ -1,18 +1,19 @@
 ﻿#pragma once
 
-#include "ByteEngine/Primitives.h"
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
+#include "ByteEngine/Primitives.h"
+
 
 namespace ByteEngine::Math
 {
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector3T;
 
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector4T;
 
-    template<Arithmetic T>
+    template <Arithmetic T>
     struct Vector2T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
@@ -40,18 +41,23 @@ namespace ByteEngine::Math
             T data[2];
         };
 
-        explicit constexpr Vector2T(T xy = 0)
-            : x(xy), y(xy)
+        constexpr Vector2T() :
+            x(0), y(0)
         { }
 
-        constexpr Vector2T(T x, T y)
-            : x(x), y(y)
+        explicit constexpr Vector2T(T xy) :
+            x(xy), y(xy)
+        { }
+
+        constexpr Vector2T(T x, T y) :
+            x(x), y(y)
         { }
 
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
-        void Normalize() requires std::floating_point<T>
+        void Normalize()
+            requires std::floating_point<T>
         {
             FloatT lengthSq = LengthSquared();
 
@@ -66,21 +72,24 @@ namespace ByteEngine::Math
             }
         }
 
-        Vector2T Normalized() const requires std::floating_point<T>
+        Vector2T Normalized() const
+            requires std::floating_point<T>
         {
             Vector2T copy = *this;
             copy.Normalize();
             return copy;
         }
 
-        bool IsNormalized() const requires std::floating_point<T>
+        bool IsNormalized() const
+            requires std::floating_point<T>
         {
             return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::rotated
-        constexpr void RotateBy(RadianT<FloatT> angle) requires std::floating_point<T>
+        constexpr void RotateBy(RadianT<FloatT> angle)
+            requires std::floating_point<T>
         {
             FloatT sin, cos;
 
@@ -99,14 +108,16 @@ namespace ByteEngine::Math
             y = oldX * sin + y * cos;
         }
 
-        constexpr Vector2T RotatedBy(RadianT<FloatT> angle) const requires std::floating_point<T>
+        constexpr Vector2T RotatedBy(RadianT<FloatT> angle) const
+            requires std::floating_point<T>
         {
             Vector2T copy = *this;
             copy.RotateBy(angle);
             return copy;
         }
 
-        void LimitLength(FloatT maxLength = 1) requires std::floating_point<T>
+        void LimitLength(FloatT maxLength = 1)
+            requires std::floating_point<T>
         {
             FloatT currentLength = LengthSquared();
 
@@ -117,14 +128,16 @@ namespace ByteEngine::Math
             }
         }
 
-        static RadianT<FloatT> AngleBetween(Vector2T from, Vector2T to) requires std::floating_point<T>
+        static RadianT<FloatT> AngleBetween(Vector2T from, Vector2T to)
+            requires std::floating_point<T>
         {
             FloatT cross = Cross(from, to);
             FloatT dot = Dot(from, to);
             return Mathf::Atan2(cross, dot);
         }
 
-        static RadianT<FloatT> UnsigedAngleBetween(Vector2T from, Vector2T to) requires std::floating_point<T>
+        static RadianT<FloatT> UnsigedAngleBetween(Vector2T from, Vector2T to)
+            requires std::floating_point<T>
         {
             return RadianT<T>(Mathf::Abs(AngleBetween(from, to).value));
         }
@@ -142,17 +155,20 @@ namespace ByteEngine::Math
             return dir;
         }
 
-        static constexpr FloatT Cross(Vector2T a, Vector2T b) requires std::floating_point<T>
+        static constexpr FloatT Cross(Vector2T a, Vector2T b)
+            requires std::floating_point<T>
         {
             return a.x * b.y - a.y * b.x;
         }
 
-        static constexpr FloatT Dot(Vector2T a, Vector2T b) requires std::floating_point<T>
+        static constexpr FloatT Dot(Vector2T a, Vector2T b)
+            requires std::floating_point<T>
         {
             return a.x * b.x + a.y * b.y;
         }
 
-        static constexpr Vector2T FromAngle(RadianT<FloatT> angle) requires std::floating_point<T>
+        static constexpr Vector2T FromAngle(RadianT<FloatT> angle)
+            requires std::floating_point<T>
         {
             Vector2T<FloatT> vec;
 
@@ -169,24 +185,28 @@ namespace ByteEngine::Math
             return vec;
         }
 
-        static constexpr Vector2T FromAngle(RadianT<FloatT> angle, FloatT length) requires std::floating_point<T>
+        static constexpr Vector2T FromAngle(RadianT<FloatT> angle, FloatT length)
+            requires std::floating_point<T>
         {
             return FromAngle(angle) * length;
         }
 
-        static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t)
+            requires std::floating_point<T>
         {
             return from + (to - from) * t;
         }
 
-        static constexpr Vector2T LerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
+        static constexpr Vector2T LerpClamped(Vector2T from, Vector2T to, FloatT t)
+            requires std::floating_point<T>
         {
             return from + (to - from) * Mathf::Clamp(t);
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::slerp
-        static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
+        static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t)
+            requires std::floating_point<T>
         {
             FloatT startLength = from.LengthSquared();
             FloatT endLength = to.LengthSquared();
@@ -202,14 +222,16 @@ namespace ByteEngine::Math
             return from * (resultLength / startLength);
         }
 
-        static Vector2T SlerpClamped(Vector2T from, Vector2T to, FloatT t) requires std::floating_point<T>
+        static Vector2T SlerpClamped(Vector2T from, Vector2T to, FloatT t)
+            requires std::floating_point<T>
         {
             return Slerp(from, to, Mathf::Clamp(t));
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::move_toward
-        static Vector2T MoveTowards(Vector2T current, Vector2T target, FloatT maxDelta) requires std::floating_point<T>
+        static Vector2T MoveTowards(Vector2T current, Vector2T target, FloatT maxDelta)
+            requires std::floating_point<T>
         {
             Vector2T direction = target - current;
             FloatT distance = direction.Length();
@@ -220,7 +242,8 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto) requires std::floating_point<T>
+        static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto)
+            requires std::floating_point<T>
         {
             T dot = Dot(vec, projectOnto);
             if (dot < Mathf::Epsilon)
@@ -229,19 +252,25 @@ namespace ByteEngine::Math
             return projectOnto * (dot / projectOnto.LengthSquared());
         }
 
-        static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto) requires std::floating_point<T>
+        static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto)
+            requires std::floating_point<T>
         {
             assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static Vector2T Reflect(Vector2T vec, Vector2T normal) requires std::floating_point<T>
+        static Vector2T Reflect(Vector2T vec, Vector2T normal)
+            requires std::floating_point<T>
         {
             assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
-        static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon) requires std::floating_point<T> { return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance); }
+        static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon)
+            requires std::floating_point<T>
+        {
+            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance);
+        }
 
         static constexpr Vector2T Min(Vector2T a, Vector2T b) { return Vector2T(Mathf::Min(a.x, b.x), Mathf::Min(a.y, b.y)); }
         static constexpr Vector2T Min(Vector2T a, Vector2T b, Vector2T c) { return Vector2T(Mathf::Min(a.x, b.x, c.x), Mathf::Min(a.y, b.y, c.y)); }
@@ -342,20 +371,23 @@ namespace ByteEngine::Math
             return data[index];
         }
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-        operator Vector2T<U>() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
+        operator Vector2T<U>() const
+        {
+            return Vector2T<U>(static_cast<U>(x), static_cast<U>(y));
+        }
 
         operator Vector3T<T>() const;
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
         operator Vector3T<U>() const;
 
         operator Vector4T<T>() const;
 
-        template<Arithmetic U>
-            requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
         operator Vector4T<U>() const;
     };
 
@@ -363,4 +395,4 @@ namespace ByteEngine::Math
     using Vector2D = Vector2T<double>;
     using Vector2I = Vector2T<int32>;
     using Vector2 = Vector2F;
-}
+} // namespace ByteEngine::Math

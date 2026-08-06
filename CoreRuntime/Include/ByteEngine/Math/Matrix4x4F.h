@@ -36,13 +36,13 @@ namespace ByteEngine::Math
             float elements[16];
         };
 
-        constexpr Matrix4x4F()
-            : elements {
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0,
-                0, 0, 0, 0
-            }
+        constexpr Matrix4x4F() :
+            // clang-format off
+            m00(1), m01(0), m02(0), m03(0),
+            m10(0), m11(1), m12(0), m13(0),
+            m20(0), m21(0), m22(1), m23(0),
+            m30(0), m31(0), m32(0), m33(1)
+        // clang-format on
         { }
 
         constexpr Matrix4x4F(
@@ -50,22 +50,26 @@ namespace ByteEngine::Math
             float m10, float m11, float m12, float m13,
             float m20, float m21, float m22, float m23,
             float m30, float m31, float m32, float m33
-        )
-            : m00(m00), m01(m01), m02(m02), m03(m03),
+        ) :
+            // clang-format off
+            m00(m00), m01(m01), m02(m02), m03(m03),
             m10(m10), m11(m11), m12(m12), m13(m13),
             m20(m20), m21(m21), m22(m22), m23(m23),
             m30(m30), m31(m31), m32(m32), m33(m33)
+        // clang-format on
         { }
 
-        constexpr Matrix4x4F(Vector4F row0, Vector4F row1, Vector4F row2, Vector4F row3)
-            : row0(row0), row1(row1), row2(row2), row3(row3)
+        constexpr Matrix4x4F(Vector4F row0, Vector4F row1, Vector4F row2, Vector4F row3) :
+            row0(row0), row1(row1), row2(row2), row3(row3)
         { }
 
-        constexpr Matrix4x4F(const float elements[16])
-            : m00(elements[0]), m01(elements[1]), m02(elements[2]), m03(elements[3]),
-            m10(elements[4]), m11(elements[5]), m12(elements[6]), m13(elements[7]),
-            m20(elements[8]), m21(elements[9]), m22(elements[10]), m23(elements[11]),
+        constexpr Matrix4x4F(const float elements[16]) :
+            // clang-format off
+            m00(elements[0]),  m01(elements[1]),  m02(elements[2]),  m03(elements[3]),
+            m10(elements[4]),  m11(elements[5]),  m12(elements[6]),  m13(elements[7]),
+            m20(elements[8]),  m21(elements[9]),  m22(elements[10]), m23(elements[11]),
             m30(elements[12]), m31(elements[13]), m32(elements[14]), m33(elements[15])
+        // clang-format on
         { }
 
         [[nodiscard]] constexpr Vector4F GetRow(int32 row) const
@@ -243,4 +247,4 @@ namespace ByteEngine::Math
         inline static const Vector4F IdentityRow2 = Vector4F(0, 0, 1, 0);
         inline static const Vector4F IdentityRow3 = Vector4F(0, 0, 0, 1);
     };
-}
+} // namespace ByteEngine::Math

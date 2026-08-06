@@ -6,22 +6,25 @@
 
 namespace ByteEngine::Math
 {
+    using namespace ByteEngine::Math::Literals;
+
     struct EulerDeg;
 
     struct EulerRad
     {
-        RadianF pitch;
-        RadianF yaw;
-        RadianF roll;
+
+        RadianF pitch = 0_rf;
+        RadianF yaw = 0_rf;
+        RadianF roll = 0_rf;
 
         [[nodiscard]] constexpr EulerDeg ToDeg() const;
     };
 
     struct EulerDeg
     {
-        DegreeF pitch;
-        DegreeF yaw;
-        DegreeF roll;
+        DegreeF pitch = 0_df;
+        DegreeF yaw = 0_df;
+        DegreeF roll = 0_df;
 
         [[nodiscard]] constexpr EulerRad ToRad() const;
     };
@@ -44,16 +47,20 @@ namespace ByteEngine::Math
             float data[4];
         };
 
-        explicit constexpr Quaternion(float xyzw = 0.0f)
-            : x(xyzw), y(xyzw), z(xyzw), w(xyzw)
+        constexpr Quaternion() :
+            x(0), y(0), z(0), w(1)
         { }
 
-        constexpr Quaternion(float x, float y, float z, float w)
-            : x(x), y(y), z(z), w(w)
+        explicit constexpr Quaternion(float xyzw) :
+            x(xyzw), y(xyzw), z(xyzw), w(xyzw)
         { }
 
-        constexpr Quaternion(const float arr[4])
-            : x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
+        constexpr Quaternion(float x, float y, float z, float w) :
+            x(x), y(y), z(z), w(w)
+        { }
+
+        constexpr Quaternion(const float arr[4]) :
+            x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
 
         [[nodiscard]] float Length() const;
@@ -167,4 +174,4 @@ namespace ByteEngine::Math
 
         static const Quaternion Identity;
     };
-}
+} // namespace ByteEngine::Math
