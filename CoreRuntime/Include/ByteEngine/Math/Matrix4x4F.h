@@ -121,9 +121,9 @@ namespace ByteEngine::Math
         [[nodiscard]] static Matrix4x4F Translation(Vector3F translation)
         {
             return Matrix4x4F {
-                IdentityRow0,
-                IdentityRow1,
-                IdentityRow2,
+                IdentityRow0(),
+                IdentityRow1(),
+                IdentityRow2(),
                 Vector4F(translation.x, translation.y, translation.z, 1.0f)
             };
         }
@@ -146,6 +146,13 @@ namespace ByteEngine::Math
         [[nodiscard]] static Matrix4x4F LookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
 
         [[nodiscard]] static Matrix4x4F TRS(Vector3F translation, Quaternion rotation, Vector3F scale);
+
+        [[nodiscard]] static constexpr Matrix4x4F Identity() { return Matrix4x4F(); }
+
+        [[nodiscard]] static constexpr Vector4F IdentityRow0() { return Vector4F(1, 0, 0, 0); }
+        [[nodiscard]] static constexpr Vector4F IdentityRow1() { return Vector4F(0, 1, 0, 0); }
+        [[nodiscard]] static constexpr Vector4F IdentityRow2() { return Vector4F(0, 0, 1, 0); }
+        [[nodiscard]] static constexpr Vector4F IdentityRow3() { return Vector4F(0, 0, 0, 1); }
 
         [[nodiscard]] constexpr Matrix4x4F operator+(const Matrix4x4F& other) const
         {
@@ -240,12 +247,5 @@ namespace ByteEngine::Math
             BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
-
-        static const Matrix4x4F Identity;
-
-        inline static const Vector4F IdentityRow0 = Vector4F(1, 0, 0, 0);
-        inline static const Vector4F IdentityRow1 = Vector4F(0, 1, 0, 0);
-        inline static const Vector4F IdentityRow2 = Vector4F(0, 0, 1, 0);
-        inline static const Vector4F IdentityRow3 = Vector4F(0, 0, 0, 1);
     };
 } // namespace ByteEngine::Math

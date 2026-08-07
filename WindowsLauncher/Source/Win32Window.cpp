@@ -363,7 +363,7 @@ namespace ByteEngine::WindowsLauncher
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {
-                    BE_LOG_DEBUG("SetWindowLongPtr error: {}", GetLastError());
+                    BE_DEBUG_LOG_ERROR("SetWindowLongPtr error: {}", GetLastError());
                     return;
                 }
             }
@@ -397,7 +397,7 @@ namespace ByteEngine::WindowsLauncher
                 }
                 else
                 {
-                    BE_LOG_DEBUG("GetMonitorInfo error: {}", GetLastError());
+                    BE_DEBUG_LOG_ERROR("GetMonitorInfo error: {}", GetLastError());
                     width = GetSystemMetrics(SM_CXSCREEN);
                     height = GetSystemMetrics(SM_CYSCREEN);
                 }
@@ -409,7 +409,7 @@ namespace ByteEngine::WindowsLauncher
 
                 if (SetWindowLongPtr(static_cast<HWND>(handle), GWL_STYLE, style) == 0)
                 {
-                    BE_LOG_DEBUG("SetWindowLongPtr error: {}", GetLastError());
+                    BE_DEBUG_LOG_ERROR("SetWindowLongPtr error: {}", GetLastError());
                     return;
                 }
 
@@ -418,7 +418,7 @@ namespace ByteEngine::WindowsLauncher
                         SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW
                     ) == 0)
                 {
-                    BE_LOG_DEBUG("SetWindowPos error: {}", GetLastError());
+                    BE_DEBUG_LOG_ERROR("SetWindowPos error: {}", GetLastError());
                     return;
                 }
             }

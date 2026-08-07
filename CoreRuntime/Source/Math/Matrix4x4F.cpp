@@ -7,13 +7,6 @@ using namespace DirectX;
 
 namespace ByteEngine::Math
 {
-    const Matrix4x4F Matrix4x4F::Identity { 
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1 
-    };
-
     float Matrix4x4F::Determinant() const
     {
         XMMATRIX matrix = XMLoadFloat4x4A(reinterpret_cast<const XMFLOAT4X4A*>(this->elements));
