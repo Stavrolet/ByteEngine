@@ -1,6 +1,7 @@
-﻿#include "ByteEngine/Utilities/Utils.h"
+﻿#include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
 
-#include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
+#include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Utilities/Utils.h"
 
 using namespace ByteEngine;
 using namespace ByteEngine::Graphics;
@@ -21,7 +22,7 @@ GraphicsDeviceD3D11::Error GraphicsDeviceD3D11::Initialize(bool enableDebug)
         D3D11_SDK_VERSION, baseDevice.put(),
         nullptr, nullptr
     );
-    
+
     if (FAILED(hResult))
     {
         if (hResult == DXGI_ERROR_UNSUPPORTED)

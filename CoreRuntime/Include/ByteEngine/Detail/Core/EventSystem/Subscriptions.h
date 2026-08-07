@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "ByteEngine/Primitives.h"
+#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine::EventSystem
 {

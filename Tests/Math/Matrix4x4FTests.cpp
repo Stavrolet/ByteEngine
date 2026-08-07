@@ -36,8 +36,8 @@ static bool Vec3Equal(const Vector3F& a, const Vector3F& b, float eps = kEps)
 TEST(Matrix4x4FConstructionTest, DefaultConstructor)
 {
     Matrix4x4F m;
-    EXPECT_EQ(m.m00, 0.0f); EXPECT_EQ(m.m11, 0.0f);
-    EXPECT_EQ(m.m22, 0.0f); EXPECT_EQ(m.m33, 0.0f);
+    EXPECT_EQ(m.m00, 1.0f); EXPECT_EQ(m.m11, 1.0f);
+    EXPECT_EQ(m.m22, 1.0f); EXPECT_EQ(m.m33, 1.0f);
     EXPECT_EQ(m.m01, 0.0f); EXPECT_EQ(m.m10, 0.0f);
     EXPECT_EQ(m.m23, 0.0f); EXPECT_EQ(m.m32, 0.0f);
 }

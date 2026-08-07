@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "ByteEngine/Primitives.h"
+#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine
 {
     enum class KeyCode : uint16
     {
-#ifdef _WINDOWS
+#ifdef BE_WINDOWS
         LeftCtrl = 0x001D,
         RightCtrl = 0xE01D,
         LeftShift = 0x002A,

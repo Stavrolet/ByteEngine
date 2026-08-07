@@ -2,7 +2,7 @@
 
 #include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/EventSystem/Delegate.h"
-#include "ByteEngine/Primitives.h"
+#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine
 {

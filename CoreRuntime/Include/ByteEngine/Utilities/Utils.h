@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "ByteEngine/Primitives.h"
-
 namespace ByteEngine::Utils
 {
     template<typename T, size_t N>

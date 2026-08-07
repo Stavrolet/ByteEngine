@@ -1,13 +1,12 @@
 ﻿#pragma once
 
-#include <string>
-
 #include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/Core/EventSystem/MulticastDelegate.h"
 #include "ByteEngine/Core/Input/KeyCode.h"
 #include "ByteEngine/Math/Vector2.h"
-#include "ByteEngine/Primitives.h"
+
+#include <string>
 
 namespace ByteEngine
 {
@@ -76,7 +75,7 @@ namespace ByteEngine
         virtual void SetFocus() = 0;
 
         void* GetNativeHandle() const { return handle; }
-        
+
         WindowMode GetMode() const { return mode; }
         const std::string& GetTitle() const { return title; }
 
@@ -94,4 +93,4 @@ namespace ByteEngine
         DelegateVoid<ByteEngine::Math::Vector2I>& MouseMoved() { return mouseMoved; }
         DelegateVoid<float, float>& MouseWheelStateChanged() { return mouseWheelStateChanged; }
     };
-}
+} // namespace ByteEngine

@@ -2,8 +2,7 @@
 
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
-#include "ByteEngine/Primitives.h"
-
+#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine::Math
 {

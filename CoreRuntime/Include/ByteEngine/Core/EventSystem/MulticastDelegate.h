@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
-#include "ByteEngine/Primitives.h"
+#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine::EventSystem
 {
