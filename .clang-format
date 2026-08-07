@@ -66,3 +66,4 @@ ConstructorInitializerIndentWidth: 4
 PackConstructorInitializers: NextLineOnly
 BreakConstructorInitializers: AfterColon
 SpaceInEmptyBraces: Always
+IndentPPDirectives: BeforeHash

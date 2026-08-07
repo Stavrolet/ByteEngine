@@ -4,10 +4,10 @@
 
 // clang-format off
 #include <Windows.h>
+// clang-format on
 
 #include "ByteEngine/Core/Base/Application.h"
 #include "Win32Window.h"
-// clang-format on
 
 using namespace ByteEngine;
 using namespace ByteEngine::WindowsLauncher;

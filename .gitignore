@@ -53,3 +53,4 @@ Resources/*
 MyLocalTests/
 .cache/
 .temp/
+.vscode/
