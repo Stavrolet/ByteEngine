@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#define NOMINMAX
+
 #include "ByteEngine/Core/Base/Singleton.h"
 
 #include <quill/LogMacros.h>
@@ -52,12 +54,20 @@ namespace ByteEngine
 #define BE_LOG_CRITICAL(fmt, ...) QUILL_LOG_CRITICAL(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 
 #ifdef BE_DEBUG
-    #define BE_ASSERT(condition, fmt, ...)       \
-        if (!(condition))                        \
-        {                                        \
-            BE_LOG_CRITICAL(fmt, ##__VA_ARGS__); \
-            ::ByteEngine::Debug::Breakpoint();   \
+    #define BE_ASSERT(condition)                              \
+        if (!(condition))                                     \
+        {                                                     \
+            BE_LOG_CRITICAL("Assertion failed: " #condition); \
+            ::ByteEngine::Debug::Breakpoint();                \
+        }
+
+    #define BE_ASSERT_MSG(condition, fmt, ...)                                                       \
+        if (!(condition))                                                                            \
+        {                                                                                            \
+            BE_LOG_CRITICAL(std::string("Assertion failed: " #condition ". ") + fmt, ##__VA_ARGS__); \
+            ::ByteEngine::Debug::Breakpoint();                                                       \
         }
 #else
-    #define BE_ASSERT(condition, fmt, ...) ((void)0)
+    #define BE_ASSERT(condition) ((void)0)
+    #define BE_ASSERT_MSG(condition, fmt, ...) ((void)0)
 #endif

@@ -1,8 +1,9 @@
 ﻿#pragma once
 
+#include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
-#include "ByteEngine/CoreTypes.h"
 
 namespace ByteEngine::Math
 {
@@ -254,14 +255,14 @@ namespace ByteEngine::Math
         static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto)
             requires std::floating_point<T>
         {
-            assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
+            BE_ASSERT(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
         static Vector2T Reflect(Vector2T vec, Vector2T normal)
             requires std::floating_point<T>
         {
-            assert(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
+            BE_ASSERT(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
@@ -360,13 +361,13 @@ namespace ByteEngine::Math
 
         constexpr T& operator[](int32 index)
         {
-            assert(index >= 0 && index < 2);
+            BE_ASSERT(index >= 0 && index < 2);
             return data[index];
         }
 
         constexpr T operator[](int32 index) const
         {
-            assert(index >= 0 && index < 2);
+            BE_ASSERT(index >= 0 && index < 2);
             return data[index];
         }
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include <cassert>
+#include "ByteEngine/Math/Concepts.h"
+
 #include <cmath>
 #include <concepts>
 #include <limits>
@@ -9,8 +10,6 @@
 
 #undef min
 #undef max
-
-#include "ByteEngine/Math/Concepts.h"
 
 namespace
 {

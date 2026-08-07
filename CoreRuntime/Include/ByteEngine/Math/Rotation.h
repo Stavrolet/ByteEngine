@@ -126,13 +126,13 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr DegreeF operator[](int32 index) const
         {
-            assert(index >= 0 && index < 3);
+            BE_ASSERT(index >= 0 && index < 3);
             return data[index];
         }
 
         [[nodiscard]] constexpr DegreeF& operator[](int32 index)
         {
-            assert(index >= 0 && index < 3);
+            BE_ASSERT(index >= 0 && index < 3);
             return data[index];
         }
     };

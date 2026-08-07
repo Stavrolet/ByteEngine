@@ -1,18 +1,18 @@
-﻿#include <Windows.h>
+﻿#include "ByteEngine/Core/Input/Input.h"
 
 #include "ByteEngine/Core/Base/MainWindow.h"
-#include "ByteEngine/Core/Input/Input.h"
 #include "ByteEngine/Debug.h"
+
+#include <Windows.h>
 
 namespace ByteEngine
 {
-    Input::Input()
-        : Singleton()
+    Input::Input() :
+        Singleton()
     {
         actions = { { "test1", { KeyCode::A, KeyCode::MouseWheelDown, KeyCode::Aplha0, KeyCode::MouseMiddle, KeyCode::MouseWheelUp } } };
-        
-        keysState =
-        {
+
+        keysState = {
             { KeyCode::LeftCtrl, false },
             { KeyCode::RightCtrl, false },
             { KeyCode::LeftShift, false },
@@ -139,16 +139,14 @@ namespace ByteEngine
             { KeyCode::MouseWheelRight, false },
         };
 
-        MainWindow::GetInstance().KeyStateChanged().SubscribeLambda([this](KeyCode code, bool isPressed)
-        {
+        MainWindow::GetInstance().KeyStateChanged().SubscribeLambda([this](KeyCode code, bool isPressed) {
             keysState[code] = isPressed;
             isAnyKeyPressed = isPressed;
         });
 
         MainWindow::GetInstance().MouseMoved().SubscribeLambda([this](Vector2 delta) { mouseDelta += delta; });
 
-        MainWindow::GetInstance().MouseWheelStateChanged().SubscribeLambda([this](float horizontalDelta, float verticalDelta)
-        {
+        MainWindow::GetInstance().MouseWheelStateChanged().SubscribeLambda([this](float horizontalDelta, float verticalDelta) {
             horizontalWheelDelta += horizontalDelta;
             verticalWheelDelta += verticalDelta;
             isAnyKeyPressed = true;
@@ -230,4 +228,4 @@ namespace ByteEngine
         horizontalWheelDelta = 0.0f;
         verticalWheelDelta = 0.0f;
     }
-}
+} // namespace ByteEngine

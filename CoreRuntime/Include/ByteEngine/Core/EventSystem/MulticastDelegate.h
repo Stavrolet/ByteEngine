@@ -1,22 +1,22 @@
 ﻿#pragma once
 
+#include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Debug.h"
+#include "ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
+
 #include <algorithm>
-#include <cassert>
 #include <iterator>
 #include <memory>
 #include <type_traits>
 #include <vector>
 
-#include "ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
-#include "ByteEngine/CoreTypes.h"
-
 namespace ByteEngine::EventSystem
 {
-    template<typename... Args>
+    template <typename... Args>
     class MulticastDelegate
     {
     public:
-        using FunctionType = void(*)(Args...);
+        using FunctionType = void (*)(Args...);
 
     private:
         using SubscriptionItem = std::pair<SubscriptionHandle, std::unique_ptr<Subcription<void, Args...>>>;
@@ -47,8 +47,8 @@ namespace ByteEngine::EventSystem
                 return SubscribeInternal(std::make_unique<StaticSubcription<void, Args...>>(func));
         }
 
-        template<typename InstanceT>
-        SubscriptionHandle SubscribeRawPointer(InstanceT* instance, void(InstanceT::* method)(Args...))
+        template <typename InstanceT>
+        SubscriptionHandle SubscribeRawPointer(InstanceT* instance, void (InstanceT::*method)(Args...))
         {
             if (invoked)
                 return SubscribePendingInternal(std::make_unique<RawPtrSubcription<InstanceT, void, Args...>>(instance, method));
@@ -56,8 +56,8 @@ namespace ByteEngine::EventSystem
                 return SubscribeInternal(std::make_unique<RawPtrSubcription<InstanceT, void, Args...>>(instance, method));
         }
 
-        template<typename InstanceT>
-        SubscriptionHandle SubscribeSmartPointer(const std::shared_ptr<InstanceT>& instance, void(InstanceT::* method)(Args...))
+        template <typename InstanceT>
+        SubscriptionHandle SubscribeSmartPointer(const std::shared_ptr<InstanceT>& instance, void (InstanceT::*method)(Args...))
         {
             if (invoked)
                 return SubscribePendingInternal(std::make_unique<SmartPtrSubcription<InstanceT, void, Args...>>(instance, method));
@@ -65,7 +65,7 @@ namespace ByteEngine::EventSystem
                 return SubscribeInternal(std::make_unique<SmartPtrSubcription<InstanceT, void, Args...>>(instance, method));
         }
 
-        template<typename LambdaT>
+        template <typename LambdaT>
         SubscriptionHandle SubscribeLambda(LambdaT&& lambda)
         {
             if (invoked)
@@ -76,7 +76,7 @@ namespace ByteEngine::EventSystem
 
         void Unsubscribe(SubscriptionHandle handle)
         {
-            assert(handle != 0 && "Subscription handle must not be equal to 0.");
+            BE_ASSERT_MSG(handle != 0, "Subscription handle must not be equal to 0.");
 
             if (invoked)
                 pendingRemovals.emplace_back(handle);
@@ -86,7 +86,7 @@ namespace ByteEngine::EventSystem
 
         void UnsubscribeObject(const void* objectToUnsubscribe)
         {
-            assert(objectToUnsubscribe != nullptr && "Object pointer cannot be null.");
+            BE_ASSERT_MSG(objectToUnsubscribe != nullptr, "Object pointer cannot be null.");
 
             if (invoked)
             {
@@ -98,8 +98,7 @@ namespace ByteEngine::EventSystem
             }
             else
             {
-                std::erase_if(subscriptions, [=](const SubscriptionItem& item)
-                {
+                std::erase_if(subscriptions, [=](const SubscriptionItem& item) {
                     return item.second->GetOwner() == objectToUnsubscribe;
                 });
             }
@@ -151,8 +150,7 @@ namespace ByteEngine::EventSystem
 
         bool IsObjectSubscribed(const void* object) const
         {
-            return std::any_of(subscriptions.begin(), subscriptions.end(), [=](const SubscriptionItem& item)
-            {
+            return std::any_of(subscriptions.begin(), subscriptions.end(), [=](const SubscriptionItem& item) {
                 return item.second->GetOwner() == object;
             });
         }
@@ -180,4 +178,4 @@ namespace ByteEngine::EventSystem
     };
 
     using MulticastDelegateVoid = MulticastDelegate<>;
-}
+} // namespace ByteEngine::EventSystem

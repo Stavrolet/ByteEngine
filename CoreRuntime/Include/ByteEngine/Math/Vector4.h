@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "ByteEngine/Math/Math.h"
 #include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Debug.h"
+#include "ByteEngine/Math/Math.h"
 
 namespace ByteEngine::Math
 {
@@ -251,13 +252,13 @@ namespace ByteEngine::Math
 
         constexpr T& operator[](int32 index)
         {
-            assert(index >= 0 && index < 4);
+            BE_ASSERT(index >= 0 && index < 4);
             return data[index];
         }
 
         constexpr T operator[](int32 index) const
         {
-            assert(index >= 0 && index < 4);
+            BE_ASSERT(index >= 0 && index < 4);
             return data[index];
         }
 

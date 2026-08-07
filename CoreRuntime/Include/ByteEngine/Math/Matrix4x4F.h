@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
 
@@ -74,13 +75,13 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr Vector4F GetRow(int32 row) const
         {
-            assert(row >= 0 && row < ROW_COUNT);
+            BE_ASSERT(row >= 0 && row < ROW_COUNT);
             return rows[row];
         }
 
         [[nodiscard]] constexpr Vector4F GetColumn(int32 column) const
         {
-            assert(column >= 0 && column < COLOMN_COUNT);
+            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
             return Vector4F(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
         }
 
@@ -216,27 +217,27 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr float operator[](int32 index) const
         {
-            assert(index >= 0 && index < ELEMENT_COUNT);
+            BE_ASSERT(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 index)
         {
-            assert(index >= 0 && index < ELEMENT_COUNT);
+            BE_ASSERT(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float operator[](int32 row, int32 column) const
         {
-            assert(row >= 0 && row < ROW_COUNT);
-            assert(column >= 0 && column < COLOMN_COUNT);
+            BE_ASSERT(row >= 0 && row < ROW_COUNT);
+            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 row, int32 column)
         {
-            assert(row >= 0 && row < ROW_COUNT);
-            assert(column >= 0 && column < COLOMN_COUNT);
+            BE_ASSERT(row >= 0 && row < ROW_COUNT);
+            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
 

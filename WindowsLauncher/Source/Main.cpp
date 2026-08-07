@@ -1,6 +1,7 @@
 ﻿#define BE_WINDOWS_MAIN
 
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 
 // clang-format off
 #include <Windows.h>

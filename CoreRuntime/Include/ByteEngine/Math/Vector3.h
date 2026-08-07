@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "ByteEngine/Math/Math.h"
 #include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Debug.h"
+#include "ByteEngine/Math/Math.h"
 
 namespace ByteEngine::Math
 {
@@ -92,7 +93,7 @@ namespace ByteEngine::Math
         void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
             requires std::floating_point<T>
         {
-            assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+            BE_ASSERT(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
             FloatT sin, cos;
 
@@ -125,7 +126,7 @@ namespace ByteEngine::Math
         static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis)
             requires std::floating_point<T>
         {
-            assert(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+            BE_ASSERT(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
 
             Vector3T cross = Cross(from, to);
             RadianT<T> unsignedAngle = Mathf::Atan2(cross.Length(), Dot(from, to));
@@ -240,7 +241,7 @@ namespace ByteEngine::Math
         static constexpr Vector3T ProjectNormalized(Vector3T vec, Vector3T projectOnto)
             requires std::floating_point<T>
         {
-            assert(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
+            BE_ASSERT(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
@@ -369,13 +370,13 @@ namespace ByteEngine::Math
 
         constexpr T& operator[](int32 index)
         {
-            assert(index >= 0 && index < 3);
+            BE_ASSERT(index >= 0 && index < 3);
             return data[index];
         }
 
         constexpr T operator[](int32 index) const
         {
-            assert(index >= 0 && index < 3);
+            BE_ASSERT(index >= 0 && index < 3);
             return data[index];
         }
 

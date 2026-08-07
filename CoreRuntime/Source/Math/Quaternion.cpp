@@ -46,7 +46,7 @@ namespace ByteEngine::Math
 
     EulerRad Quaternion::GetEuler() const
     {
-        assert(IsNormalized());
+        BE_ASSERT(IsNormalized());
 
         float sinp = 2.0f * (w * x - z * y);
 
@@ -162,8 +162,8 @@ namespace ByteEngine::Math
     // Source: Quaternion::slerp
     Quaternion Quaternion::Slerp(Quaternion from, Quaternion to, float t)
     {
-        assert(from.IsNormalized());
-        assert(to.IsNormalized());
+        BE_ASSERT(from.IsNormalized());
+        BE_ASSERT(to.IsNormalized());
 
         Quaternion to1;
         RadianF omega;
