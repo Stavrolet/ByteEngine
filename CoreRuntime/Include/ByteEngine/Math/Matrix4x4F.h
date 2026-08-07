@@ -117,7 +117,7 @@ namespace ByteEngine::Math
         [[nodiscard]] Vector3F MultiplyPointFast(Vector3F point) const;
         [[nodiscard]] Vector3F MultiplyVector(Vector3F vector) const;
 
-        [[nodiscard]] static Matrix4x4F CreateTranslation(Vector3F translation)
+        [[nodiscard]] static Matrix4x4F Translation(Vector3F translation)
         {
             return Matrix4x4F {
                 IdentityRow0,
@@ -127,9 +127,9 @@ namespace ByteEngine::Math
             };
         }
 
-        [[nodiscard]] static Matrix4x4F CreateRotation(Quaternion quat);
+        [[nodiscard]] static Matrix4x4F Rotation(Quaternion quat);
 
-        [[nodiscard]] static constexpr Matrix4x4F CreateScale(Vector3F scale)
+        [[nodiscard]] static constexpr Matrix4x4F Scale(Vector3F scale)
         {
             return Matrix4x4F {
                 scale.x, 0, 0, 0,
@@ -139,12 +139,12 @@ namespace ByteEngine::Math
             };
         }
 
-        [[nodiscard]] static Matrix4x4F CreatePerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane);
-        [[nodiscard]] static Matrix4x4F CreateOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane);
+        [[nodiscard]] static Matrix4x4F PerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane);
+        [[nodiscard]] static Matrix4x4F OrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane);
 
-        [[nodiscard]] static Matrix4x4F CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
+        [[nodiscard]] static Matrix4x4F LookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp = Vector3F::Up());
 
-        [[nodiscard]] static Matrix4x4F CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale);
+        [[nodiscard]] static Matrix4x4F TRS(Vector3F translation, Quaternion rotation, Vector3F scale);
 
         [[nodiscard]] constexpr Matrix4x4F operator+(const Matrix4x4F& other) const
         {

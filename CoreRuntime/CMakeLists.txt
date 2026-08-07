@@ -35,7 +35,6 @@ add_library(CoreRuntime STATIC
 	"Include/ByteEngine/WinApiExcludingDefs/NoUiAndWindows.h"	
 	"Include/ByteEngine/Debug.h"
 	"Include/ByteEngine/GameTime.h"
-	"Include/ByteEngine/Primitives.h"
 	"Source/Core/Base/Application.cpp"
 	"Source/Core/Input/Input.cpp"
 	"Source/Math/Math.cpp"

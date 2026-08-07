@@ -121,7 +121,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateRotation(Quaternion quat)
+    Matrix4x4F Matrix4x4F::Rotation(Quaternion quat)
     {
         XMVECTOR quatVec = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&quat));
         XMMATRIX rotMatrix = XMMatrixRotationQuaternion(quatVec);
@@ -131,7 +131,7 @@ namespace ByteEngine::Math
         return result;
     }    
 
-    Matrix4x4F Matrix4x4F::CreatePerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane)
+    Matrix4x4F Matrix4x4F::PerspectiveProjection(float fovY, float aspectRatio, float nearPlane, float farPlane)
     {
         XMMATRIX matrix = XMMatrixPerspectiveFovLH(fovY, aspectRatio, nearPlane, farPlane);
         Matrix4x4F result;
@@ -139,7 +139,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateOrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane)
+    Matrix4x4F Matrix4x4F::OrthographicProjection(float left, float right, float top, float bottom, float nearPlane, float farPlane)
     {
         XMMATRIX matrix = XMMatrixOrthographicOffCenterLH(left, right, bottom, top, nearPlane, farPlane);
         Matrix4x4F result;
@@ -147,7 +147,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateLookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp)
+    Matrix4x4F Matrix4x4F::LookAt(Vector3F eyePos, Vector3F targetPos, Vector3F worldUp)
     {
         Vector3F direction = Vector3F::Direction(eyePos, targetPos);
 
@@ -161,7 +161,7 @@ namespace ByteEngine::Math
         return result;
     }
 
-    Matrix4x4F Matrix4x4F::CreateTRS(Vector3F translation, Quaternion rotation, Vector3F scale)
+    Matrix4x4F Matrix4x4F::TRS(Vector3F translation, Quaternion rotation, Vector3F scale)
     {
         XMVECTOR translationVec = XMLoadFloat3(reinterpret_cast<const XMFLOAT3*>(&translation));
         XMVECTOR rotationVec = XMLoadFloat4(reinterpret_cast<const XMFLOAT4*>(&rotation));

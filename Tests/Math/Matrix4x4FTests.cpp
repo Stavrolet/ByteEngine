@@ -335,8 +335,8 @@ TEST(Matrix4x4FOperatorTest, MatrixMultiplicationKnownResult)
 
 TEST(Matrix4x4FOperatorTest, MatrixMultiplicationNotCommutative)
 {
-    Matrix4x4F a = Matrix4x4F::CreateTranslation(Vector3F(1, 0, 0));
-    Matrix4x4F b = Matrix4x4F::CreateScale(Vector3F(2, 2, 2));
+    Matrix4x4F a = Matrix4x4F::Translation(Vector3F(1, 0, 0));
+    Matrix4x4F b = Matrix4x4F::Scale(Vector3F(2, 2, 2));
     Matrix4x4F ab = a * b;
     Matrix4x4F ba = b * a;
     EXPECT_FALSE(Mat4Equal(ab, ba));
@@ -459,14 +459,14 @@ TEST(Matrix4x4FDeterminantTest, UpperTriangularKnownValue)
 TEST(Matrix4x4FDeterminantTest, ScaleMatrixDeterminant)
 {
     // det(diag(a,b,c,1)) = a*b*c
-    Matrix4x4F m = Matrix4x4F::CreateScale(Vector3F(2.f, 3.f, 4.f));
+    Matrix4x4F m = Matrix4x4F::Scale(Vector3F(2.f, 3.f, 4.f));
     EXPECT_NEAR(m.Determinant(), 24.f, kEps);
 }
 
 TEST(Matrix4x4FDeterminantTest, DeterminantOfProductEqualsProductOfDeterminants)
 {
-    Matrix4x4F a = Matrix4x4F::CreateScale(Vector3F(1.f, 2.f, 3.f));
-    Matrix4x4F b = Matrix4x4F::CreateScale(Vector3F(4.f, 5.f, 6.f));
+    Matrix4x4F a = Matrix4x4F::Scale(Vector3F(1.f, 2.f, 3.f));
+    Matrix4x4F b = Matrix4x4F::Scale(Vector3F(4.f, 5.f, 6.f));
     float detAB = (a * b).Determinant();
     float detAdotdetB = a.Determinant() * b.Determinant();
     EXPECT_NEAR(detAB, detAdotdetB, kEps);
@@ -483,14 +483,14 @@ TEST(Matrix4x4FInverseTest, InversedOfIdentityIsIdentity)
 
 TEST(Matrix4x4FInverseTest, InversedMultipliedGivesIdentity)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(1.f, 2.f, 3.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(1.f, 2.f, 3.f));
     Matrix4x4F product = m * m.Inversed();
     EXPECT_TRUE(Mat4Equal(product, Matrix4x4F::Identity));
 }
 
 TEST(Matrix4x4FInverseTest, InversedDoesNotModifyOriginal)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(1.f, 2.f, 3.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(1.f, 2.f, 3.f));
     Matrix4x4F copy = m;
     [[maybe_unused]] Matrix4x4F inv = m.Inversed();
     EXPECT_TRUE(Mat4Equal(m, copy));
@@ -498,7 +498,7 @@ TEST(Matrix4x4FInverseTest, InversedDoesNotModifyOriginal)
 
 TEST(Matrix4x4FInverseTest, InverseModifiesInPlace)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(5.f, -3.f, 7.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(5.f, -3.f, 7.f));
     Matrix4x4F original = m;
     m.Inverse();
     Matrix4x4F product = original * m;
@@ -507,7 +507,7 @@ TEST(Matrix4x4FInverseTest, InverseModifiesInPlace)
 
 TEST(Matrix4x4FInverseTest, DoubleInverseIsOriginal)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTRS(
+    Matrix4x4F m = Matrix4x4F::TRS(
         Vector3F(1.f, 2.f, 3.f),
         Quaternion::FromAngleAxis(0.5_rf, Vector3F::Up()),
         Vector3F(1.f, 1.f, 1.f)
@@ -531,14 +531,14 @@ TEST(Matrix4x4FDecompositionTest, GetTranslationFromIdentity)
 TEST(Matrix4x4FDecompositionTest, GetTranslation)
 {
     Vector3F expected(3.f, -1.f, 7.f);
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(expected);
+    Matrix4x4F m = Matrix4x4F::Translation(expected);
     EXPECT_TRUE(Vec3Equal(m.GetTranslation(), expected));
 }
 
 TEST(Matrix4x4FDecompositionTest, GetScaleUniform)
 {
     Vector3F s(4.f, 4.f, 4.f);
-    Matrix4x4F m = Matrix4x4F::CreateScale(s);
+    Matrix4x4F m = Matrix4x4F::Scale(s);
     Vector3F extracted = m.GetScale();
     EXPECT_NEAR(extracted.x, s.x, kEps);
     EXPECT_NEAR(extracted.y, s.y, kEps);
@@ -548,7 +548,7 @@ TEST(Matrix4x4FDecompositionTest, GetScaleUniform)
 TEST(Matrix4x4FDecompositionTest, GetScaleNonUniform)
 {
     Vector3F s(2.f, 3.f, 4.f);
-    Matrix4x4F m = Matrix4x4F::CreateScale(s);
+    Matrix4x4F m = Matrix4x4F::Scale(s);
     Vector3F extracted = m.GetScale();
     EXPECT_NEAR(extracted.x, s.x, kEps);
     EXPECT_NEAR(extracted.y, s.y, kEps);
@@ -580,7 +580,7 @@ TEST(Matrix4x4FDecompositionTest, GetRotationIdentity)
 TEST(Matrix4x4FDecompositionTest, GetRotation90DegAroundY)
 {
     Quaternion q = Quaternion::FromAngleAxis(90_df, Vector3F::Up());
-    Matrix4x4F m = Matrix4x4F::CreateRotation(q);
+    Matrix4x4F m = Matrix4x4F::Rotation(q);
     Quaternion extracted = m.GetRotation();
     bool sameOrNegated =
         (std::fabs(extracted.x - q.x) < kEps && std::fabs(extracted.y - q.y) < kEps &&
@@ -596,7 +596,7 @@ TEST(Matrix4x4FDecompositionTest, GetRotation90DegAroundY)
 
 TEST(Matrix4x4FMultiplyTest, MultiplyPointOriginByTranslation)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(1.f, 2.f, 3.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(1.f, 2.f, 3.f));
     Vector3F p = m.MultiplyPoint(Vector3F(0.f, 0.f, 0.f));
     EXPECT_NEAR(p.x, 1.f, kEps);
     EXPECT_NEAR(p.y, 2.f, kEps);
@@ -605,7 +605,7 @@ TEST(Matrix4x4FMultiplyTest, MultiplyPointOriginByTranslation)
 
 TEST(Matrix4x4FMultiplyTest, MultiplyPointNonOriginByTranslation)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(1.f, 0.f, 0.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(1.f, 0.f, 0.f));
     Vector3F p = m.MultiplyPoint(Vector3F(2.f, 3.f, 4.f));
     EXPECT_NEAR(p.x, 3.f, kEps);
     EXPECT_NEAR(p.y, 3.f, kEps);
@@ -614,7 +614,7 @@ TEST(Matrix4x4FMultiplyTest, MultiplyPointNonOriginByTranslation)
 
 TEST(Matrix4x4FMultiplyTest, MultiplyPointFastAppliesTranslation)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(4.f, -2.f, 1.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(4.f, -2.f, 1.f));
     Vector3F p = m.MultiplyPointFast(Vector3F(1.f, 1.f, 1.f));
     EXPECT_NEAR(p.x, 5.f, kEps);
     EXPECT_NEAR(p.y, -1.f, kEps);
@@ -630,7 +630,7 @@ TEST(Matrix4x4FMultiplyTest, MultiplyPointByIdentityUnchanged)
 
 TEST(Matrix4x4FMultiplyTest, MultiplyVectorIgnoresTranslation)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(10.f, 20.f, 30.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(10.f, 20.f, 30.f));
     Vector3F v = m.MultiplyVector(Vector3F(1.f, 0.f, 0.f));
     EXPECT_NEAR(v.x, 1.f, kEps);
     EXPECT_NEAR(v.y, 0.f, kEps);
@@ -641,7 +641,7 @@ TEST(Matrix4x4FMultiplyTest, MultiplyVectorAppliesRotation)
 {
     // 90° around Z: (1,0,0) → (0,1,0) (right-hand convention)
     Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI / 2.f), Vector3F::Forward());
-    Matrix4x4F m = Matrix4x4F::CreateRotation(q);
+    Matrix4x4F m = Matrix4x4F::Rotation(q);
     Vector3F v = m.MultiplyVector(Vector3F(1.f, 0.f, 0.f));
     // Length is preserved
     float len = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
@@ -663,27 +663,27 @@ TEST(Matrix4x4FMultiplyTest, MultiplyVectorByIdentityUnchanged)
 TEST(Matrix4x4FFactoryTest, CreateTranslationStoresTranslation)
 {
     Vector3F t(5.f, -3.f, 2.f);
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(t);
+    Matrix4x4F m = Matrix4x4F::Translation(t);
     EXPECT_TRUE(Vec3Equal(m.GetTranslation(), t));
 }
 
 TEST(Matrix4x4FFactoryTest, CreateTranslationUpperLeft3x3IsIdentity)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(1.f, 2.f, 3.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(1.f, 2.f, 3.f));
     EXPECT_NEAR(m.m00, 1.f, kEps); EXPECT_NEAR(m.m11, 1.f, kEps);
     EXPECT_NEAR(m.m22, 1.f, kEps); EXPECT_NEAR(m.m01, 0.f, kEps);
 }
 
 TEST(Matrix4x4FFactoryTest, CreateTranslationZeroEqualsIdentity)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTranslation(Vector3F(0.f, 0.f, 0.f));
+    Matrix4x4F m = Matrix4x4F::Translation(Vector3F(0.f, 0.f, 0.f));
     EXPECT_TRUE(Mat4Equal(m, Matrix4x4F::Identity));
 }
 
 TEST(Matrix4x4FFactoryTest, CreateScaleDiagonal)
 {
     Vector3F s(2.f, 3.f, 4.f);
-    Matrix4x4F m = Matrix4x4F::CreateScale(s);
+    Matrix4x4F m = Matrix4x4F::Scale(s);
     EXPECT_NEAR(m.m00, s.x, kEps);
     EXPECT_NEAR(m.m11, s.y, kEps);
     EXPECT_NEAR(m.m22, s.z, kEps);
@@ -693,46 +693,46 @@ TEST(Matrix4x4FFactoryTest, CreateScaleDiagonal)
 
 TEST(Matrix4x4FFactoryTest, CreateScaleOneEqualsIdentity)
 {
-    Matrix4x4F m = Matrix4x4F::CreateScale(Vector3F(1.f, 1.f, 1.f));
+    Matrix4x4F m = Matrix4x4F::Scale(Vector3F(1.f, 1.f, 1.f));
     EXPECT_TRUE(Mat4Equal(m, Matrix4x4F::Identity));
 }
 
-TEST(Matrix4x4FFactoryTest, CreateRotationIdentityQuaternionGivesIdentityMatrix)
+TEST(Matrix4x4FFactoryTest, RotationIdentityQuaternionGivesIdentityMatrix)
 {
     Quaternion q;
-    Matrix4x4F m = Matrix4x4F::CreateRotation(q);
+    Matrix4x4F m = Matrix4x4F::Rotation(q);
     EXPECT_TRUE(Mat4Equal(m, Matrix4x4F::Identity));
 }
 
-TEST(Matrix4x4FFactoryTest, CreateRotation180DegAroundXFlipsYZ)
+TEST(Matrix4x4FFactoryTest, Rotation180DegAroundXFlipsYZ)
 {
     Quaternion q = Quaternion::FromAngleAxis(RadianF(Mathf::PI), Vector3F::Right());
-    Matrix4x4F m = Matrix4x4F::CreateRotation(q);
+    Matrix4x4F m = Matrix4x4F::Rotation(q);
     Vector3F v = m.MultiplyVector(Vector3F(0.f, 1.f, 0.f));
     EXPECT_NEAR(v.x, 0.f, kEps);
     EXPECT_NEAR(v.y, -1.f, kEps);
 }
 
-TEST(Matrix4x4FFactoryTest, CreateTRSTranslationRoundTrip)
+TEST(Matrix4x4FFactoryTest, TRSTranslationRoundTrip)
 {
     Vector3F t(1.f, 2.f, 3.f);
-    Matrix4x4F m = Matrix4x4F::CreateTRS(t, Quaternion(), Vector3F(1.f, 1.f, 1.f));
+    Matrix4x4F m = Matrix4x4F::TRS(t, Quaternion(), Vector3F(1.f, 1.f, 1.f));
     EXPECT_TRUE(Vec3Equal(m.GetTranslation(), t));
 }
 
-TEST(Matrix4x4FFactoryTest, CreateTRSScaleRoundTrip)
+TEST(Matrix4x4FFactoryTest, TRSScaleRoundTrip)
 {
     Vector3F s(2.f, 3.f, 4.f);
-    Matrix4x4F m = Matrix4x4F::CreateTRS(Vector3F(0.f, 0.f, 0.f), Quaternion(), s);
+    Matrix4x4F m = Matrix4x4F::TRS(Vector3F(0.f, 0.f, 0.f), Quaternion(), s);
     Vector3F extractedScale = m.GetScale();
     EXPECT_NEAR(extractedScale.x, s.x, kEps);
     EXPECT_NEAR(extractedScale.y, s.y, kEps);
     EXPECT_NEAR(extractedScale.z, s.z, kEps);
 }
 
-TEST(Matrix4x4FFactoryTest, CreateTRSIdentityEqualsIdentity)
+TEST(Matrix4x4FFactoryTest, TRSIdentityEqualsIdentity)
 {
-    Matrix4x4F m = Matrix4x4F::CreateTRS(
+    Matrix4x4F m = Matrix4x4F::TRS(
         Vector3F(0.f, 0.f, 0.f),
         Quaternion(),
         Vector3F(1.f, 1.f, 1.f)
@@ -746,7 +746,7 @@ TEST(Matrix4x4FFactoryTest, CreateTRSIdentityEqualsIdentity)
 
 TEST(Matrix4x4FProjectionTest, PerspectiveDiagonalElementsAreFiniteAndPositive)
 {
-    Matrix4x4F m = Matrix4x4F::CreatePerspectiveProjection(
+    Matrix4x4F m = Matrix4x4F::PerspectiveProjection(
         Mathf::PI / 2.f, 16.f / 9.f, 0.1f, 1000.f
     );
     EXPECT_TRUE(std::isfinite(m.m00)); EXPECT_GT(m.m00, 0.f);
@@ -757,15 +757,15 @@ TEST(Matrix4x4FProjectionTest, PerspectiveDiagonalElementsAreFiniteAndPositive)
 
 TEST(Matrix4x4FProjectionTest, PerspectiveNarrowFovHasLargerM11)
 {
-    Matrix4x4F wide = Matrix4x4F::CreatePerspectiveProjection(Mathf::PI / 2.f, 1.f, 0.1f, 100.f);
-    Matrix4x4F narrow = Matrix4x4F::CreatePerspectiveProjection(Mathf::PI / 4.f, 1.f, 0.1f, 100.f);
+    Matrix4x4F wide = Matrix4x4F::PerspectiveProjection(Mathf::PI / 2.f, 1.f, 0.1f, 100.f);
+    Matrix4x4F narrow = Matrix4x4F::PerspectiveProjection(Mathf::PI / 4.f, 1.f, 0.1f, 100.f);
     EXPECT_GT(narrow.m11, wide.m11);
 }
 
 TEST(Matrix4x4FProjectionTest, OrthographicSymmetricScaleIsOne)
 {
     // Symmetric unit-cube mapping: l=-1,r=1,t=1,b=-1,n=0,f=1
-    Matrix4x4F m = Matrix4x4F::CreateOrthographicProjection(-1.f, 1.f, 1.f, -1.f, 0.f, 1.f);
+    Matrix4x4F m = Matrix4x4F::OrthographicProjection(-1.f, 1.f, 1.f, -1.f, 0.f, 1.f);
     EXPECT_NEAR(std::fabs(m.m00), 1.f, kEps);
     EXPECT_NEAR(std::fabs(m.m11), 1.f, kEps);
     EXPECT_TRUE(std::isfinite(m.m22));
@@ -773,7 +773,7 @@ TEST(Matrix4x4FProjectionTest, OrthographicSymmetricScaleIsOne)
 
 TEST(Matrix4x4FProjectionTest, OrthographicElementsAreFinite)
 {
-    Matrix4x4F m = Matrix4x4F::CreateOrthographicProjection(
+    Matrix4x4F m = Matrix4x4F::OrthographicProjection(
         0.f, 800.f, 600.f, 0.f, -1.f, 1.f
     );
     for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
@@ -786,7 +786,7 @@ TEST(Matrix4x4FProjectionTest, OrthographicElementsAreFinite)
 
 TEST(Matrix4x4FLookAtTest, LookAtUpperLeft3x3IsOrthonormal)
 {
-    Matrix4x4F m = Matrix4x4F::CreateLookAt(
+    Matrix4x4F m = Matrix4x4F::LookAt(
         Vector3F(0.f, 0.f, 5.f),
         Vector3F(0.f, 0.f, 0.f),
         Vector3F::Up()
@@ -808,7 +808,7 @@ TEST(Matrix4x4FLookAtTest, LookAtUpperLeft3x3IsOrthonormal)
 TEST(Matrix4x4FLookAtTest, LookAtDefaultUpParameterDoesNotThrow)
 {
     EXPECT_NO_THROW({
-        Matrix4x4F m = Matrix4x4F::CreateLookAt(
+        Matrix4x4F m = Matrix4x4F::LookAt(
             Vector3F(1.f, 1.f, 1.f),
             Vector3F(0.f, 0.f, 0.f)
         );
@@ -819,7 +819,7 @@ TEST(Matrix4x4FLookAtTest, LookAtDefaultUpParameterDoesNotThrow)
 TEST(Matrix4x4FLookAtTest, LookAtCustomUpVector)
 {
     EXPECT_NO_THROW({
-        Matrix4x4F m = Matrix4x4F::CreateLookAt(
+        Matrix4x4F m = Matrix4x4F::LookAt(
             Vector3F(0.f, 5.f, 0.f),
             Vector3F(0.f, 0.f, 0.f),
             Vector3F::Forward()
@@ -834,13 +834,13 @@ TEST(Matrix4x4FLookAtTest, LookAtCustomUpVector)
 
 TEST(Matrix4x4FRobustnessTest, UniformScaleThenInverse)
 {
-    Matrix4x4F s = Matrix4x4F::CreateScale(Vector3F(2.f, 2.f, 2.f));
+    Matrix4x4F s = Matrix4x4F::Scale(Vector3F(2.f, 2.f, 2.f));
     EXPECT_TRUE(Mat4Equal(s * s.Inversed(), Matrix4x4F::Identity));
 }
 
 TEST(Matrix4x4FRobustnessTest, ChainedTRSAndInverse)
 {
-    Matrix4x4F trs = Matrix4x4F::CreateTRS(
+    Matrix4x4F trs = Matrix4x4F::TRS(
         Vector3F(3.f, -1.f, 2.f),
         Quaternion::FromAngleAxis(0.785398_rf, Vector3F(0.f, 1.f, 0.f)),
         Vector3F(1.f, 1.f, 1.f)
@@ -859,7 +859,7 @@ TEST(Matrix4x4FRobustnessTest, StaticIdentityRowsMatchNamedRows)
 TEST(Matrix4x4FRobustnessTest, NegativeScalePreservesAbsoluteGetScale)
 {
     Vector3F s(-1.f, 2.f, -3.f);
-    Matrix4x4F m = Matrix4x4F::CreateScale(s);
+    Matrix4x4F m = Matrix4x4F::Scale(s);
     Vector3F extracted = m.GetScale();
     // GetScale returns magnitudes of basis vectors
     EXPECT_NEAR(extracted.x, std::fabs(s.x), kEps);
