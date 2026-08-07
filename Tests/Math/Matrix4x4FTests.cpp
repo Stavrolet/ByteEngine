@@ -16,7 +16,7 @@ static constexpr float kEps = 1e-4f;
 
 static bool Mat4Equal(const Matrix4x4F& a, const Matrix4x4F& b, float eps = kEps)
 {
-    for (int i = 0; i < Matrix4x4F::ElementCount; ++i)
+    for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
         if (std::fabs(a.elements[i] - b.elements[i]) > eps)
             return false;
     return true;
@@ -258,7 +258,7 @@ TEST(Matrix4x4FOperatorTest, Subtraction)
     Matrix4x4F a = Matrix4x4F::Identity;
     Matrix4x4F b = Matrix4x4F::Identity;
     Matrix4x4F c = a - b;
-    for (int i = 0; i < Matrix4x4F::ElementCount; ++i)
+    for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
         EXPECT_EQ(c.elements[i], 0.f);
 }
 
@@ -267,7 +267,7 @@ TEST(Matrix4x4FOperatorTest, SubtractionAssignment)
     Matrix4x4F a = Matrix4x4F::Identity;
     Matrix4x4F b = Matrix4x4F::Identity;
     a -= b;
-    for (int i = 0; i < Matrix4x4F::ElementCount; ++i)
+    for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
         EXPECT_EQ(a.elements[i], 0.f);
 }
 
@@ -292,7 +292,7 @@ TEST(Matrix4x4FOperatorTest, ScalarMultiplyByZero)
 {
     Matrix4x4F m = Matrix4x4F::Identity;
     Matrix4x4F zero = m * 0.f;
-    for (int i = 0; i < Matrix4x4F::ElementCount; ++i)
+    for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
         EXPECT_EQ(zero.elements[i], 0.f);
 }
 
@@ -776,7 +776,7 @@ TEST(Matrix4x4FProjectionTest, OrthographicElementsAreFinite)
     Matrix4x4F m = Matrix4x4F::CreateOrthographicProjection(
         0.f, 800.f, 600.f, 0.f, -1.f, 1.f
     );
-    for (int i = 0; i < Matrix4x4F::ElementCount; ++i)
+    for (int i = 0; i < Matrix4x4F::ELEMENT_COUNT; ++i)
         EXPECT_TRUE(std::isfinite(m.elements[i]));
 }
 

@@ -9,9 +9,9 @@ namespace ByteEngine::Math
 
     struct alignas(16) Matrix4x4F
     {
-        static constexpr int32 RowCount = 4;
-        static constexpr int32 ColumnCount = 4;
-        static constexpr int32 ElementCount = RowCount * ColumnCount;
+        static constexpr int32 ROW_COUNT = 4;
+        static constexpr int32 COLOMN_COUNT = 4;
+        static constexpr int32 ELEMENT_COUNT = ROW_COUNT * COLOMN_COUNT;
 
         union
         {
@@ -74,13 +74,13 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr Vector4F GetRow(int32 row) const
         {
-            assert(row >= 0 && row < RowCount);
+            assert(row >= 0 && row < ROW_COUNT);
             return rows[row];
         }
 
         [[nodiscard]] constexpr Vector4F GetColumn(int32 column) const
         {
-            assert(column >= 0 && column < ColumnCount);
+            assert(column >= 0 && column < COLOMN_COUNT);
             return Vector4F(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
         }
 
@@ -150,7 +150,7 @@ namespace ByteEngine::Math
         {
             Matrix4x4F result;
 
-            for (int i = 0; i < ElementCount; i++)
+            for (int i = 0; i < ELEMENT_COUNT; i++)
                 result.elements[i] = elements[i] + other.elements[i];
 
             return result;
@@ -160,7 +160,7 @@ namespace ByteEngine::Math
         {
             Matrix4x4F result;
 
-            for (int i = 0; i < ElementCount; i++)
+            for (int i = 0; i < ELEMENT_COUNT; i++)
                 result.elements[i] = elements[i] - other.elements[i];
 
             return result;
@@ -184,7 +184,7 @@ namespace ByteEngine::Math
         {
             Matrix4x4F result;
 
-            for (int i = 0; i < ElementCount; i++)
+            for (int i = 0; i < ELEMENT_COUNT; i++)
                 result.elements[i] = elements[i] * scalar;
 
             return result;
@@ -200,7 +200,7 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr bool operator==(const Matrix4x4F& other) const
         {
-            for (int i = 0; i < ElementCount; i++)
+            for (int i = 0; i < ELEMENT_COUNT; i++)
             {
                 if (elements[i] != other.elements[i])
                     return false;
@@ -216,27 +216,27 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr float operator[](int32 index) const
         {
-            assert(index >= 0 && index < ElementCount);
+            assert(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 index)
         {
-            assert(index >= 0 && index < ElementCount);
+            assert(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float operator[](int32 row, int32 column) const
         {
-            assert(row >= 0 && row < RowCount);
-            assert(column >= 0 && column < ColumnCount);
+            assert(row >= 0 && row < ROW_COUNT);
+            assert(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 row, int32 column)
         {
-            assert(row >= 0 && row < RowCount);
-            assert(column >= 0 && column < ColumnCount);
+            assert(row >= 0 && row < ROW_COUNT);
+            assert(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
 
