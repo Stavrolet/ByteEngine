@@ -331,6 +331,12 @@ namespace ByteEngine::Math
             return Max(Max(a, b), c);
         }
 
+        [[nodiscard]] static constexpr ColorT Black() { return ColorT(); }
+        [[nodiscard]] static constexpr ColorT White() { return ColorT(1.0f); }
+        [[nodiscard]] static constexpr ColorT Red() { return ColorT(1.0f, 0.0f, 0.0f); }
+        [[nodiscard]] static constexpr ColorT Green() { return ColorT(0.0f, 1.0f, 0.0f); }
+        [[nodiscard]] static constexpr ColorT Blue() { return ColorT(0.0f, 0.0f, 1.0f); }
+
         [[nodiscard]] constexpr ColorT operator+() const { return ColorT { +r, +g, +b, +a }; }
         [[nodiscard]] constexpr ColorT operator-() const { return ColorT { -r, -g, -b, -a }; }
 
@@ -404,28 +410,7 @@ namespace ByteEngine::Math
 
         template <std::floating_point U>
         [[nodiscard]] constexpr operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
-
-        static const ColorT Black;
-        static const ColorT White;
-        static const ColorT Red;
-        static const ColorT Green;
-        static const ColorT Blue;
     };
-
-    template <std::floating_point T>
-    inline constexpr ColorT<T> ColorT<T>::Black { 0 };
-
-    template <std::floating_point T>
-    inline constexpr ColorT<T> ColorT<T>::White { 1 };
-
-    template <std::floating_point T>
-    inline constexpr ColorT<T> ColorT<T>::Red { 1, 0, 0 };
-
-    template <std::floating_point T>
-    inline constexpr ColorT<T> ColorT<T>::Green { 0, 1, 0 };
-
-    template <std::floating_point T>
-    inline constexpr ColorT<T> ColorT<T>::Blue { 0, 0, 1 };
 
     using ColorF = ColorT<float>;
     using ColorD = ColorT<double>;
