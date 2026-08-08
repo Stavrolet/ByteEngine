@@ -403,13 +403,13 @@ namespace ByteEngine::Math
 
         template <std::floating_point U>
             requires(!std::is_same_v<T, U>)
-        [[nodiscard]] constexpr operator ColorT<U>() const
+        [[nodiscard]] explicit constexpr operator ColorT<U>() const
         {
             return ColorT<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a));
         }
 
         template <std::floating_point U>
-        [[nodiscard]] constexpr operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
+        [[nodiscard]] explicit constexpr operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
     };
 
     using ColorF = ColorT<float>;
