@@ -7,34 +7,6 @@
 namespace ByteEngine::Math
 {
     template<Arithmetic T>
-    Vector2T<T>::operator Vector3T<T>() const
-    {
-        return Vector3T<T>(x, y, 0);
-    }
-
-    template<Arithmetic T>
-    template<Arithmetic U>
-        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector2T<T>::operator Vector3T<U>() const
-    {
-        return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), 0);
-    }
-
-    template<Arithmetic T>
-    Vector2T<T>::operator Vector4T<T>() const
-    {
-        return Vector4T<T>(x, y, 0, 0);
-    }
-
-    template<Arithmetic T>
-    template<Arithmetic U>
-        requires (!std::is_same_v<T, U>&& std::is_convertible_v<T, U>)
-    Vector2T<T>::operator Vector4T<U>() const
-    {
-        return Vector4T<U>(static_cast<U>(x), static_cast<U>(y), 0, 0);
-    }
-
-    template<Arithmetic T>
     Vector3T<T>::operator Vector2T<T>() const
     {
         return Vector2T(x, y);

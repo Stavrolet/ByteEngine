@@ -53,6 +53,12 @@ namespace ByteEngine::Math
             x(x), y(y)
         { }
 
+        template <typename U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector2T(Vector2T<U> other) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y))
+        { }
+
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y; }
 
@@ -370,25 +376,6 @@ namespace ByteEngine::Math
             BE_ASSERT(index >= 0 && index < 2);
             return data[index];
         }
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector2T<U>() const
-        {
-            return Vector2T<U>(static_cast<U>(x), static_cast<U>(y));
-        }
-
-        operator Vector3T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector3T<U>() const;
-
-        operator Vector4T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector4T<U>() const;
     };
 
     using Vector2F = Vector2T<float>;
