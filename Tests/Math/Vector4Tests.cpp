@@ -1,18 +1,27 @@
-﻿#include <gtest/gtest.h>
-#include <cmath>
-#include <limits>
-#include "ByteEngine/Math/Vector4.h"
+﻿#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
-#include "ByteEngine/Math/Vector2.h"
-#include "ByteEngine/Math/VectorConversions.h"
+#include "ByteEngine/Math/Vector4.h"
+
+#include <cmath>
+#include <gtest/gtest.h>
+#include <limits>
+
 
 using namespace ByteEngine::Math;
 
 template <typename T>
-class Vector4tTest : public ::testing::Test { protected: using Vec4 = Vector4T<T>; };
+class Vector4tTest : public ::testing::Test
+{
+protected:
+    using Vec4 = Vector4T<T>;
+};
 
 template <typename T>
-class Vector4tFloatTypesTest : public ::testing::Test { protected: using Vec4 = Vector4T<T>; };
+class Vector4tFloatTypesTest : public ::testing::Test
+{
+protected:
+    using Vec4 = Vector4T<T>;
+};
 
 using Types = ::testing::Types<float, double, ByteEngine::int32, ByteEngine::int64>;
 using FloatTypes = ::testing::Types<float, double>;
@@ -127,22 +136,32 @@ TYPED_TEST(Vector4tTest, Operators)
 TYPED_TEST(Vector4tTest, ConversionsAndAccess)
 {
     using Vec4 = typename TestFixture::Vec4;
-    Vec4 v(1.0, 2.0, 3.0, 4.0);
+    Vector4F v(1.0, 2.0, 3.0, 4.0);
 
     EXPECT_EQ(v[0], 1.0);
     EXPECT_EQ(v[3], 4.0);
     v[0] = 10.0;
     EXPECT_EQ(v.x, 10.0);
 
-    Vector3T<decltype(v.x)> v3 = v;
+    Vector3T<decltype(v.x)> v3 = v.xyz();
     EXPECT_EQ(v3.z, 3.0);
 
-    Vector2T<double> v2 = v;
+    Vector2T<double> v2 = v.xy<double>();
     EXPECT_EQ(v2.y, 2.0);
 }
 
-template <typename T> class Vector4tFloatTypesRobustnessTest : public ::testing::Test { protected: using Vec4 = Vector4T<T>; };
-template <typename T> class Vector4tIntTypesRobustnessTest : public ::testing::Test { protected: using Vec4 = Vector4T<T>; };
+template <typename T>
+class Vector4tFloatTypesRobustnessTest : public ::testing::Test
+{
+protected:
+    using Vec4 = Vector4T<T>;
+};
+template <typename T>
+class Vector4tIntTypesRobustnessTest : public ::testing::Test
+{
+protected:
+    using Vec4 = Vector4T<T>;
+};
 
 TYPED_TEST_SUITE(Vector4tFloatTypesRobustnessTest, FloatTypes);
 TYPED_TEST_SUITE(Vector4tIntTypesRobustnessTest, IntTypes);

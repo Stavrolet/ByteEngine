@@ -46,7 +46,7 @@ namespace ByteEngine
         std::unordered_map<KeyCode, bool> previousFrameKeysState;
         bool isAnyKeyPressed = false;
 
-        Vector2 mouseDelta;
+        Vector2I mouseDelta;
         float horizontalWheelDelta = 0.0f;
         float verticalWheelDelta = 0.0f;
 
@@ -62,8 +62,8 @@ namespace ByteEngine
         bool IsKeyJustReleased(KeyCode code) const;
         bool IsAnyKeyPressed() const { return isAnyKeyPressed; }
 
-        Vector2 GetMouseDelta() const { return mouseDelta; }
-        Vector2 GetMousePosition() const;
+        Vector2I GetMouseDelta() const { return mouseDelta; }
+        Vector2I GetMousePosition() const;
 
     private:
         void Update();

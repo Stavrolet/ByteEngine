@@ -2,6 +2,7 @@
 
 #include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Debug.h"
+#include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
 namespace ByteEngine::Math
@@ -50,6 +51,32 @@ namespace ByteEngine::Math
             x(x), y(y), z(z), w(w)
         { }
 
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector4T(Vector4T<U> other) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(static_cast<T>(other.w))
+        { }
+
+        explicit constexpr Vector4T(Vector2T<T> other, T z = 0, T w = 0) :
+            x(other.x), y(other.y), z(z), w(w)
+        { }
+
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector4T(Vector2T<U> other, T z = 0, T w = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(z), w(w)
+        { }
+
+        explicit constexpr Vector4T(Vector3T<T> other, T w = 0) :
+            x(other.x), y(other.y), z(other.z), w(w)
+        { }
+
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector4T(Vector3T<U> other, T w = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(w)
+        { }
+
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
         constexpr FloatT LengthSquared() const { return x * x + y * y + z * z + w * w; }
 
@@ -91,6 +118,81 @@ namespace ByteEngine::Math
             if (currentLength > maxLength * maxLength)
                 *this *= maxLength / Mathf::Sqrt(currentLength);
         }
+
+#pragma region Swizzling
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> xy() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> xz() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> xw() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> yx() const { return Vector2T<U>(static_cast<U>(y), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> yz() const { return Vector2T<U>(static_cast<U>(y), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> yw() const { return Vector2T<U>(static_cast<U>(y), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> zx() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> zy() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> zw() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> wx() const { return Vector2T<U>(static_cast<U>(w), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> wy() const { return Vector2T<U>(static_cast<U>(w), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> wz() const { return Vector2T<U>(static_cast<U>(w), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xyz() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xyw() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xzy() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(z), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xzw() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(z), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xwy() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(w), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> xwz() const { return Vector3T<U>(static_cast<U>(x), static_cast<U>(w), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> yxz() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(x), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> yxw() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(x), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> yzx() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(z), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> yzw() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(z), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> ywx() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(w), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> ywz() const { return Vector3T<U>(static_cast<U>(y), static_cast<U>(w), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zxy() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(x), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zxw() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(x), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zyx() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(y), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zyw() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(y), static_cast<U>(w)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zwx() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(w), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> zwy() const { return Vector3T<U>(static_cast<U>(z), static_cast<U>(w), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wxy() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(x), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wxz() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(x), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wyx() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(y), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wyz() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(y), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wzx() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector3T<U> wzy() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(y)); }
+#pragma endregion
 
         static FloatT Distcance(Vector4T a, Vector4T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
@@ -261,25 +363,6 @@ namespace ByteEngine::Math
             BE_ASSERT(index >= 0 && index < 4);
             return data[index];
         }
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector4T<U>() const
-        {
-            return Vector4T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z));
-        }
-
-        operator Vector2T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector2T<U>() const;
-
-        operator Vector3T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector3T<U>() const;
     };
 
     using Vector4F = Vector4T<float>;

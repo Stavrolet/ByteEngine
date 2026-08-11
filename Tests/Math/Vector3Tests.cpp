@@ -5,7 +5,6 @@
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector4.h"
-#include "ByteEngine/Math/VectorConversions.h"
 
 using namespace ByteEngine::Math;
 using namespace ByteEngine::Math::Literals;
@@ -228,11 +227,11 @@ TYPED_TEST(Vector3tTest, AccessAndConversion)
     EXPECT_EQ(v[1], 2.0);
     EXPECT_EQ(v[2], 3.0);
 
-    Vector2T<decltype(v.x)> v2 = v;
+    Vector2T<decltype(v.x)> v2 = v.xy();
     EXPECT_EQ(v2.x, 1.0);
     EXPECT_EQ(v2.y, 2.0);
 
-    Vector4D v4 = v;
+    Vector4D v4(v);
     EXPECT_EQ(v4.x, 1.0);
     EXPECT_EQ(v4.y, 2.0);
     EXPECT_EQ(v4.z, 3.0);

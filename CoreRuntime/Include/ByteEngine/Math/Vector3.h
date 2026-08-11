@@ -2,6 +2,7 @@
 
 #include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Debug.h"
+#include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
 namespace ByteEngine::Math
@@ -46,6 +47,22 @@ namespace ByteEngine::Math
 
         constexpr Vector3T(T x, T y, T z) :
             x(x), y(y), z(z)
+        { }
+
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector3T(Vector3T<U> other) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z))
+        { }
+
+        explicit constexpr Vector3T(Vector2T<T> other, T z = 0) :
+            x(other.x), y(other.y), z(z)
+        { }
+
+        template <Arithmetic U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Vector3T(Vector2T<U> other, T z = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(other.z)
         { }
 
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
@@ -120,6 +137,21 @@ namespace ByteEngine::Math
             copy.RotateBy(angle, rotationAxis);
             return copy;
         }
+
+#pragma region Swizzling
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> xy() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> xz() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> yx() const { return Vector2T<U>(static_cast<U>(y), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> yz() const { return Vector2T<U>(static_cast<U>(y), static_cast<U>(z)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> zx() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(x)); }
+        template <Arithmetic U = T>
+        constexpr Vector2T<U> zy() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(y)); }
+#pragma endregion
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
@@ -379,25 +411,6 @@ namespace ByteEngine::Math
             BE_ASSERT(index >= 0 && index < 3);
             return data[index];
         }
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector3T<U>() const
-        {
-            return Vector3T<U>(static_cast<U>(x), static_cast<U>(y), static_cast<U>(z));
-        }
-
-        operator Vector2T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector2T<U>() const;
-
-        operator Vector4T<T>() const;
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U> && std::is_convertible_v<T, U>)
-        operator Vector4T<U>() const;
     };
 
     using Vector3F = Vector3T<float>;

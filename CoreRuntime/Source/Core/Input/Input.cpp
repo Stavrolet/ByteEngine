@@ -144,7 +144,7 @@ namespace ByteEngine
             isAnyKeyPressed = isPressed;
         });
 
-        MainWindow::GetInstance().MouseMoved().SubscribeLambda([this](Vector2 delta) { mouseDelta += delta; });
+        MainWindow::GetInstance().MouseMoved().SubscribeLambda([this](Vector2I delta) { mouseDelta += delta; });
 
         MainWindow::GetInstance().MouseWheelStateChanged().SubscribeLambda([this](float horizontalDelta, float verticalDelta) {
             horizontalWheelDelta += horizontalDelta;
@@ -205,13 +205,13 @@ namespace ByteEngine
     bool Input::IsKeyJustPressed(KeyCode code) const { return !previousFrameKeysState.at(code) && keysState.at(code); }
     bool Input::IsKeyJustReleased(KeyCode code) const { return previousFrameKeysState.at(code) && !keysState.at(code); }
 
-    Vector2 Input::GetMousePosition() const
+    Vector2I Input::GetMousePosition() const
     {
         POINT pos = { };
         if (GetCursorPos(&pos) == false)
             BE_LOG_ERROR("Failed to get cursor position. Error code: {:X}", GetLastError());
 
-        return Vector2(static_cast<float>(pos.x), static_cast<float>(pos.y));
+        return Vector2I(pos.x, pos.y);
     }
 
     void Input::Update()
@@ -224,7 +224,7 @@ namespace ByteEngine
         keysState[KeyCode::MouseWheelRight] = false;
         isAnyKeyPressed = false;
 
-        mouseDelta = Vector2::Zero();
+        mouseDelta = Vector2I::Zero();
         horizontalWheelDelta = 0.0f;
         verticalWheelDelta = 0.0f;
     }
