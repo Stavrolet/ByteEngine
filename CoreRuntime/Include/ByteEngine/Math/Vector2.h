@@ -8,12 +8,6 @@
 namespace ByteEngine::Math
 {
     template <Arithmetic T>
-    struct Vector3T;
-
-    template <Arithmetic T>
-    struct Vector4T;
-
-    template <Arithmetic T>
     struct Vector2T
     {
         using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
@@ -217,7 +211,7 @@ namespace ByteEngine::Math
             FloatT startLength = from.LengthSquared();
             FloatT endLength = to.LengthSquared();
 
-            if (startLength == 0 || endLength == 0)
+            if (Mathf::IsEqualApproximetly(startLength, FloatT(0)) || Mathf::IsEqualApproximetly(endLength, FloatT(0)))
                 return Lerp(from, to, t);
 
             startLength = Mathf::Sqrt(startLength);
