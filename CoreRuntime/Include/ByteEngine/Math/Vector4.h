@@ -57,24 +57,14 @@ namespace ByteEngine::Math
             x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(static_cast<T>(other.w))
         { }
 
-        explicit constexpr Vector4T(Vector2T<T> other, T z = 0, T w = 0) :
-            x(other.x), y(other.y), z(z), w(w)
+        template <Arithmetic U>
+        explicit constexpr Vector4T(Vector2T<U> other, U z = 0, U w = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(z)), w(static_cast<T>(w))
         { }
 
         template <Arithmetic U>
-            requires(!std::is_same_v<T, U>)
-        explicit constexpr Vector4T(Vector2T<U> other, T z = 0, T w = 0) :
-            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(z), w(w)
-        { }
-
-        explicit constexpr Vector4T(Vector3T<T> other, T w = 0) :
-            x(other.x), y(other.y), z(other.z), w(w)
-        { }
-
-        template <Arithmetic U>
-            requires(!std::is_same_v<T, U>)
-        explicit constexpr Vector4T(Vector3T<U> other, T w = 0) :
-            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(w)
+        explicit constexpr Vector4T(Vector3T<U> other, U w = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(static_cast<T>(w))
         { }
 
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }
@@ -119,7 +109,6 @@ namespace ByteEngine::Math
                 *this *= maxLength / Mathf::Sqrt(currentLength);
         }
 
-#pragma region Swizzling
         template <Arithmetic U = T>
         constexpr Vector2T<U> xy() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
         template <Arithmetic U = T>
@@ -192,7 +181,6 @@ namespace ByteEngine::Math
         constexpr Vector3T<U> wzx() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(x)); }
         template <Arithmetic U = T>
         constexpr Vector3T<U> wzy() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(y)); }
-#pragma endregion
 
         static FloatT Distcance(Vector4T a, Vector4T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }

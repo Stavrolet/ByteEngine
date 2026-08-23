@@ -55,14 +55,9 @@ namespace ByteEngine::Math
             x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z))
         { }
 
-        explicit constexpr Vector3T(Vector2T<T> other, T z = 0) :
-            x(other.x), y(other.y), z(z)
-        { }
-
         template <Arithmetic U>
-            requires(!std::is_same_v<T, U>)
-        explicit constexpr Vector3T(Vector2T<U> other, T z = 0) :
-            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(other.z)
+        explicit constexpr Vector3T(Vector2T<U> other, U z = 0) :
+            x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(z))
         { }
 
         FloatT Length() const { return Mathf::Sqrt(LengthSquared()); }

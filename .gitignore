@@ -54,3 +54,4 @@ MyLocalTests/
 .cache/
 .temp/
 .vscode/
+.idea/
