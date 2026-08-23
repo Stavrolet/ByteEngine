@@ -430,23 +430,14 @@ namespace ByteEngine::Math::Mathf
         return value;
     }
 
-    template <std::floating_point T>
-    [[nodiscard]] inline T Round(T value) noexcept { return std::round(value); }
+    template<std::floating_point T, Arithmetic U = T>
+    [[nodiscard]] inline U Round(T value) noexcept { return static_cast<U>(std::round(value)); }
 
-    template<std::floating_point T, Arithmetic U>
-    [[nodiscard]] inline U RoundTo(T value) noexcept { return static_cast<U>(std::round(value)); }
+    template<std::floating_point T, Arithmetic U = T>
+    [[nodiscard]] inline U Ceil(T value) noexcept { return static_cast<U>(std::ceil(value)); }
 
-    template <std::floating_point T>
-    [[nodiscard]] inline T Ceil(T value) noexcept { return std::ceil(value); }
-
-    template<std::floating_point T, Arithmetic U>
-    [[nodiscard]] inline U CeilTo(T value) noexcept { return static_cast<U>(std::ceil(value)); }
-
-    template <std::floating_point T>
-    [[nodiscard]] inline T Floor(T value) noexcept { return std::floor(value); }
-
-    template<std::floating_point T, Arithmetic U>
-    [[nodiscard]] inline U FloorTo(T value) noexcept { return static_cast<U>(std::floor(value)); }
+    template<std::floating_point T, Arithmetic U = T>
+    [[nodiscard]] inline U Floor(T value) noexcept { return static_cast<U>(std::floor(value)); }
 
     template <Arithmetic T>
     [[nodiscard]] constexpr T Sign(T value) noexcept { return static_cast<T>((value > 0) - (value < 0)); }
