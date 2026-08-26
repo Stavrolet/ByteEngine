@@ -10,7 +10,6 @@
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
         "CMAKE_SYSTEM_VERSION": "10.0.26100.0",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_MANIFEST_MODE": "ON",
         "VCPKG_TARGET_TRIPLET": "x64-windows"
       },

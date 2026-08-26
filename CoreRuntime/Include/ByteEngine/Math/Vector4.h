@@ -110,6 +110,28 @@ namespace ByteEngine::Math
         }
 
         template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Round()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y),Mathf::Round<U>(z), Mathf::Round<U>(w));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Ceil()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Ceil<U>(x), Mathf::Ceil<U>(y), Mathf::Ceil<U>(z), Mathf::Ceil<U>(w));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Floor()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Floor<U>(x), Mathf::Floor<U>(y), Mathf::Floor<U>(z), Mathf::Floor<U>(w));
+        }
+
+#pragma region Swizzling
+        template <Arithmetic U = T>
         constexpr Vector2T<U> xy() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }
         template <Arithmetic U = T>
         constexpr Vector2T<U> xz() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(z)); }
@@ -181,6 +203,7 @@ namespace ByteEngine::Math
         constexpr Vector3T<U> wzx() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(x)); }
         template <Arithmetic U = T>
         constexpr Vector3T<U> wzy() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(y)); }
+#pragma endregion
 
         static FloatT Distcance(Vector4T a, Vector4T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }

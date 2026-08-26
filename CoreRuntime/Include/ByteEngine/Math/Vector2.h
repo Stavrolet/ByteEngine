@@ -128,6 +128,27 @@ namespace ByteEngine::Math
             }
         }
 
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector2T<U> Round()
+            requires std::floating_point<T>
+        {
+            return Vector2T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector2T<U> Ceil()
+            requires std::floating_point<T>
+        {
+            return Vector2T<U>(Mathf::Ceil<U>(x), Mathf::Ceil<U>(y));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector2T<U> Floor()
+            requires std::floating_point<T>
+        {
+            return Vector2T<U>(Mathf::Floor<U>(x), Mathf::Floor<U>(y));
+        }
+
         static RadianT<FloatT> AngleBetween(Vector2T from, Vector2T to)
             requires std::floating_point<T>
         {

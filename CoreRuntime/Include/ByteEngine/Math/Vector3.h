@@ -133,6 +133,27 @@ namespace ByteEngine::Math
             return copy;
         }
 
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Round()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y),Mathf::Round<U>(z));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Ceil()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Ceil<U>(x), Mathf::Ceil<U>(y), Mathf::Ceil<U>(z));
+        }
+
+        template <Arithmetic U = T>
+        [[nodiscard]] constexpr Vector3T<U> Floor()
+            requires std::floating_point<T>
+        {
+            return Vector3T<U>(Mathf::Floor<U>(x), Mathf::Floor<U>(y), Mathf::Floor<U>(z));
+        }
+
 #pragma region Swizzling
         template <Arithmetic U = T>
         constexpr Vector2T<U> xy() const { return Vector2T<U>(static_cast<U>(x), static_cast<U>(y)); }

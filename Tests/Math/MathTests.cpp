@@ -105,3 +105,11 @@ TEST(MathTest, MinMax)
     EXPECT_EQ(Mathf::Max(10, 2, 100), 100);
     EXPECT_EQ(Mathf::Max(data), 4);
 }
+
+TEST(MathTest, Rounding)
+{
+    EXPECT_NEAR(Mathf::Round(2.4f), 2.0f, 1e-5f);
+    EXPECT_NEAR(Mathf::Round(2.5f), 3.0f, 1e-5f);
+    EXPECT_EQ(Mathf::Ceil<int>(3.1), 4);
+    EXPECT_EQ(Mathf::Floor<int>(3.1), 3);
+}
