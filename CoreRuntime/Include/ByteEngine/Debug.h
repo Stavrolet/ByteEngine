@@ -17,7 +17,7 @@ namespace ByteEngine
         ::quill::Logger* logger = nullptr;
 
     public:
-        ~Debug() { Shutdown(); }
+        ~Debug() override { Shutdown(); }
 
         static void Breakpoint()
         {
@@ -35,6 +35,8 @@ namespace ByteEngine
     #error "ByteEngine does not support current compiler"
 #endif
         }
+
+        static bool IsDebuggerAttached();
 
         void* GetLogger() const
         {
@@ -56,6 +58,7 @@ namespace ByteEngine
     #define BE_DEBUG_LOG_INFO(fmt, ...) QUILL_LOG_INFO(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
     #define BE_DEBUG_LOG_WARNING(fmt, ...) QUILL_LOG_WARNING(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
     #define BE_DEBUG_LOG_ERROR(fmt, ...) QUILL_LOG_ERROR(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
+    #define BE_DEBUG_LOG_CRITICAL(fmt, ...) QUILL_LOG_CRITICAL(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 
     #define BE_ASSERT(condition)                              \
         if (!(condition))                                     \
@@ -74,6 +77,7 @@ namespace ByteEngine
     #define BE_DEBUG_LOG_INFO(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_WARNING(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_ERROR(fmt, ...) ((void)0)
+    #define BE_DEBUG_LOG_CRITICAL(fmt, ...) ((void)0)
 
     #define BE_ASSERT(condition) ((void)0)
     #define BE_ASSERT_MSG(condition, fmt, ...) ((void)0)

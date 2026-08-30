@@ -2,13 +2,22 @@
 
 #include <quill/Backend.h>
 #include <quill/Frontend.h>
-#include <quill/Logger.h>
 #include <quill/sinks/ConsoleSink.h>
+#ifdef BE_WINDOWS
+    #include <Windows.h>
+#endif
 
 using namespace quill;
 
 namespace ByteEngine
 {
+    bool Debug::IsDebuggerAttached()
+    {
+#ifdef BE_WINDOWS
+        return IsDebuggerPresent();
+#endif
+    }
+
     void Debug::Initialize()
     {
         BackendOptions backendOptions;
@@ -18,12 +27,11 @@ namespace ByteEngine
         logger = Frontend::create_or_get_logger(
             "Main",
             Frontend::create_or_get_sink<ConsoleSink>("ConsoleSink1"),
-            PatternFormatterOptions { "[%(time)] [THREAD:%(thread_name)] %(level): \"%(message)\" at %(source_location)" }
-        );
+            PatternFormatterOptions { "[%(time)] [THREAD:%(thread_name)] %(level): \"%(message)\" at %(source_location)" });
     }
 
     void Debug::Shutdown()
     {
         Backend::stop();
     }
-}
+} // namespace ByteEngine
