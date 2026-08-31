@@ -1,6 +1,7 @@
 ﻿#define WIN32_LEAN_AND_MEAN
 
 #include "ByteEngine/Core/Base/Application.h"
+
 #include "ByteEngine/Core/Base/MainWindow.h"
 #include "ByteEngine/Core/Input/Input.h"
 #include "ByteEngine/Debug.h"
@@ -87,4 +88,14 @@ namespace ByteEngine
 
         return exitCode;
     }
-}
+
+    void Application::FatalCrashImpl(std::string_view msg) const
+    {
+        BE_LOG_CRITICAL("{}", msg);
+
+        if (Debug::IsDebuggerAttached())
+            Debug::Breakpoint();
+        else
+            std::abort();
+    }
+} // namespace ByteEngine

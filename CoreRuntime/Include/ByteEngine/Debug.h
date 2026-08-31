@@ -2,6 +2,7 @@
 
 #define NOMINMAX
 
+#include "ByteEngine/Core/Base/Application.h"
 #include "ByteEngine/Core/Base/Singleton.h"
 
 #include <quill/LogMacros.h>
@@ -53,25 +54,30 @@ namespace ByteEngine
 #define BE_LOG_WARNING(fmt, ...) QUILL_LOG_WARNING(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 #define BE_LOG_ERROR(fmt, ...) QUILL_LOG_ERROR(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 #define BE_LOG_CRITICAL(fmt, ...) QUILL_LOG_CRITICAL(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
+
 #ifdef BE_DEBUG
-    #define BE_DEBUG_LOG_INFO(fmt, ...) BE_LOG_INFO(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
-    #define BE_DEBUG_LOG_WARNING(fmt, ...) BE_LOG_WARNING(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
-    #define BE_DEBUG_LOG_ERROR(fmt, ...) BE_LOG_ERROR(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
-    #define BE_DEBUG_LOG_CRITICAL(fmt, ...) BE_LOG_CRITICAL(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
+    #define BE_DEBUG_LOG_INFO(fmt, ...) BE_LOG_INFO(fmt, ##__VA_ARGS__)
+    #define BE_DEBUG_LOG_WARNING(fmt, ...) BE_LOG_WARNING(fmt, ##__VA_ARGS__)
+    #define BE_DEBUG_LOG_ERROR(fmt, ...) BE_LOG_ERROR(fmt, ##__VA_ARGS__)
+    #define BE_DEBUG_LOG_CRITICAL(fmt, ...) BE_LOG_CRITICAL(fmt, ##__VA_ARGS__)
 
-    #define BE_ASSERT(condition)                              \
-        if (!(condition))                                     \
-        {                                                     \
-            BE_LOG_CRITICAL("Assertion failed: " #condition); \
-            ::ByteEngine::Debug::Breakpoint();                \
-        }
+    #define BE_ASSERT(condition)                                                                                          \
+        do                                                                                                                \
+        {                                                                                                                 \
+            if (!(condition))                                                                                             \
+            {                                                                                                             \
+                ::ByteEngine::Application::GetInstance().FatalCrash("Assertion failed: " #condition ". "); \
+            }                                                                                                             \
+        } while (false)
 
-    #define BE_ASSERT_MSG(condition, fmt, ...)                                                       \
-        if (!(condition))                                                                            \
-        {                                                                                            \
-            BE_LOG_CRITICAL(std::string("Assertion failed: " #condition ". ") + fmt, ##__VA_ARGS__); \
-            ::ByteEngine::Debug::Breakpoint();                                                       \
-        }
+    #define BE_ASSERT_MSG(condition, fmt, ...)                                                                                               \
+        do                                                                                                                                   \
+        {                                                                                                                                    \
+            if (!(condition))                                                                                                                \
+            {                                                                                                                                \
+                ::ByteEngine::Application::GetInstance().FatalCrash(std::string("Assertion failed: " #condition ". ") + fmt, ##__VA_ARGS__); \
+            }                                                                                                                                \
+        } while (false)
 #else
     #define BE_DEBUG_LOG_INFO(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_WARNING(fmt, ...) ((void)0)

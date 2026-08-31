@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "ByteEngine/Core/Base/Singleton.h"
-
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/CoreTypes.h"
-#include "ByteEngine/Debug.h"
 
+#include <format>
+#include <string>
 #include <string_view>
 
 namespace ByteEngine
@@ -39,18 +39,16 @@ namespace ByteEngine
         Delegate<bool>& QuitRequest() { return quitRequest; }
 
         template <typename... Args>
-        [[noreturn]] void FatalCrash(std::string_view msg, Args... args) const
+        [[noreturn]] void FatalCrash(std::format_string<Args...> msg, Args... args) const
         {
-            BE_LOG_CRITICAL(msg.data(), std::forward<Args>(args)...);
-
-            if (Debug::IsDebuggerAttached())
-                Debug::Breakpoint();
-            else
-                std::abort();
+            const std::string format = std::format(msg, std::forward<Args>(args)...);
+            FatalCrashImpl(format);
         }
 
     private:
         Error Initialize();
         int32 Run();
+
+        void FatalCrashImpl(std::string_view msg) const;
     };
 } // namespace ByteEngine
