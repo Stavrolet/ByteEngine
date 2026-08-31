@@ -7,7 +7,6 @@
 #include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
 
 #include <d3d11_1.h>
-#include <Windows.h>
 
 using namespace ByteEngine::Graphics;
 
