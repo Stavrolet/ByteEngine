@@ -75,13 +75,13 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr Vector4F GetRow(int32 row) const
         {
-            BE_ASSERT(row >= 0 && row < ROW_COUNT);
+            BE_DEBUG_CHECK(row >= 0 && row < ROW_COUNT);
             return rows[row];
         }
 
         [[nodiscard]] constexpr Vector4F GetColumn(int32 column) const
         {
-            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
+            BE_DEBUG_CHECK(column >= 0 && column < COLOMN_COUNT);
             return Vector4F(rows[0][column], rows[1][column], rows[2][column], rows[3][column]);
         }
 
@@ -224,27 +224,27 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr float operator[](int32 index) const
         {
-            BE_ASSERT(index >= 0 && index < ELEMENT_COUNT);
+            BE_DEBUG_CHECK(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 index)
         {
-            BE_ASSERT(index >= 0 && index < ELEMENT_COUNT);
+            BE_DEBUG_CHECK(index >= 0 && index < ELEMENT_COUNT);
             return elements[index];
         }
 
         [[nodiscard]] constexpr float operator[](int32 row, int32 column) const
         {
-            BE_ASSERT(row >= 0 && row < ROW_COUNT);
-            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
+            BE_DEBUG_CHECK(row >= 0 && row < ROW_COUNT);
+            BE_DEBUG_CHECK(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
 
         [[nodiscard]] constexpr float& operator[](int32 row, int32 column)
         {
-            BE_ASSERT(row >= 0 && row < ROW_COUNT);
-            BE_ASSERT(column >= 0 && column < COLOMN_COUNT);
+            BE_DEBUG_CHECK(row >= 0 && row < ROW_COUNT);
+            BE_DEBUG_CHECK(column >= 0 && column < COLOMN_COUNT);
             return rows[row][column];
         }
     };

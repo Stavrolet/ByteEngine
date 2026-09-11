@@ -276,14 +276,14 @@ namespace ByteEngine::Math
         static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto)
             requires std::floating_point<T>
         {
-            BE_ASSERT(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
+            BE_DEBUG_CHECK(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
             return projectOnto * Dot(vec, projectOnto);
         }
 
         static Vector2T Reflect(Vector2T vec, Vector2T normal)
             requires std::floating_point<T>
         {
-            BE_ASSERT(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
+            BE_DEBUG_CHECK(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
             return vec - T(2) * Dot(vec, normal) * normal;
         }
 
@@ -382,13 +382,13 @@ namespace ByteEngine::Math
 
         constexpr T& operator[](int32 index)
         {
-            BE_ASSERT(index >= 0 && index < 2);
+            BE_DEBUG_CHECK(index >= 0 && index < 2);
             return data[index];
         }
 
         constexpr T operator[](int32 index) const
         {
-            BE_ASSERT(index >= 0 && index < 2);
+            BE_DEBUG_CHECK(index >= 0 && index < 2);
             return data[index];
         }
     };

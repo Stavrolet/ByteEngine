@@ -7,6 +7,8 @@
 
 #include <quill/LogMacros.h>
 #include <quill/Logger.h>
+#include <source_location>
+#include <stacktrace>
 
 namespace ByteEngine
 {
@@ -15,7 +17,7 @@ namespace ByteEngine
         friend class Application;
 
     private:
-        ::quill::Logger* logger = nullptr;
+        quill::Logger* logger = nullptr;
 
     public:
         ~Debug() override { Shutdown(); }
@@ -37,6 +39,7 @@ namespace ByteEngine
 #endif
         }
 
+        static void BreakpointIfDebuggerAttached();
         static bool IsDebuggerAttached();
 
         void* GetLogger() const
@@ -55,35 +58,137 @@ namespace ByteEngine
 #define BE_LOG_ERROR(fmt, ...) QUILL_LOG_ERROR(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 #define BE_LOG_CRITICAL(fmt, ...) QUILL_LOG_CRITICAL(static_cast<::quill::Logger*>(::ByteEngine::Debug::GetInstance().GetLogger()), fmt, ##__VA_ARGS__)
 
+#define BE_CHECK(condition)                                                                       \
+    do                                                                                            \
+    {                                                                                             \
+        if (!(condition)) [[unlikely]]                                                            \
+        {                                                                                         \
+            ::ByteEngine::Application::GetInstance().FatalCrash("Condition failed: " #condition); \
+        }                                                                                         \
+    } while (false)
+
+#define BE_CHECK_MSG(condition, fmt, ...)                        \
+    do                                                           \
+    {                                                            \
+        if (!(condition)) [[unlikely]]                           \
+        {                                                        \
+            ::ByteEngine::Application::GetInstance().FatalCrash( \
+                "Condition failed: " #condition "\n"             \
+                "Message: " fmt,                                 \
+                ##__VA_ARGS__);                                  \
+        }                                                        \
+    } while (false)
+
 #ifdef BE_DEBUG
     #define BE_DEBUG_LOG_INFO(fmt, ...) BE_LOG_INFO(fmt, ##__VA_ARGS__)
     #define BE_DEBUG_LOG_WARNING(fmt, ...) BE_LOG_WARNING(fmt, ##__VA_ARGS__)
     #define BE_DEBUG_LOG_ERROR(fmt, ...) BE_LOG_ERROR(fmt, ##__VA_ARGS__)
     #define BE_DEBUG_LOG_CRITICAL(fmt, ...) BE_LOG_CRITICAL(fmt, ##__VA_ARGS__)
 
-    #define BE_ASSERT(condition)                                                                                          \
-        do                                                                                                                \
-        {                                                                                                                 \
-            if (!(condition))                                                                                             \
-            {                                                                                                             \
-                ::ByteEngine::Application::GetInstance().FatalCrash("Assertion failed: " #condition ". "); \
-            }                                                                                                             \
-        } while (false)
+    #define BE_DEBUG_CHECK(condition) BE_CHECK(condition)
+    #define BE_DEBUG_CHECK_MSG(condition, fmt, ...) BE_CHECK_MSG(condition, fmt, ##__VA_ARGS__)
 
-    #define BE_ASSERT_MSG(condition, fmt, ...)                                                                                               \
-        do                                                                                                                                   \
-        {                                                                                                                                    \
-            if (!(condition))                                                                                                                \
-            {                                                                                                                                \
-                ::ByteEngine::Application::GetInstance().FatalCrash(std::string("Assertion failed: " #condition ". ") + fmt, ##__VA_ARGS__); \
-            }                                                                                                                                \
-        } while (false)
+    #define BE_ENSURE(condition)                                                   \
+        [&]() -> bool {                                                            \
+            const bool conditionResult = condition;                                \
+            static bool ensured = false;                                           \
+                                                                                   \
+            if (!ensured)                                                          \
+            {                                                                      \
+                ensured = true;                                                    \
+                                                                                   \
+                if (!conditionResult) [[unlikely]]                                 \
+                {                                                                  \
+                    const std::stacktrace backtrace = std::stacktrace::current(1); \
+                    std::string backtraceString;                                   \
+                    backtraceString.reserve(backtrace.size() * 20);                \
+                    for (auto& el : backtrace)                                     \
+                        backtraceString.append('\t' + std::to_string(el) + '\n');  \
+                    BE_LOG_ERROR(                                                  \
+                        "Condition failed: " #condition "\n"                       \
+                        "Backtrace: \n{}\n",                                       \
+                        backtraceString);                                          \
+                }                                                                  \
+            }                                                                      \
+            ::ByteEngine::Debug::BreakpointIfDebuggerAttached();                   \
+            return conditionResult;                                                \
+        }()
+
+    #define BE_ENSURE_MSG(condition, fmt, ...)                                     \
+        [&]() -> bool {                                                            \
+            const bool conditionResult = condition;                                \
+            static bool ensured = false;                                           \
+                                                                                   \
+            if (!ensured)                                                          \
+            {                                                                      \
+                ensured = true;                                                    \
+                                                                                   \
+                if (!conditionResult) [[unlikely]]                                 \
+                {                                                                  \
+                    const std::stacktrace backtrace = std::stacktrace::current(1); \
+                    std::string backtraceString;                                   \
+                    backtraceString.reserve(backtrace.size() * 20);                \
+                    for (auto& el : backtrace)                                     \
+                        backtraceString.append('\t' + std::to_string(el) + '\n');  \
+                    BE_LOG_ERROR(                                                  \
+                        "Condition failed: " #condition "\n"                       \
+                        "Message: " fmt "\n"                                       \
+                        "Backtrace: \n{}\n",                                       \
+                        ##__VA_ARGS__, backtraceString);                           \
+                }                                                                  \
+            }                                                                      \
+            return conditionResult;                                                \
+        }()
+
+    #define BE_ENSURE_ALWAYS(condition)                                        \
+        [&]() -> bool {                                                        \
+            const bool conditionResult = condition;                            \
+            if (!conditionResult) [[unlikely]]                                 \
+            {                                                                  \
+                const std::stacktrace backtrace = std::stacktrace::current(1); \
+                std::string backtraceString;                                   \
+                backtraceString.reserve(backtrace.size() * 20);                \
+                for (auto& el : backtrace)                                     \
+                    backtraceString.append('\t' + std::to_string(el) + '\n');  \
+                BE_LOG_ERROR(                                                  \
+                    "Condition failed: " #condition "\n"                       \
+                    "Backtrace: \n{}\n",                                       \
+                    backtraceString);                                          \
+            }                                                                  \
+            ::ByteEngine::Debug::BreakpointIfDebuggerAttached();               \
+            return conditionResult;                                            \
+        }()
+
+    #define BE_ENSURE_ALWAYS_MSG(condition, fmt, ...)                          \
+        [&]() -> bool {                                                        \
+            const bool conditionResult = condition;                            \
+            if (!conditionResult) [[unlikely]]                                 \
+            {                                                                  \
+                const std::stacktrace backtrace = std::stacktrace::current(1); \
+                std::string backtraceString;                                   \
+                backtraceString.reserve(backtrace.size() * 20);                \
+                for (auto& el : backtrace)                                     \
+                    backtraceString.append('\t' + std::to_string(el) + '\n');  \
+                BE_LOG_ERROR(                                                  \
+                    "Condition failed: " #condition "\n"                       \
+                    "Message: " fmt "\n"                                       \
+                    "Backtrace: \n{}\n",                                       \
+                    ##__VA_ARGS__, backtraceString);                           \
+            }                                                                  \
+            ::ByteEngine::Debug::BreakpointIfDebuggerAttached();               \
+            return conditionResult;                                            \
+        }()
 #else
     #define BE_DEBUG_LOG_INFO(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_WARNING(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_ERROR(fmt, ...) ((void)0)
     #define BE_DEBUG_LOG_CRITICAL(fmt, ...) ((void)0)
 
-    #define BE_ASSERT(condition) ((void)0)
-    #define BE_ASSERT_MSG(condition, fmt, ...) ((void)0)
+    #define BE_DEBUG_CHECK(condition) ((void)0)
+    #define BE_DEBUG_CHECK_MSG(condition, fmt, ...) ((void)0)
+
+    #define BE_ENSURE(condition) (!!(condition))
+    #define BE_ENSURE_MSG(condition) (!!(condition))
+    #define BE_ENSURE_ALWAYS(condition) (!!(condition))
+    #define BE_ENSURE_ALWAYS_MSG(condition) (!!(condition))
 #endif

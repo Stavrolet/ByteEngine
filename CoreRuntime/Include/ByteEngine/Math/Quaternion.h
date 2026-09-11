@@ -72,7 +72,7 @@ namespace ByteEngine::Math
 
         void Inverse()
         {
-            BE_ASSERT(IsNormalized());
+            BE_DEBUG_CHECK(IsNormalized());
             x = -x;
             y = -y;
             z = -z;
@@ -158,13 +158,13 @@ namespace ByteEngine::Math
 
         constexpr float& operator[](int32 index)
         {
-            BE_ASSERT(index >= 0 && index < 4);
+            BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
 
         constexpr float operator[](int32 index) const
         {
-            BE_ASSERT(index >= 0 && index < 4);
+            BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
 

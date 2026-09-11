@@ -76,7 +76,7 @@ namespace ByteEngine::EventSystem
 
         void Unsubscribe(SubscriptionHandle handle)
         {
-            BE_ASSERT_MSG(handle != 0, "Subscription handle must not be equal to 0.");
+            BE_DEBUG_CHECK_MSG(handle != 0, "Subscription handle must not be equal to 0.");
 
             if (invoked)
                 pendingRemovals.emplace_back(handle);
@@ -86,7 +86,7 @@ namespace ByteEngine::EventSystem
 
         void UnsubscribeObject(const void* objectToUnsubscribe)
         {
-            BE_ASSERT_MSG(objectToUnsubscribe != nullptr, "Object pointer cannot be null.");
+            BE_DEBUG_CHECK_MSG(objectToUnsubscribe != nullptr, "Object pointer cannot be null.");
 
             if (invoked)
             {

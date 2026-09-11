@@ -45,6 +45,7 @@ namespace ByteEngine
 
         Input* input = new Input;
         Input::SetInstance(input);
+
         return Error::Success;
     }
 
@@ -85,7 +86,6 @@ namespace ByteEngine
         }
 
         BE_LOG_INFO("Application is closing");
-
         return exitCode;
     }
 

@@ -391,13 +391,13 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr T& operator[](int32 index)
         {
-            BE_ASSERT(index >= 0 && index < 4);
+            BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
 
         [[nodiscard]] constexpr T operator[](int32 index) const
         {
-            BE_ASSERT(index >= 0 && index < 4);
+            BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
 
