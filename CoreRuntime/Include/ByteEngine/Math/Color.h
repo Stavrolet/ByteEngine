@@ -286,14 +286,14 @@ namespace ByteEngine::Math
             return std::nullopt;
         }
 
-        [[nodiscard]] static ColorT Lerp(ColorT from, ColorT to, T t)
+        [[nodiscard]] static ColorT LerpUnclamped(ColorT from, ColorT to, T t)
         {
             return from + (to - from) * t;
         }
 
-        [[nodiscard]] static ColorT LerpClamped(ColorT from, ColorT to, T t)
+        [[nodiscard]] static ColorT Lerp(ColorT from, ColorT to, T t)
         {
-            return from + (to - from) * Mathf::Clamp(t);
+            return LerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
         [[nodiscard]] static constexpr bool IsEqualApproximetly(ColorT a, ColorT b, T tolerance = Mathf::Epsilon)

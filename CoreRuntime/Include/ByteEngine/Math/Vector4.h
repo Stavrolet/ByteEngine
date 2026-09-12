@@ -86,11 +86,26 @@ namespace ByteEngine::Math
             }
         }
 
+        void NormalizeUnsafe()
+            requires std::floating_point<T>
+        {
+            FloatT invLength = 1 / Length();
+            *this *= invLength;
+        }
+
         Vector4T Normalized() const
             requires std::floating_point<T>
         {
             Vector4T copy = *this;
             copy.Normalize();
+            return copy;
+        }
+
+        Vector4T NormalizedUnsafe() const
+            requires std::floating_point<T>
+        {
+            Vector4T copy = *this;
+            copy.NormalizeUnsafe();
             return copy;
         }
 
@@ -113,7 +128,7 @@ namespace ByteEngine::Math
         [[nodiscard]] constexpr Vector3T<U> Round()
             requires std::floating_point<T>
         {
-            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y),Mathf::Round<U>(z), Mathf::Round<U>(w));
+            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y), Mathf::Round<U>(z), Mathf::Round<U>(w));
         }
 
         template <Arithmetic U = T>
@@ -220,16 +235,16 @@ namespace ByteEngine::Math
 
         static constexpr FloatT Dot(Vector4T a, Vector4T b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
-        static constexpr Vector4T Lerp(Vector4T from, Vector4T to, FloatT t)
+        static constexpr Vector4T LerpUnclamped(Vector4T from, Vector4T to, FloatT t)
             requires std::floating_point<T>
         {
             return from + (to - from) * t;
         }
 
-        static constexpr Vector4T LerpClamped(Vector4T from, Vector4T to, FloatT t)
+        static constexpr Vector4T Lerp(Vector4T from, Vector4T to, FloatT t)
             requires std::floating_point<T>
         {
-            return from + (to - from) * Mathf::Clamp(t);
+            return LerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
         static Vector4T MoveTowards(Vector4T current, Vector4T target, FloatT maxDelta)

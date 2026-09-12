@@ -72,11 +72,27 @@ namespace ByteEngine::Math
             }
         }
 
+        void NormalizeUnsafe()
+            requires std::floating_point<T>
+        {
+            BE_DEBUG_CHECK(LengthSquared() > Mathf::Epsilon);
+            FloatT invLength = 1 / Length();
+            *this *= invLength;
+        }
+
         Vector2T Normalized() const
             requires std::floating_point<T>
         {
             Vector2T copy = *this;
             copy.Normalize();
+            return copy;
+        }
+
+        Vector2T NormalizedUnsafe() const
+            requires std::floating_point<T>
+        {
+            Vector2T copy = *this;
+            copy.NormalizeUnsafe();
             return copy;
         }
 
@@ -212,21 +228,21 @@ namespace ByteEngine::Math
             return FromAngle(angle) * length;
         }
 
-        static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t)
+        static constexpr Vector2T LerpUnclamped(Vector2T from, Vector2T to, FloatT t)
             requires std::floating_point<T>
         {
             return from + (to - from) * t;
         }
 
-        static constexpr Vector2T LerpClamped(Vector2T from, Vector2T to, FloatT t)
+        static constexpr Vector2T Lerp(Vector2T from, Vector2T to, FloatT t)
             requires std::floating_point<T>
         {
-            return from + (to - from) * Mathf::Clamp(t);
+            return LerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector2::slerp
-        static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t)
+        static Vector2T SlerpUnclamped(Vector2T from, Vector2T to, FloatT t)
             requires std::floating_point<T>
         {
             FloatT startLength = from.LengthSquared();
@@ -243,7 +259,7 @@ namespace ByteEngine::Math
             return from * (resultLength / startLength);
         }
 
-        static Vector2T SlerpClamped(Vector2T from, Vector2T to, FloatT t)
+        static Vector2T Slerp(Vector2T from, Vector2T to, FloatT t)
             requires std::floating_point<T>
         {
             return Slerp(from, to, Mathf::Clamp(t));
@@ -266,25 +282,27 @@ namespace ByteEngine::Math
         static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto)
             requires std::floating_point<T>
         {
-            T dot = Dot(vec, projectOnto);
-            if (dot < Mathf::Epsilon)
-                return Zero();
-
-            return projectOnto * (dot / projectOnto.LengthSquared());
+            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
         }
 
-        static Vector2T ProjectNormalized(Vector2T vec, Vector2T projectOnto)
+        static Vector2T ProjectUnsafe(Vector2T vec, Vector2T projectOnto)
             requires std::floating_point<T>
         {
-            BE_DEBUG_CHECK(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
+            BE_DEBUG_CHECK(projectOnto.IsNormalized());
             return projectOnto * Dot(vec, projectOnto);
         }
 
-        static Vector2T Reflect(Vector2T vec, Vector2T normal)
+        static Vector2T ReflectUnsafe(Vector2T vec, Vector2T normal)
             requires std::floating_point<T>
         {
-            BE_DEBUG_CHECK(normal.IsNormalized() || IsEqualApproximetly(normal, Zero()));
+            BE_DEBUG_CHECK(normal.IsNormalized());
             return vec - T(2) * Dot(vec, normal) * normal;
+        }
+
+        static Vector2T Reflect(Vector2T vec, Vector2T normal)
+        {
+            normal.Normalize();
+            return ReflectUnsafe(vec, normal);
         }
 
         static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon)

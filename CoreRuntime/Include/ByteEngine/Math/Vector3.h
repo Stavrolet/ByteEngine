@@ -79,11 +79,27 @@ namespace ByteEngine::Math
             }
         }
 
+        void NormalizeUnsafe()
+            requires std::floating_point<T>
+        {
+            BE_DEBUG_CHECK(LengthSquared() > Mathf::Epsilon);
+            FloatT invLength = 1 / Length();
+            *this *= invLength;
+        }
+
         Vector3T Normalized() const
             requires std::floating_point<T>
         {
             Vector3T copy = *this;
             copy.Normalize();
+            return copy;
+        }
+
+        Vector3T NormalizedUnsafe() const
+            requires std::floating_point<T>
+        {
+            Vector3T copy = *this;
+            copy.NormalizeUnsafe();
             return copy;
         }
 
@@ -102,10 +118,10 @@ namespace ByteEngine::Math
                 *this *= maxLength / Mathf::Sqrt(currentLength);
         }
 
-        void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
+        void RotateByUnsafe(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
             requires std::floating_point<T>
         {
-            BE_DEBUG_CHECK(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+            BE_DEBUG_CHECK(rotationAxis.IsNormalized());
 
             FloatT sin, cos;
 
@@ -119,10 +135,14 @@ namespace ByteEngine::Math
                 cos = Mathf::Cos(-angle);
             }
 
-            if (rotationAxis.LengthSquared() < Mathf::Epsilon)
-                return;
+            *this = *this * cos + Cross(rotationAxis, *this) * sin + rotationAxis * Dot(rotationAxis, *this) * (1 - cos);
+        }
 
-            *this = (*this * cos) + (Cross(rotationAxis, *this) * sin) + (rotationAxis * Dot(rotationAxis, *this) * (1 - cos));
+        void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
+            requires std::floating_point<T>
+        {
+            rotationAxis.Normalize();
+            return RotateByUnsafe(angle, rotationAxis);
         }
 
         Vector3T RotatedBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) const
@@ -133,11 +153,19 @@ namespace ByteEngine::Math
             return copy;
         }
 
+        Vector3T RotatedByUnsafe(RadianT<FloatT> angle, Vector3T rotationAxis = Up()) const
+            requires std::floating_point<T>
+        {
+            Vector3T copy = *this;
+            copy.RotateByUnsafe(angle, rotationAxis);
+            return copy;
+        }
+
         template <Arithmetic U = T>
         [[nodiscard]] constexpr Vector3T<U> Round()
             requires std::floating_point<T>
         {
-            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y),Mathf::Round<U>(z));
+            return Vector3T<U>(Mathf::Round<U>(x), Mathf::Round<U>(y), Mathf::Round<U>(z));
         }
 
         template <Arithmetic U = T>
@@ -174,11 +202,20 @@ namespace ByteEngine::Math
         static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis)
             requires std::floating_point<T>
         {
-            BE_DEBUG_CHECK(rotationAxis.IsNormalized() || IsEqualApproximetly(rotationAxis, Zero()));
+            BE_DEBUG_CHECK(rotationAxis.IsNormalized());
 
             Vector3T cross = Cross(from, to);
             RadianT<T> unsignedAngle = Mathf::Atan2(cross.Length(), Dot(from, to));
             FloatT sign = Mathf::Sign(Dot(cross, rotationAxis));
+            return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
+        }
+
+        static RadianT<FloatT> AngleBetweenUnsafe(Vector3T from, Vector3T to, Vector3T rotationAxis)
+            requires std::floating_point<T>
+        {
+            Vector3T cross = Cross(from, to);
+            RadianT<T> unsignedAngle = Mathf::Atan2(cross.Length(), Dot(from, to));
+            FloatT sign = Mathf::Sign(Dot(cross, rotationAxis) / rotationAxis.LengthSquared());
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
@@ -209,8 +246,7 @@ namespace ByteEngine::Math
             return Vector3T(
                 a.y * b.z - a.z * b.y,
                 a.z * b.x - a.x * b.z,
-                a.x * b.y - a.y * b.x
-            );
+                a.x * b.y - a.y * b.x);
         }
 
         static constexpr FloatT Dot(Vector3T a, Vector3T b)
@@ -219,21 +255,21 @@ namespace ByteEngine::Math
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t)
+        static constexpr Vector3T LerpUnclamped(Vector3T from, Vector3T to, FloatT t)
             requires std::floating_point<T>
         {
             return from + (to - from) * t;
         }
 
-        static constexpr Vector3T LerpClamped(Vector3T from, Vector3T to, FloatT t)
+        static constexpr Vector3T Lerp(Vector3T from, Vector3T to, FloatT t)
             requires std::floating_point<T>
         {
-            return from + (to - from) * Mathf::Clamp(t);
+            return LerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
         // Slerp implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::slerp
-        static Vector3T Slerp(Vector3T from, Vector3T to, FloatT t)
+        static Vector3T SlerpUnclamped(Vector3T from, Vector3T to, FloatT t)
             requires std::floating_point<T>
         {
             FloatT startLengthSq = from.LengthSquared();
@@ -255,10 +291,10 @@ namespace ByteEngine::Math
             return axis.RotatedBy(angle * t) * (resultLength / startLength);
         }
 
-        static Vector3T SlerpClamped(Vector3T from, Vector3T to, FloatT t)
+        static Vector3T Slerp(Vector3T from, Vector3T to, FloatT t)
             requires std::floating_point<T>
         {
-            return Slerp(from, to, Mathf::Clamp(t));
+            return SlerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
         // MoveTowards implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -278,25 +314,28 @@ namespace ByteEngine::Math
         static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto)
             requires std::floating_point<T>
         {
-            T dot = Dot(vec, projectOnto);
-
-            if (dot < Mathf::Epsilon)
-                return Zero();
-
-            return projectOnto * (dot / projectOnto.LengthSquared());
+            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
         }
 
-        static constexpr Vector3T ProjectNormalized(Vector3T vec, Vector3T projectOnto)
+        static constexpr Vector3T ProjectUnsafe(Vector3T vec, Vector3T projectOnto)
             requires std::floating_point<T>
         {
-            BE_DEBUG_CHECK(projectOnto.IsNormalized() || IsEqualApproximetly(projectOnto, Zero()));
+            BE_DEBUG_CHECK(projectOnto.IsNormalized());
             return projectOnto * Dot(vec, projectOnto);
+        }
+
+        static constexpr Vector3T ReflectUnsafe(Vector3T vec, Vector3T normal)
+            requires std::floating_point<T>
+        {
+            BE_DEBUG_CHECK(normal.IsNormalized());
+            return vec - 2 * Dot(vec, normal) * normal;
         }
 
         static constexpr Vector3T Reflect(Vector3T vec, Vector3T normal)
             requires std::floating_point<T>
         {
-            return vec - 2 * Dot(vec, normal) * normal;
+            normal.Normalize();
+            return ReflectUnsafe(vec, normal);
         }
 
         static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon)
