@@ -27,7 +27,7 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct RadianT
     {
-        T value = 0;
+        T value;
 
         constexpr RadianT() = default;
 
@@ -119,7 +119,7 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct DegreeT
     {
-        T value = 0;
+        T value;
 
         constexpr DegreeT() = default;
 

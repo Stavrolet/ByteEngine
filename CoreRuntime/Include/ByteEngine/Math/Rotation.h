@@ -19,8 +19,10 @@ namespace ByteEngine::Math
             DegreeF data[3];
         };
 
-        constexpr Rotation() :
-            pitch(0), yaw(0), roll(0)
+        constexpr Rotation() = default;
+
+        explicit constexpr Rotation(DegreeF all) :
+            pitch(all), yaw(all), roll(all)
         { }
 
         constexpr Rotation(DegreeF pitch, DegreeF yaw, DegreeF roll) :
@@ -47,7 +49,7 @@ namespace ByteEngine::Math
             pitch(euler.pitch.ToDegree()), yaw(euler.yaw.ToDegree()), roll(euler.roll.ToDegree())
         { }
 
-        explicit constexpr Rotation(const Quaternion& q) :
+        explicit constexpr Rotation(Quaternion q) :
             Rotation(q.GetEulerInDegrees())
         { }
 
@@ -55,14 +57,10 @@ namespace ByteEngine::Math
 
         [[nodiscard]] Rotation Normalized() const;
 
-        [[nodiscard]] Quaternion ToQuaternion() const;
-
         [[nodiscard]] constexpr EulerDeg ToEulerDeg() const { return EulerDeg { pitch, yaw, roll }; }
         [[nodiscard]] constexpr EulerRad ToEulerRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
 
         [[nodiscard]] Vector3F RotateVector(Vector3F vector) const;
-
-        [[nodiscard]] static Rotation FromQuaternion(Quaternion q);
 
         [[nodiscard]] static bool IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon = Mathf::AngleEpsilon.ToDegree());
 
@@ -136,4 +134,9 @@ namespace ByteEngine::Math
             return data[index];
         }
     };
+
+    constexpr Quaternion::Quaternion(Rotation rotation)
+    {
+        *this = FromEuler(rotation.pitch, rotation.yaw, rotation.roll);
+    }
 } // namespace ByteEngine::Math

@@ -1,8 +1,6 @@
 ﻿#pragma once
 
-#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
-#include "ByteEngine/Math/Vector4.h"
 
 namespace ByteEngine::Math
 {
@@ -12,24 +10,38 @@ namespace ByteEngine::Math
 
     struct EulerRad
     {
-        RadianF pitch = 0_rf;
-        RadianF yaw = 0_rf;
-        RadianF roll = 0_rf;
+        RadianF pitch;
+        RadianF yaw;
+        RadianF roll;
+
+        constexpr EulerRad() = default;
+
+        constexpr EulerRad(RadianF pitch, RadianF yaw, RadianF roll) :
+            pitch(pitch), yaw(yaw), roll(roll)
+        { }
 
         [[nodiscard]] constexpr EulerDeg ToDeg() const;
     };
 
     struct EulerDeg
     {
-        DegreeF pitch = 0_df;
-        DegreeF yaw = 0_df;
-        DegreeF roll = 0_df;
+        DegreeF pitch;
+        DegreeF yaw;
+        DegreeF roll;
+
+        constexpr EulerDeg() = default;
+
+        constexpr EulerDeg(DegreeF pitch, DegreeF yaw, DegreeF roll) :
+            pitch(pitch), yaw(yaw), roll(roll)
+        { }
 
         [[nodiscard]] constexpr EulerRad ToRad() const;
     };
 
     constexpr EulerDeg EulerRad::ToDeg() const { return EulerDeg { pitch.ToDegree(), yaw.ToDegree(), roll.ToDegree() }; }
     constexpr EulerRad EulerDeg::ToRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
+
+    struct Rotation;
 
     struct Quaternion
     {
@@ -56,9 +68,11 @@ namespace ByteEngine::Math
             x(x), y(y), z(z), w(w)
         { }
 
-        constexpr Quaternion(const float arr[4]) :
+        explicit constexpr Quaternion(const float arr[4]) :
             x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
+
+        explicit constexpr Quaternion(Rotation rotation);
 
         [[nodiscard]] float Length() const;
         [[nodiscard]] constexpr float LengthSquared() const { return x * x + y * y + z * z + w * w; }
@@ -135,7 +149,8 @@ namespace ByteEngine::Math
                 w * q.x + x * q.w + y * q.z - z * q.y,
                 w * q.y - x * q.z + y * q.w + z * q.x,
                 w * q.z + x * q.y - y * q.x + z * q.w,
-                w * q.w - x * q.x - y * q.y - z * q.z);
+                w * q.w - x * q.x - y * q.y - z * q.z
+            );
         }
 
         constexpr Vector3F operator*(Vector3F v) const

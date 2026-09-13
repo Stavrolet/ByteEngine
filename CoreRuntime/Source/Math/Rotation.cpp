@@ -16,18 +16,10 @@ namespace ByteEngine::Math
         return copy;
     }
 
-    Quaternion Rotation::ToQuaternion() const { return Quaternion::FromEuler(pitch, yaw, roll); }
-
     Vector3F Rotation::RotateVector(Vector3F vector) const
     {
-        Quaternion q = ToQuaternion();
+        Quaternion q = Quaternion(*this);
         return q * vector;
-    }
-
-    Rotation Rotation::FromQuaternion(Quaternion q)
-    {
-        EulerDeg euler = q.GetEulerInDegrees();
-        return Rotation(euler);
     }
 
     bool Rotation::IsEqualApproximately(Rotation a, Rotation b, DegreeF epsilon)
@@ -39,10 +31,10 @@ namespace ByteEngine::Math
 
     Rotation Rotation::Slerp(Rotation from, Rotation to, float t)
     {
-        Quaternion qFrom = from.ToQuaternion();
-        Quaternion qTo = to.ToQuaternion();
+        Quaternion qFrom = Quaternion(from);
+        Quaternion qTo = Quaternion(to);
         Quaternion qResult = Quaternion::Slerp(qFrom, qTo, t);
-        return FromQuaternion(qResult);
+        return Rotation(qResult);
     }
 
     Rotation Rotation::SlerpClamped(Rotation from, Rotation to, float t)

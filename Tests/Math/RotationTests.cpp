@@ -24,14 +24,6 @@ static bool RotEqual(const Rotation& a, const Rotation& b, float eps = kEps)
 // Construction
 // ─────────────────────────────────────────────
 
-TEST(RotationConstructionTest, DefaultConstructorIsZero)
-{
-    Rotation r;
-    EXPECT_EQ(r.pitch.value, 0.0f);
-    EXPECT_EQ(r.yaw.value, 0.0f);
-    EXPECT_EQ(r.roll.value, 0.0f);
-}
-
 TEST(RotationConstructionTest, DegreeConstructor)
 {
     Rotation r(45.0_df, 90.0_df, 180.0_df);
@@ -96,7 +88,7 @@ TEST(RotationConstructionTest, QuaternionConstructorIdentityGivesZero)
 TEST(RotationConstructionTest, QuaternionConstructorRoundTrip)
 {
     Rotation original(30.0_df, 45.0_df, 60.0_df);
-    Quaternion q = original.ToQuaternion();
+    Quaternion q = Quaternion(original);
     Rotation roundTripped(q);
     EXPECT_TRUE(RotEqual(original, roundTripped, kLooseEps));
 }
@@ -158,13 +150,6 @@ TEST(RotationOperatorTest, EqualitySymmetric)
     Rotation b(45.0_df, 0.0_df, -90.0_df);
     EXPECT_TRUE(a == b);
     EXPECT_TRUE(b == a);
-}
-
-TEST(RotationOperatorTest, DefaultConstructedRotationsAreEqual)
-{
-    Rotation a;
-    Rotation b;
-    EXPECT_TRUE(a == b);
 }
 
 // ─────────────────────────────────────────────
@@ -349,8 +334,8 @@ TEST(RotationNormalizeTest, NormalizedAndNormalizeMutateProduceSameResult)
 
 TEST(RotationConversionTest, ZeroRotationToQuaternionIsIdentity)
 {
-    Rotation r;
-    Quaternion q = r.ToQuaternion();
+    Rotation r(0_df);
+    Quaternion q = Quaternion(r);
     EXPECT_NEAR(q.x, Quaternion::Identity().x, kLooseEps);
     EXPECT_NEAR(q.y, Quaternion::Identity().y, kLooseEps);
     EXPECT_NEAR(q.z, Quaternion::Identity().z, kLooseEps);
@@ -360,27 +345,8 @@ TEST(RotationConversionTest, ZeroRotationToQuaternionIsIdentity)
 TEST(RotationConversionTest, ToQuaternionIsNormalized)
 {
     Rotation r(30.0_df, 45.0_df, 60.0_df);
-    Quaternion q = r.ToQuaternion();
+    Quaternion q = Quaternion(r);
     EXPECT_TRUE(q.IsNormalized());
-}
-
-TEST(RotationConversionTest, ToQuaternionRoundTrip)
-{
-    Rotation original(30.0_df, 45.0_df, 0.0_df);
-    Quaternion q = original.ToQuaternion();
-    Rotation roundTripped = Rotation::FromQuaternion(q);
-    EXPECT_TRUE(RotEqual(original, roundTripped, kLooseEps));
-}
-
-TEST(RotationConversionTest, FromQuaternionRoundTrip)
-{
-    Quaternion q = Quaternion::FromAngleAxis(45.0_df, Vector3F::Up());
-    Rotation r = Rotation::FromQuaternion(q);
-    Quaternion qBack = r.ToQuaternion();
-    // Quaternions q and qBack should represent the same rotation.
-    // The dot product of two equivalent (unit) quaternions is ±1.
-    float dot = std::fabs(Quaternion::Dot(q, qBack));
-    EXPECT_NEAR(dot, 1.0f, kLooseEps);
 }
 
 TEST(RotationConversionTest, ToEulerDeg)
@@ -522,7 +488,7 @@ TEST(RotationSlerpTest, SlerpResultIsNormalized)
     Rotation from(10.0_df, 20.0_df, 30.0_df);
     Rotation to(80.0_df, 70.0_df, 60.0_df);
     Rotation mid = Rotation::Slerp(from, to, 0.5f);
-    Quaternion q = mid.ToQuaternion();
+    Quaternion q = Quaternion(mid);
     EXPECT_TRUE(q.IsNormalized());
 }
 
