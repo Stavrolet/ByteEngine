@@ -41,7 +41,7 @@ namespace ByteEngine::Math
     constexpr EulerDeg EulerRad::ToDeg() const { return EulerDeg { pitch.ToDegree(), yaw.ToDegree(), roll.ToDegree() }; }
     constexpr EulerRad EulerDeg::ToRad() const { return EulerRad { pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian() }; }
 
-    struct Rotation;
+    struct Rotator;
 
     struct Quaternion
     {
@@ -72,7 +72,7 @@ namespace ByteEngine::Math
             x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
 
-        explicit constexpr Quaternion(Rotation rotation);
+        explicit constexpr Quaternion(Rotator rotation);
 
         [[nodiscard]] float Length() const;
         [[nodiscard]] constexpr float LengthSquared() const { return x * x + y * y + z * z + w * w; }

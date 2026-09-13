@@ -1,4 +1,4 @@
-﻿#include "ByteEngine/Math/Rotation.h"
+﻿#include "ByteEngine/Math/Rotator.h"
 #include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
@@ -68,7 +68,7 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
     if constexpr (std::same_as<typename Vec3::FloatT, float>)
     {
         Vec3 v2(1.0, 0.0, 0.0);
-        Rotation rot(90.0_df, 90.0_df, 0.0_df);
+        Rotator rot(90.0_df, 90.0_df, 0.0_df);
         Vec3 rotated = rot.RotateVector(v2);
         EXPECT_NEAR(rotated.x, 0.0, 1e-5);
         EXPECT_NEAR(rotated.y, 0.0, 1e-5);
@@ -82,7 +82,7 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
         EXPECT_NEAR(rotated.z, 0.0, 1e-5);
 
         Quaternion q1 = Quaternion::FromEuler(45.0_df, 90.0_df, 0.0_df);
-        Rotation rot1(45.0_df, 90.0_df, 0.0_df);
+        Rotator rot1(45.0_df, 90.0_df, 0.0_df);
         Vec3 vec4(1.0, 0.0, 0.0);
         Vec3 rotated1 = q1 * vec4;
         Vec3 rotated2 = rot1.RotateVector(vec4);

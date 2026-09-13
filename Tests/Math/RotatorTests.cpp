@@ -1,6 +1,6 @@
 ﻿#include <gtest/gtest.h>
 #include <cmath>
-#include "ByteEngine/Math/Rotation.h"
+#include "ByteEngine/Math/Rotator.h"
 #include "ByteEngine/Math/Quaternion.h"
 
 using namespace ByteEngine::Math;
@@ -13,7 +13,7 @@ using namespace ByteEngine::Math::Literals;
 static constexpr float kEps = 1e-4f;
 static constexpr float kLooseEps = 1e-2f; // for Euler↔Quaternion round-trips
 
-static bool RotEqual(const Rotation& a, const Rotation& b, float eps = kEps)
+static bool RotEqual(const Rotator& a, const Rotator& b, float eps = kEps)
 {
     return std::fabs(a.pitch.value - b.pitch.value) < eps &&
         std::fabs(a.yaw.value - b.yaw.value) < eps &&
@@ -26,7 +26,7 @@ static bool RotEqual(const Rotation& a, const Rotation& b, float eps = kEps)
 
 TEST(RotationConstructionTest, DegreeConstructor)
 {
-    Rotation r(45.0_df, 90.0_df, 180.0_df);
+    Rotator r(45.0_df, 90.0_df, 180.0_df);
     EXPECT_NEAR(r.pitch.value, 45.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 90.0f, kEps);
     EXPECT_NEAR(r.roll.value, 180.0f, kEps);
@@ -35,7 +35,7 @@ TEST(RotationConstructionTest, DegreeConstructor)
 TEST(RotationConstructionTest, RadianConstructorConvertsCorrectly)
 {
     // PI/2 rad == 90 degrees
-    Rotation r(RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI), RadianF(0.f));
+    Rotator r(RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI), RadianF(0.f));
     EXPECT_NEAR(r.pitch.value, 90.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 180.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 0.0f, kLooseEps);
@@ -44,7 +44,7 @@ TEST(RotationConstructionTest, RadianConstructorConvertsCorrectly)
 TEST(RotationConstructionTest, DegreeArrayConstructor)
 {
     DegreeF arr[3] = { 10.0_df, 20.0_df, 30.0_df };
-    Rotation r(arr);
+    Rotator r(arr);
     EXPECT_NEAR(r.pitch.value, 10.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 20.0f, kEps);
     EXPECT_NEAR(r.roll.value, 30.0f, kEps);
@@ -53,7 +53,7 @@ TEST(RotationConstructionTest, DegreeArrayConstructor)
 TEST(RotationConstructionTest, RadianArrayConstructor)
 {
     RadianF arr[3] = { RadianF(0.f), RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI) };
-    Rotation r(arr);
+    Rotator r(arr);
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 90.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 180.0f, kLooseEps);
@@ -62,7 +62,7 @@ TEST(RotationConstructionTest, RadianArrayConstructor)
 TEST(RotationConstructionTest, EulerDegConstructor)
 {
     EulerDeg euler { 15.0_df, 30.0_df, 45.0_df };
-    Rotation r(euler);
+    Rotator r(euler);
     EXPECT_NEAR(r.pitch.value, 15.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 30.0f, kEps);
     EXPECT_NEAR(r.roll.value, 45.0f, kEps);
@@ -71,7 +71,7 @@ TEST(RotationConstructionTest, EulerDegConstructor)
 TEST(RotationConstructionTest, EulerRadConstructor)
 {
     EulerRad euler { RadianF(0.f), RadianF(Mathf::PI / 2.f), RadianF(Mathf::PI) };
-    Rotation r(euler);
+    Rotator r(euler);
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 90.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 180.0f, kLooseEps);
@@ -79,7 +79,7 @@ TEST(RotationConstructionTest, EulerRadConstructor)
 
 TEST(RotationConstructionTest, QuaternionConstructorIdentityGivesZero)
 {
-    Rotation r(Quaternion::Identity());
+    Rotator r(Quaternion::Identity());
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 0.0f, kLooseEps);
@@ -87,9 +87,9 @@ TEST(RotationConstructionTest, QuaternionConstructorIdentityGivesZero)
 
 TEST(RotationConstructionTest, QuaternionConstructorRoundTrip)
 {
-    Rotation original(30.0_df, 45.0_df, 60.0_df);
+    Rotator original(30.0_df, 45.0_df, 60.0_df);
     Quaternion q = Quaternion(original);
-    Rotation roundTripped(q);
+    Rotator roundTripped(q);
     EXPECT_TRUE(RotEqual(original, roundTripped, kLooseEps));
 }
 
@@ -99,7 +99,7 @@ TEST(RotationConstructionTest, QuaternionConstructorRoundTrip)
 
 TEST(RotationAccessTest, IndexOperatorRead)
 {
-    Rotation r(10.0_df, 20.0_df, 30.0_df);
+    Rotator r(10.0_df, 20.0_df, 30.0_df);
     EXPECT_NEAR(r[0].value, 10.0f, kEps);
     EXPECT_NEAR(r[1].value, 20.0f, kEps);
     EXPECT_NEAR(r[2].value, 30.0f, kEps);
@@ -107,7 +107,7 @@ TEST(RotationAccessTest, IndexOperatorRead)
 
 TEST(RotationAccessTest, IndexOperatorWrite)
 {
-    Rotation r;
+    Rotator r;
     r[0] = 99.0_df;
     r[1] = -45.0_df;
     r[2] = 180.0_df;
@@ -118,7 +118,7 @@ TEST(RotationAccessTest, IndexOperatorWrite)
 
 TEST(RotationAccessTest, IndexAndNamedFieldsAliasToSameMemory)
 {
-    Rotation r(1.0_df, 2.0_df, 3.0_df);
+    Rotator r(1.0_df, 2.0_df, 3.0_df);
     EXPECT_EQ(r[0].value, r.pitch.value);
     EXPECT_EQ(r[1].value, r.yaw.value);
     EXPECT_EQ(r[2].value, r.roll.value);
@@ -130,24 +130,24 @@ TEST(RotationAccessTest, IndexAndNamedFieldsAliasToSameMemory)
 
 TEST(RotationOperatorTest, EqualityIdentical)
 {
-    Rotation a(10.0_df, 20.0_df, 30.0_df);
-    Rotation b(10.0_df, 20.0_df, 30.0_df);
+    Rotator a(10.0_df, 20.0_df, 30.0_df);
+    Rotator b(10.0_df, 20.0_df, 30.0_df);
     EXPECT_TRUE(a == b);
     EXPECT_FALSE(a != b);
 }
 
 TEST(RotationOperatorTest, InequalityDifferent)
 {
-    Rotation a(10.0_df, 20.0_df, 30.0_df);
-    Rotation b(10.0_df, 20.0_df, 31.0_df);
+    Rotator a(10.0_df, 20.0_df, 30.0_df);
+    Rotator b(10.0_df, 20.0_df, 31.0_df);
     EXPECT_FALSE(a == b);
     EXPECT_TRUE(a != b);
 }
 
 TEST(RotationOperatorTest, EqualitySymmetric)
 {
-    Rotation a(45.0_df, 0.0_df, -90.0_df);
-    Rotation b(45.0_df, 0.0_df, -90.0_df);
+    Rotator a(45.0_df, 0.0_df, -90.0_df);
+    Rotator b(45.0_df, 0.0_df, -90.0_df);
     EXPECT_TRUE(a == b);
     EXPECT_TRUE(b == a);
 }
@@ -158,15 +158,15 @@ TEST(RotationOperatorTest, EqualitySymmetric)
 
 TEST(RotationOperatorTest, UnaryPlus)
 {
-    Rotation r(10.0_df, -20.0_df, 30.0_df);
-    Rotation p = +r;
+    Rotator r(10.0_df, -20.0_df, 30.0_df);
+    Rotator p = +r;
     EXPECT_TRUE(p == r);
 }
 
 TEST(RotationOperatorTest, UnaryNegate)
 {
-    Rotation r(10.0_df, -20.0_df, 30.0_df);
-    Rotation n = -r;
+    Rotator r(10.0_df, -20.0_df, 30.0_df);
+    Rotator n = -r;
     EXPECT_NEAR(n.pitch.value, -10.0f, kEps);
     EXPECT_NEAR(n.yaw.value, 20.0f, kEps);
     EXPECT_NEAR(n.roll.value, -30.0f, kEps);
@@ -174,9 +174,9 @@ TEST(RotationOperatorTest, UnaryNegate)
 
 TEST(RotationOperatorTest, Addition)
 {
-    Rotation a(10.0_df, 20.0_df, 30.0_df);
-    Rotation b(5.0_df, -5.0_df, 15.0_df);
-    Rotation c = a + b;
+    Rotator a(10.0_df, 20.0_df, 30.0_df);
+    Rotator b(5.0_df, -5.0_df, 15.0_df);
+    Rotator c = a + b;
     EXPECT_NEAR(c.pitch.value, 15.0f, kEps);
     EXPECT_NEAR(c.yaw.value, 15.0f, kEps);
     EXPECT_NEAR(c.roll.value, 45.0f, kEps);
@@ -184,9 +184,9 @@ TEST(RotationOperatorTest, Addition)
 
 TEST(RotationOperatorTest, Subtraction)
 {
-    Rotation a(30.0_df, 60.0_df, 90.0_df);
-    Rotation b(10.0_df, 10.0_df, 10.0_df);
-    Rotation c = a - b;
+    Rotator a(30.0_df, 60.0_df, 90.0_df);
+    Rotator b(10.0_df, 10.0_df, 10.0_df);
+    Rotator c = a - b;
     EXPECT_NEAR(c.pitch.value, 20.0f, kEps);
     EXPECT_NEAR(c.yaw.value, 50.0f, kEps);
     EXPECT_NEAR(c.roll.value, 80.0f, kEps);
@@ -194,8 +194,8 @@ TEST(RotationOperatorTest, Subtraction)
 
 TEST(RotationOperatorTest, AdditionAssignment)
 {
-    Rotation a(10.0_df, 10.0_df, 10.0_df);
-    Rotation b(5.0_df, 5.0_df, 5.0_df);
+    Rotator a(10.0_df, 10.0_df, 10.0_df);
+    Rotator b(5.0_df, 5.0_df, 5.0_df);
     a += b;
     EXPECT_NEAR(a.pitch.value, 15.0f, kEps);
     EXPECT_NEAR(a.yaw.value, 15.0f, kEps);
@@ -204,8 +204,8 @@ TEST(RotationOperatorTest, AdditionAssignment)
 
 TEST(RotationOperatorTest, SubtractionAssignment)
 {
-    Rotation a(20.0_df, 30.0_df, 40.0_df);
-    Rotation b(5.0_df, 5.0_df, 5.0_df);
+    Rotator a(20.0_df, 30.0_df, 40.0_df);
+    Rotator b(5.0_df, 5.0_df, 5.0_df);
     a -= b;
     EXPECT_NEAR(a.pitch.value, 15.0f, kEps);
     EXPECT_NEAR(a.yaw.value, 25.0f, kEps);
@@ -214,8 +214,8 @@ TEST(RotationOperatorTest, SubtractionAssignment)
 
 TEST(RotationOperatorTest, ScalarMultiplication)
 {
-    Rotation r(10.0_df, 20.0_df, 30.0_df);
-    Rotation s = r * 2.f;
+    Rotator r(10.0_df, 20.0_df, 30.0_df);
+    Rotator s = r * 2.f;
     EXPECT_NEAR(s.pitch.value, 20.0f, kEps);
     EXPECT_NEAR(s.yaw.value, 40.0f, kEps);
     EXPECT_NEAR(s.roll.value, 60.0f, kEps);
@@ -223,15 +223,15 @@ TEST(RotationOperatorTest, ScalarMultiplication)
 
 TEST(RotationOperatorTest, ScalarMultiplicationCommutative)
 {
-    Rotation r(10.0_df, 20.0_df, 30.0_df);
-    Rotation a = r * 3.f;
-    Rotation b = 3.f * r;
+    Rotator r(10.0_df, 20.0_df, 30.0_df);
+    Rotator a = r * 3.f;
+    Rotator b = 3.f * r;
     EXPECT_TRUE(RotEqual(a, b));
 }
 
 TEST(RotationOperatorTest, ScalarMultiplicationAssignment)
 {
-    Rotation r(10.0_df, 20.0_df, 30.0_df);
+    Rotator r(10.0_df, 20.0_df, 30.0_df);
     r *= 2.f;
     EXPECT_NEAR(r.pitch.value, 20.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 40.0f, kEps);
@@ -240,8 +240,8 @@ TEST(RotationOperatorTest, ScalarMultiplicationAssignment)
 
 TEST(RotationOperatorTest, ScalarDivision)
 {
-    Rotation r(20.0_df, 40.0_df, 60.0_df);
-    Rotation s = r / 2.f;
+    Rotator r(20.0_df, 40.0_df, 60.0_df);
+    Rotator s = r / 2.f;
     EXPECT_NEAR(s.pitch.value, 10.0f, kEps);
     EXPECT_NEAR(s.yaw.value, 20.0f, kEps);
     EXPECT_NEAR(s.roll.value, 30.0f, kEps);
@@ -249,7 +249,7 @@ TEST(RotationOperatorTest, ScalarDivision)
 
 TEST(RotationOperatorTest, ScalarDivisionAssignment)
 {
-    Rotation r(20.0_df, 40.0_df, 60.0_df);
+    Rotator r(20.0_df, 40.0_df, 60.0_df);
     r /= 2.f;
     EXPECT_NEAR(r.pitch.value, 10.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 20.0f, kEps);
@@ -258,9 +258,9 @@ TEST(RotationOperatorTest, ScalarDivisionAssignment)
 
 TEST(RotationOperatorTest, AddSubtractRoundTrip)
 {
-    Rotation a(45.0_df, 90.0_df, 135.0_df);
-    Rotation b(15.0_df, -30.0_df, 45.0_df);
-    Rotation result = (a + b) - b;
+    Rotator a(45.0_df, 90.0_df, 135.0_df);
+    Rotator b(15.0_df, -30.0_df, 45.0_df);
+    Rotator result = (a + b) - b;
     EXPECT_TRUE(RotEqual(result, a));
 }
 
@@ -271,7 +271,7 @@ TEST(RotationOperatorTest, AddSubtractRoundTrip)
 TEST(RotationNormalizeTest, NormalizePositiveOutOfRange)
 {
     // 400° should normalize to 40°
-    Rotation r(400.0_df, 0.0_df, 0.0_df);
+    Rotator r(400.0_df, 0.0_df, 0.0_df);
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, 40.0f, kEps);
 }
@@ -279,7 +279,7 @@ TEST(RotationNormalizeTest, NormalizePositiveOutOfRange)
 TEST(RotationNormalizeTest, NormalizeNegativeOutOfRange)
 {
     // -90° should normalize to -90° (already in (-180, 180])
-    Rotation r(-90.0_df, 0.0_df, 0.0_df);
+    Rotator r(-90.0_df, 0.0_df, 0.0_df);
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, -90.0f, kEps);
 }
@@ -287,14 +287,14 @@ TEST(RotationNormalizeTest, NormalizeNegativeOutOfRange)
 TEST(RotationNormalizeTest, NormalizeValueAbove180)
 {
     // 270° should normalize to -90°
-    Rotation r(270.0_df, 0.0_df, 0.0_df);
+    Rotator r(270.0_df, 0.0_df, 0.0_df);
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, -90.0f, kEps);
 }
 
 TEST(RotationNormalizeTest, NormalizeAllComponentsIndependently)
 {
-    Rotation r(370.0_df, -370.0_df, 540.0_df);
+    Rotator r(370.0_df, -370.0_df, 540.0_df);
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, 10.0f, kEps);  // 370 - 360 = 10
     EXPECT_NEAR(r.yaw.value, -10.0f, kEps);  // -370 + 360 = -10
@@ -303,7 +303,7 @@ TEST(RotationNormalizeTest, NormalizeAllComponentsIndependently)
 
 TEST(RotationNormalizeTest, NormalizeZeroRemainsZero)
 {
-    Rotation r(0.0_df, 0.0_df, 0.0_df);
+    Rotator r(0.0_df, 0.0_df, 0.0_df);
     r.Normalize();
     EXPECT_NEAR(r.pitch.value, 0.0f, kEps);
     EXPECT_NEAR(r.yaw.value, 0.0f, kEps);
@@ -312,8 +312,8 @@ TEST(RotationNormalizeTest, NormalizeZeroRemainsZero)
 
 TEST(RotationNormalizeTest, NormalizedDoesNotMutate)
 {
-    Rotation original(400.0_df, 0.0_df, 0.0_df);
-    Rotation normalized = original.Normalized();
+    Rotator original(400.0_df, 0.0_df, 0.0_df);
+    Rotator normalized = original.Normalized();
     // original unchanged
     EXPECT_NEAR(original.pitch.value, 400.0f, kEps);
     // result is normalized
@@ -322,8 +322,8 @@ TEST(RotationNormalizeTest, NormalizedDoesNotMutate)
 
 TEST(RotationNormalizeTest, NormalizedAndNormalizeMutateProduceSameResult)
 {
-    Rotation a(730.0_df, -200.0_df, 270.0_df);
-    Rotation b = a.Normalized();
+    Rotator a(730.0_df, -200.0_df, 270.0_df);
+    Rotator b = a.Normalized();
     a.Normalize();
     EXPECT_TRUE(RotEqual(a, b));
 }
@@ -334,7 +334,7 @@ TEST(RotationNormalizeTest, NormalizedAndNormalizeMutateProduceSameResult)
 
 TEST(RotationConversionTest, ZeroRotationToQuaternionIsIdentity)
 {
-    Rotation r(0_df);
+    Rotator r(0_df);
     Quaternion q = Quaternion(r);
     EXPECT_NEAR(q.x, Quaternion::Identity().x, kLooseEps);
     EXPECT_NEAR(q.y, Quaternion::Identity().y, kLooseEps);
@@ -344,14 +344,14 @@ TEST(RotationConversionTest, ZeroRotationToQuaternionIsIdentity)
 
 TEST(RotationConversionTest, ToQuaternionIsNormalized)
 {
-    Rotation r(30.0_df, 45.0_df, 60.0_df);
+    Rotator r(30.0_df, 45.0_df, 60.0_df);
     Quaternion q = Quaternion(r);
     EXPECT_TRUE(q.IsNormalized());
 }
 
 TEST(RotationConversionTest, ToEulerDeg)
 {
-    Rotation r(10.0_df, 20.0_df, 30.0_df);
+    Rotator r(10.0_df, 20.0_df, 30.0_df);
     EulerDeg euler = r.ToEulerDeg();
     EXPECT_NEAR(euler.pitch.value, 10.0f, kEps);
     EXPECT_NEAR(euler.yaw.value, 20.0f, kEps);
@@ -360,7 +360,7 @@ TEST(RotationConversionTest, ToEulerDeg)
 
 TEST(RotationConversionTest, ToEulerRad)
 {
-    Rotation r(0.0_df, 90.0_df, 180.0_df);
+    Rotator r(0.0_df, 90.0_df, 180.0_df);
     EulerRad euler = r.ToEulerRad();
     EXPECT_NEAR(euler.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(euler.yaw.value, Mathf::PI / 2.f, kLooseEps);
@@ -373,31 +373,31 @@ TEST(RotationConversionTest, ToEulerRad)
 
 TEST(RotationApproxTest, ExactEqualIsApproxEqual)
 {
-    Rotation a(45.0_df, 90.0_df, 135.0_df);
-    Rotation b(45.0_df, 90.0_df, 135.0_df);
-    EXPECT_TRUE(Rotation::IsEqualApproximately(a, b));
+    Rotator a(45.0_df, 90.0_df, 135.0_df);
+    Rotator b(45.0_df, 90.0_df, 135.0_df);
+    EXPECT_TRUE(Rotator::IsEqualApproximately(a, b));
 }
 
 TEST(RotationApproxTest, SlightlyDifferentIsApproxEqual)
 {
-    Rotation a(45.0_df, 90.0_df, 135.0_df);
-    Rotation b(DegreeF { 45.0f + 0.0001f }, 90.0_df, 135.0_df);
-    EXPECT_TRUE(Rotation::IsEqualApproximately(a, b));
+    Rotator a(45.0_df, 90.0_df, 135.0_df);
+    Rotator b(DegreeF { 45.0f + 0.0001f }, 90.0_df, 135.0_df);
+    EXPECT_TRUE(Rotator::IsEqualApproximately(a, b));
 }
 
 TEST(RotationApproxTest, LargelyDifferentIsNotApproxEqual)
 {
-    Rotation a(45.0_df, 90.0_df, 135.0_df);
-    Rotation b(46.0_df, 90.0_df, 135.0_df);
-    EXPECT_FALSE(Rotation::IsEqualApproximately(a, b));
+    Rotator a(45.0_df, 90.0_df, 135.0_df);
+    Rotator b(46.0_df, 90.0_df, 135.0_df);
+    EXPECT_FALSE(Rotator::IsEqualApproximately(a, b));
 }
 
 TEST(RotationApproxTest, CustomEpsilonRespected)
 {
-    Rotation a(45.0_df, 0.0_df, 0.0_df);
-    Rotation b(46.0_df, 0.0_df, 0.0_df);
-    EXPECT_FALSE(Rotation::IsEqualApproximately(a, b, 0.5_df));
-    EXPECT_TRUE(Rotation::IsEqualApproximately(a, b, 2.0_df));
+    Rotator a(45.0_df, 0.0_df, 0.0_df);
+    Rotator b(46.0_df, 0.0_df, 0.0_df);
+    EXPECT_FALSE(Rotator::IsEqualApproximately(a, b, 0.5_df));
+    EXPECT_TRUE(Rotator::IsEqualApproximately(a, b, 2.0_df));
 }
 
 // ─────────────────────────────────────────────
@@ -406,25 +406,25 @@ TEST(RotationApproxTest, CustomEpsilonRespected)
 
 TEST(RotationLerpTest, LerpAtZeroReturnsFrom)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 90.0_df, 90.0_df);
-    Rotation result = Rotation::Lerp(from, to, 0.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 90.0_df, 90.0_df);
+    Rotator result = Rotator::Lerp(from, to, 0.f);
     EXPECT_TRUE(RotEqual(result, from));
 }
 
 TEST(RotationLerpTest, LerpAtOneReturnsTo)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 90.0_df, 90.0_df);
-    Rotation result = Rotation::Lerp(from, to, 1.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 90.0_df, 90.0_df);
+    Rotator result = Rotator::Lerp(from, to, 1.f);
     EXPECT_TRUE(RotEqual(result, to));
 }
 
 TEST(RotationLerpTest, LerpAtHalfReturnsMidpoint)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 60.0_df, 30.0_df);
-    Rotation mid = Rotation::Lerp(from, to, 0.5f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 60.0_df, 30.0_df);
+    Rotator mid = Rotator::Lerp(from, to, 0.5f);
     EXPECT_NEAR(mid.pitch.value, 45.0f, kEps);
     EXPECT_NEAR(mid.yaw.value, 30.0f, kEps);
     EXPECT_NEAR(mid.roll.value, 15.0f, kEps);
@@ -432,26 +432,26 @@ TEST(RotationLerpTest, LerpAtHalfReturnsMidpoint)
 
 TEST(RotationLerpTest, LerpUnclampedExtrapolates)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(10.0_df, 10.0_df, 10.0_df);
-    Rotation result = Rotation::Lerp(from, to, 2.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(10.0_df, 10.0_df, 10.0_df);
+    Rotator result = Rotator::Lerp(from, to, 2.f);
     // Lerp is unclamped, so t=2 gives 20°
     EXPECT_NEAR(result.pitch.value, 20.0f, kEps);
 }
 
 TEST(RotationLerpTest, LerpClampedClampsAtOne)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(10.0_df, 10.0_df, 10.0_df);
-    Rotation result = Rotation::LerpClamped(from, to, 2.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(10.0_df, 10.0_df, 10.0_df);
+    Rotator result = Rotator::LerpClamped(from, to, 2.f);
     EXPECT_TRUE(RotEqual(result, to));
 }
 
 TEST(RotationLerpTest, LerpClampedClampsAtZero)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(10.0_df, 10.0_df, 10.0_df);
-    Rotation result = Rotation::LerpClamped(from, to, -1.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(10.0_df, 10.0_df, 10.0_df);
+    Rotator result = Rotator::LerpClamped(from, to, -1.f);
     EXPECT_TRUE(RotEqual(result, from));
 }
 
@@ -461,40 +461,40 @@ TEST(RotationLerpTest, LerpClampedClampsAtZero)
 
 TEST(RotationSlerpTest, SlerpAtZeroReturnsFrom)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 0.0_df, 0.0_df);
-    Rotation result = Rotation::Slerp(from, to, 0.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 0.0_df, 0.0_df);
+    Rotator result = Rotator::Slerp(from, to, 0.f);
     EXPECT_TRUE(RotEqual(result, from, kLooseEps));
 }
 
 TEST(RotationSlerpTest, SlerpAtOneReturnsTo)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 0.0_df, 0.0_df);
-    Rotation result = Rotation::Slerp(from, to, 1.f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 0.0_df, 0.0_df);
+    Rotator result = Rotator::Slerp(from, to, 1.f);
     EXPECT_TRUE(RotEqual(result, to, 0.5f));
 }
 
 TEST(RotationSlerpTest, SlerpAtHalfIsHalfway)
 {
-    Rotation from(0.0_df, 0.0_df, 0.0_df);
-    Rotation to(90.0_df, 0.0_df, 0.0_df);
-    Rotation mid = Rotation::Slerp(from, to, 0.5f);
+    Rotator from(0.0_df, 0.0_df, 0.0_df);
+    Rotator to(90.0_df, 0.0_df, 0.0_df);
+    Rotator mid = Rotator::Slerp(from, to, 0.5f);
     EXPECT_NEAR(mid.pitch.value, 45.0f, kLooseEps);
 }
 
 TEST(RotationSlerpTest, SlerpResultIsNormalized)
 {
-    Rotation from(10.0_df, 20.0_df, 30.0_df);
-    Rotation to(80.0_df, 70.0_df, 60.0_df);
-    Rotation mid = Rotation::Slerp(from, to, 0.5f);
+    Rotator from(10.0_df, 20.0_df, 30.0_df);
+    Rotator to(80.0_df, 70.0_df, 60.0_df);
+    Rotator mid = Rotator::Slerp(from, to, 0.5f);
     Quaternion q = Quaternion(mid);
     EXPECT_TRUE(q.IsNormalized());
 }
 
 TEST(RotationSlerpTest, SlerpIdenticalRotationsReturnSame)
 {
-    Rotation r(45.0_df, 45.0_df, 45.0_df);
-    Rotation result = Rotation::Slerp(r, r, 0.5f);
+    Rotator r(45.0_df, 45.0_df, 45.0_df);
+    Rotator result = Rotator::Slerp(r, r, 0.5f);
     EXPECT_TRUE(RotEqual(result, r, kLooseEps));
 }
