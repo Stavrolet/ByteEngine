@@ -2,7 +2,6 @@
 
 #include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Debug.h"
-#include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
 namespace ByteEngine::Math
@@ -26,14 +25,6 @@ namespace ByteEngine::Math
                 T y;
                 T z;
                 T w;
-            };
-
-            struct
-            {
-                T r;
-                T g;
-                T b;
-                T a;
             };
 
             T data[4];
