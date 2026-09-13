@@ -1,14 +1,11 @@
 ﻿#include <DirectXMath.h>
 
-#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Quaternion.h"
 
 using namespace DirectX;
 
 namespace ByteEngine::Math
 {
-    const Quaternion Quaternion::Identity { 0.0f, 0.0f, 0.0f, 1.0f };
-
     float Quaternion::Length() const { return Mathf::Sqrt(LengthSquared()); }
 
     void Quaternion::Normalize()
@@ -120,7 +117,7 @@ namespace ByteEngine::Math
     Quaternion Quaternion::FromLookDirection(Vector3F direction, Vector3F worldUp)
     {
         if (Mathf::IsEqualApproximetly(direction.LengthSquared(), 0.0f))
-            return Identity;
+            return Identity();
 
         XMVECTOR forward = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&direction));
         XMVECTOR worldUp2 = XMLoadFloat3(reinterpret_cast<XMFLOAT3*>(&worldUp));
@@ -147,7 +144,7 @@ namespace ByteEngine::Math
         float dot = Mathf::Clamp(Vector3F::Dot(from, to), -1.0f, 1.0f);
 
         if (dot >= 1.0f || Mathf::IsEqualApproximetly(dot, 0.0f))
-            return Identity;
+            return Identity();
         else if (dot <= -1.0f)
             return FromAngleAxis(static_cast<RadianF>(Mathf::PI), Vector3F(0.0f, 1.0f, 0.0f));
 

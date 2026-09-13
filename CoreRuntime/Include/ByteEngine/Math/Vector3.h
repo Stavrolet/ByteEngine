@@ -37,9 +37,7 @@ namespace ByteEngine::Math
             T data[3];
         };
 
-        constexpr Vector3T() :
-            x(0), y(0), z(0)
-        { }
+        constexpr Vector3T() = default;
 
         explicit constexpr Vector3T(T xyz) :
             x(xyz), y(xyz), z(xyz)
@@ -109,6 +107,14 @@ namespace ByteEngine::Math
             return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
         }
 
+        bool IsZero() const
+        {
+            if constexpr (std::floating_point<T>)
+                return Mathf::IsEqualApproximetly(LengthSquared(), 0);
+            else
+                return LengthSquared() == 0;
+        }
+
         void LimitLength(FloatT maxLength = 1)
             requires std::floating_point<T>
         {
@@ -141,6 +147,9 @@ namespace ByteEngine::Math
         void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
             requires std::floating_point<T>
         {
+            if (rotationAxis.IsZero())
+                return;
+
             rotationAxis.Normalize();
             return RotateByUnsafe(angle, rotationAxis);
         }
@@ -313,8 +322,10 @@ namespace ByteEngine::Math
 
         static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto)
             requires std::floating_point<T>
-        {
-            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
+        {FloatT lengthSq = projectOnto.LengthSquared();
+            if (lengthSq < Mathf::Epsilon)
+                return Zero();
+            return projectOnto * (Dot(vec, projectOnto) / lengthSq);
         }
 
         static constexpr Vector3T ProjectUnsafe(Vector3T vec, Vector3T projectOnto)

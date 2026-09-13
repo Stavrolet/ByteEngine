@@ -87,7 +87,7 @@ TEST(RotationConstructionTest, EulerRadConstructor)
 
 TEST(RotationConstructionTest, QuaternionConstructorIdentityGivesZero)
 {
-    Rotation r(Quaternion::Identity);
+    Rotation r(Quaternion::Identity());
     EXPECT_NEAR(r.pitch.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.yaw.value, 0.0f, kLooseEps);
     EXPECT_NEAR(r.roll.value, 0.0f, kLooseEps);
@@ -351,10 +351,10 @@ TEST(RotationConversionTest, ZeroRotationToQuaternionIsIdentity)
 {
     Rotation r;
     Quaternion q = r.ToQuaternion();
-    EXPECT_NEAR(q.x, Quaternion::Identity.x, kLooseEps);
-    EXPECT_NEAR(q.y, Quaternion::Identity.y, kLooseEps);
-    EXPECT_NEAR(q.z, Quaternion::Identity.z, kLooseEps);
-    EXPECT_NEAR(q.w, Quaternion::Identity.w, kLooseEps);
+    EXPECT_NEAR(q.x, Quaternion::Identity().x, kLooseEps);
+    EXPECT_NEAR(q.y, Quaternion::Identity().y, kLooseEps);
+    EXPECT_NEAR(q.z, Quaternion::Identity().z, kLooseEps);
+    EXPECT_NEAR(q.w, Quaternion::Identity().w, kLooseEps);
 }
 
 TEST(RotationConversionTest, ToQuaternionIsNormalized)

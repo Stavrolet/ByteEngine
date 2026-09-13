@@ -507,18 +507,16 @@ TYPED_TEST(ColorTTest, LerpClampedAboveOneClamps)
         static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0));
     Color to(static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0),
         static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0));
-    Color result = Color::LerpClamped(from, to, static_cast<TypeParam>(2.0));
+    Color result = Color::Lerp(from, to, static_cast<TypeParam>(2.0));
     EXPECT_TRUE(ColorEqual(result, to));
 }
 
 TYPED_TEST(ColorTTest, LerpClampedBelowZeroClamps)
 {
     using Color = typename TestFixture::Color;
-    Color from(static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0));
-    Color to(static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0),
-        static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0));
-    Color result = Color::LerpClamped(from, to, static_cast<TypeParam>(-1.0));
+    Color from(static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0));
+    Color to(static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0));
+    Color result = Color::Lerp(from, to, static_cast<TypeParam>(-1.0));
     EXPECT_TRUE(ColorEqual(result, from));
 }
 
@@ -529,7 +527,7 @@ TYPED_TEST(ColorTTest, LerpUnclampedExtrapolates)
         static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.0));
     Color to(static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0),
         static_cast<TypeParam>(1.0), static_cast<TypeParam>(1.0));
-    Color result = Color::Lerp(from, to, static_cast<TypeParam>(2.0));
+    Color result = Color::LerpUnclamped(from, to, static_cast<TypeParam>(2.0));
     EXPECT_NEAR(result.r, 2.0, kEpsF);
 }
 

@@ -39,11 +39,11 @@ namespace ByteEngine::Math
             pitch(arr[0].ToDegree()), yaw(arr[1].ToDegree()), roll(arr[2].ToDegree())
         { }
 
-        explicit constexpr Rotation(const EulerDeg& euler) :
+        explicit constexpr Rotation(EulerDeg euler) :
             pitch(euler.pitch), yaw(euler.yaw), roll(euler.roll)
         { }
 
-        explicit constexpr Rotation(const EulerRad& euler) :
+        explicit constexpr Rotation(EulerRad euler) :
             pitch(euler.pitch.ToDegree()), yaw(euler.yaw.ToDegree()), roll(euler.roll.ToDegree())
         { }
 

@@ -12,7 +12,6 @@ namespace ByteEngine::Math
 
     struct EulerRad
     {
-
         RadianF pitch = 0_rf;
         RadianF yaw = 0_rf;
         RadianF roll = 0_rf;
@@ -47,9 +46,7 @@ namespace ByteEngine::Math
             float data[4];
         };
 
-        constexpr Quaternion() :
-            x(0), y(0), z(0), w(1)
-        { }
+        constexpr Quaternion() = default;
 
         explicit constexpr Quaternion(float xyzw) :
             x(xyzw), y(xyzw), z(xyzw), w(xyzw)
@@ -112,6 +109,8 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static bool IsEqualApproximetly(Quaternion a, Quaternion b, float tolerance = Mathf::Epsilon);
 
+        [[nodiscard]] static constexpr Quaternion Identity() { return Quaternion(0.0f, 0.0f, 0.0f, 1.0f); }
+
         [[nodiscard]] constexpr Quaternion operator+() const { return Quaternion(+x, +y, +z, +w); }
         [[nodiscard]] constexpr Quaternion operator-() const { return Quaternion(-x, -y, -z, -w); }
 
@@ -136,8 +135,7 @@ namespace ByteEngine::Math
                 w * q.x + x * q.w + y * q.z - z * q.y,
                 w * q.y - x * q.z + y * q.w + z * q.x,
                 w * q.z + x * q.y - y * q.x + z * q.w,
-                w * q.w - x * q.x - y * q.y - z * q.z
-            );
+                w * q.w - x * q.x - y * q.y - z * q.z);
         }
 
         constexpr Vector3F operator*(Vector3F v) const
@@ -167,11 +165,5 @@ namespace ByteEngine::Math
             BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
-
-        [[nodiscard]] constexpr explicit operator Vector3F() const { return Vector3F(x, y, z); }
-        [[nodiscard]] constexpr explicit operator Vector2F() const { return Vector2F(x, y); }
-        [[nodiscard]] constexpr explicit operator Vector4F() const { return Vector4F(x, y, z, w); }
-
-        static const Quaternion Identity;
     };
 } // namespace ByteEngine::Math

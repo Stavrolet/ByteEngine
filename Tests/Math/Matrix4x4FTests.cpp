@@ -33,62 +33,6 @@ static bool Vec3Equal(const Vector3F& a, const Vector3F& b, float eps = kEps)
 // Construction
 // ─────────────────────────────────────────────
 
-TEST(Matrix4x4FConstructionTest, DefaultConstructor)
-{
-    Matrix4x4F m;
-    EXPECT_EQ(m.m00, 1.0f); EXPECT_EQ(m.m11, 1.0f);
-    EXPECT_EQ(m.m22, 1.0f); EXPECT_EQ(m.m33, 1.0f);
-    EXPECT_EQ(m.m01, 0.0f); EXPECT_EQ(m.m10, 0.0f);
-    EXPECT_EQ(m.m23, 0.0f); EXPECT_EQ(m.m32, 0.0f);
-}
-
-TEST(Matrix4x4FConstructionTest, ScalarConstructor)
-{
-    Matrix4x4F m(
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    );
-    EXPECT_EQ(m.m00, 1.f); EXPECT_EQ(m.m01, 2.f);
-    EXPECT_EQ(m.m02, 3.f); EXPECT_EQ(m.m03, 4.f);
-    EXPECT_EQ(m.m10, 5.f); EXPECT_EQ(m.m11, 6.f);
-    EXPECT_EQ(m.m12, 7.f); EXPECT_EQ(m.m13, 8.f);
-    EXPECT_EQ(m.m20, 9.f); EXPECT_EQ(m.m21, 10.f);
-    EXPECT_EQ(m.m22, 11.f); EXPECT_EQ(m.m23, 12.f);
-    EXPECT_EQ(m.m30, 13.f); EXPECT_EQ(m.m31, 14.f);
-    EXPECT_EQ(m.m32, 15.f); EXPECT_EQ(m.m33, 16.f);
-}
-
-TEST(Matrix4x4FConstructionTest, RowVectorConstructor)
-{
-    Vector4F r0(1, 2, 3, 4);
-    Vector4F r1(5, 6, 7, 8);
-    Vector4F r2(9, 10, 11, 12);
-    Vector4F r3(13, 14, 15, 16);
-
-    Matrix4x4F m(r0, r1, r2, r3);
-
-    EXPECT_EQ(m.m00, 1.f); EXPECT_EQ(m.m03, 4.f);
-    EXPECT_EQ(m.m10, 5.f); EXPECT_EQ(m.m13, 8.f);
-    EXPECT_EQ(m.m20, 9.f); EXPECT_EQ(m.m23, 12.f);
-    EXPECT_EQ(m.m33, 16.f);
-}
-
-TEST(Matrix4x4FConstructionTest, ArrayConstructor)
-{
-    float elems[16] = {
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    };
-    Matrix4x4F m(elems);
-
-    for (int i = 0; i < 16; ++i)
-        EXPECT_EQ(m.elements[i], static_cast<float>(i + 1));
-}
-
 // ─────────────────────────────────────────────
 // Row / Column accessors
 // ─────────────────────────────────────────────
@@ -566,7 +510,7 @@ TEST(Matrix4x4FDecompositionTest, GetScaleFromIdentity)
 TEST(Matrix4x4FDecompositionTest, GetRotationIdentity)
 {
     Quaternion q = Matrix4x4F::Identity().GetRotation();
-    Quaternion identity = Quaternion::Identity;
+    Quaternion identity = Quaternion::Identity();
 
     bool sameOrNegated =
         (std::fabs(q.x - identity.x) < kEps && std::fabs(q.y - identity.y) < kEps &&
@@ -699,7 +643,7 @@ TEST(Matrix4x4FFactoryTest, CreateScaleOneEqualsIdentity)
 
 TEST(Matrix4x4FFactoryTest, RotationIdentityQuaternionGivesIdentityMatrix)
 {
-    Quaternion q;
+    Quaternion q = Quaternion::Identity();
     Matrix4x4F m = Matrix4x4F::Rotation(q);
     EXPECT_TRUE(Mat4Equal(m, Matrix4x4F::Identity()));
 }

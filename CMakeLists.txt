@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 unset(CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
 unset(_CMAKE_INCLUDE_SYSTEM_FLAG_CXX_WARNING)
 
-project(ByteEngineD3D11 CXX)
+project(ByteEngine CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

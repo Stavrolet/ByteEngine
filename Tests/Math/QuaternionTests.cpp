@@ -327,23 +327,6 @@ TEST_F(QuaternionTest, SubscriptOperatorWrite)
     EXPECT_EQ(q.w, 4.0f);
 }
 
-TEST_F(QuaternionTest, CastToVector3)
-{
-    Quaternion q(1.0f, 2.0f, 3.0f, 4.0f);
-    Vector3 v = static_cast<Vector3>(q);
-    EXPECT_EQ(v.x, 1.0f);
-    EXPECT_EQ(v.y, 2.0f);
-    EXPECT_EQ(v.z, 3.0f);
-}
-
-TEST_F(QuaternionTest, CastToVector2)
-{
-    Quaternion q(1.0f, 2.0f, 3.0f, 4.0f);
-    Vector2 v = static_cast<Vector2>(q);
-    EXPECT_EQ(v.x, 1.0f);
-    EXPECT_EQ(v.y, 2.0f);
-}
-
 TEST_F(QuaternionTest, SlerpAtZero)
 {
     Quaternion q1 = Quaternion::FromAngleAxis(RadianF(0.0f), Vector3(0.0f, 1.0f, 0.0f));

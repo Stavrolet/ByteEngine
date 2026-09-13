@@ -28,9 +28,7 @@ namespace ByteEngine::Math
             T data[4];
         };
 
-        constexpr ColorT() :
-            r(0), g(0), b(0), a(1)
-        { }
+        constexpr ColorT() = default;
 
         explicit constexpr ColorT(T rgb, T a = 1) :
             r(rgb), g(rgb), b(rgb), a(a)
@@ -331,11 +329,11 @@ namespace ByteEngine::Math
             return Max(Max(a, b), c);
         }
 
-        [[nodiscard]] static constexpr ColorT Black() { return ColorT(); }
-        [[nodiscard]] static constexpr ColorT White() { return ColorT(1.0f); }
-        [[nodiscard]] static constexpr ColorT Red() { return ColorT(1.0f, 0.0f, 0.0f); }
-        [[nodiscard]] static constexpr ColorT Green() { return ColorT(0.0f, 1.0f, 0.0f); }
-        [[nodiscard]] static constexpr ColorT Blue() { return ColorT(0.0f, 0.0f, 1.0f); }
+        [[nodiscard]] static constexpr ColorT Black() { return ColorT(0.0); }
+        [[nodiscard]] static constexpr ColorT White() { return ColorT(1.0); }
+        [[nodiscard]] static constexpr ColorT Red() { return ColorT(1.0, 0.0, 0.0); }
+        [[nodiscard]] static constexpr ColorT Green() { return ColorT(0.0, 1.0, 0.0); }
+        [[nodiscard]] static constexpr ColorT Blue() { return ColorT(0.0, 0.0, 1.0); }
 
         [[nodiscard]] constexpr ColorT operator+() const { return ColorT { +r, +g, +b, +a }; }
         [[nodiscard]] constexpr ColorT operator-() const { return ColorT { -r, -g, -b, -a }; }

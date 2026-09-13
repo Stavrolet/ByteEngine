@@ -37,14 +37,7 @@ namespace ByteEngine::Math
             float elements[16];
         };
 
-        constexpr Matrix4x4F() :
-            // clang-format off
-            m00(1), m01(0), m02(0), m03(0),
-            m10(0), m11(1), m12(0), m13(0),
-            m20(0), m21(0), m22(1), m23(0),
-            m30(0), m31(0), m32(0), m33(1)
-        // clang-format on
-        { }
+        constexpr Matrix4x4F() = default;
 
         constexpr Matrix4x4F(
             float m00, float m01, float m02, float m03,
@@ -147,7 +140,15 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static Matrix4x4F TRS(Vector3F translation, Quaternion rotation, Vector3F scale);
 
-        [[nodiscard]] static constexpr Matrix4x4F Identity() { return Matrix4x4F(); }
+        [[nodiscard]] static constexpr Matrix4x4F Identity()
+        {
+            return Matrix4x4F(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
+        }
 
         [[nodiscard]] static constexpr Vector4F IdentityRow0() { return Vector4F(1, 0, 0, 0); }
         [[nodiscard]] static constexpr Vector4F IdentityRow1() { return Vector4F(0, 1, 0, 0); }

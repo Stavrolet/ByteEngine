@@ -39,9 +39,7 @@ namespace ByteEngine::Math
             T data[4];
         };
 
-        constexpr Vector4T() :
-            x(0), y(0), z(0), w(0)
-        { }
+        constexpr Vector4T() = default;
 
         explicit constexpr Vector4T(T xyzw) :
             x(xyzw), y(xyzw), z(xyzw), w(xyzw)

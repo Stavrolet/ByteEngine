@@ -112,8 +112,8 @@ TYPED_TEST(Vector2tFloatTypesTest, InterpolationAndReflection)
     Vec2 start(0, 0);
     Vec2 end(10, 10);
 
-    EXPECT_EQ(Vec2::Lerp(start, end, 0.5), Vec2(5, 5));
-    EXPECT_EQ(Vec2::LerpClamped(start, end, 2.0), Vec2(10, 10));
+    EXPECT_EQ(Vec2::LerpUnclamped(start, end, 0.5), Vec2(5, 5));
+    EXPECT_EQ(Vec2::Lerp(start, end, 2.0), Vec2(10, 10));
 
     Vec2 vec(1, -1);
     Vec2 normal(0, 1);
@@ -339,7 +339,7 @@ TYPED_TEST(Vector2tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)
     EXPECT_EQ(proj.x, 0);
     EXPECT_EQ(proj.y, 0);
 
-    proj = Vec2::ProjectNormalized(v, zeroNormal);
+    proj = Vec2::ProjectUnsafe(v, zeroNormal);
     EXPECT_EQ(proj.x, 0);
     EXPECT_EQ(proj.y, 0);
 

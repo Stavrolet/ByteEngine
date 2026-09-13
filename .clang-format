@@ -23,7 +23,7 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-AlignAfterOpenBracket: false
+AlignAfterOpenBracket: BlockIndent
 ContinuationIndentWidth: 4
 AlignConsecutiveAssignments: None
 AlignConsecutiveDeclarations: None

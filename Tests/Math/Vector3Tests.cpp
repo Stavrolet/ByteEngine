@@ -1,10 +1,10 @@
-﻿#include <gtest/gtest.h>
-#include <cmath>
-
-#include "ByteEngine/Math/Rotation.h"
-#include "ByteEngine/Math/Vector3.h"
+﻿#include "ByteEngine/Math/Rotation.h"
 #include "ByteEngine/Math/Vector2.h"
+#include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
+
+#include <cmath>
+#include <gtest/gtest.h>
 
 using namespace ByteEngine::Math;
 using namespace ByteEngine::Math::Literals;
@@ -147,8 +147,8 @@ TYPED_TEST(Vector3tFloatTypesTest, InterpolationAndReflection)
     Vec3 start(0, 0, 0);
     Vec3 end(10, 10, 10);
 
-    EXPECT_EQ(Vec3::Lerp(start, end, 0.5), Vec3(5, 5, 5));
-    EXPECT_EQ(Vec3::LerpClamped(start, end, 2.0), Vec3(10, 10, 10));
+    EXPECT_EQ(Vec3::LerpUnclamped(start, end, 0.5), Vec3(5, 5, 5));
+    EXPECT_EQ(Vec3::Lerp(start, end, 2.0), Vec3(10, 10, 10));
 
     Vec3 current(0, 0, 0);
     Vec3 target(10, 0, 0);
@@ -294,7 +294,10 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 zeroAxis(0.0, 0.0, 0.0);
 
-    v.RotateBy(RadianT(Mathf::PI_D / 2.0f), zeroAxis);
+    if constexpr (std::is_same_v<decltype(v.x), double>)
+        v.RotateBy(RadianD(Mathf::PI_D / 2.0), zeroAxis);
+    else
+        v.RotateBy(RadianF(Mathf::PI / 2.0f), zeroAxis);
 
     EXPECT_NEAR(v.x, 1.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);

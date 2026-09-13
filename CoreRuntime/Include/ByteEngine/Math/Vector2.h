@@ -35,9 +35,7 @@ namespace ByteEngine::Math
             T data[2];
         };
 
-        constexpr Vector2T() :
-            x(0), y(0)
-        { }
+        constexpr Vector2T() = default;
 
         explicit constexpr Vector2T(T xy) :
             x(xy), y(xy)
@@ -282,7 +280,11 @@ namespace ByteEngine::Math
         static constexpr Vector2T Project(Vector2T vec, Vector2T projectOnto)
             requires std::floating_point<T>
         {
-            return projectOnto * (Dot(vec, projectOnto) / projectOnto.LengthSquared());
+            FloatT lengthSq = projectOnto.LengthSquared();
+            if (lengthSq < Mathf::Epsilon)
+                return Zero();
+
+            return projectOnto * (Dot(vec, projectOnto) / lengthSq);
         }
 
         static Vector2T ProjectUnsafe(Vector2T vec, Vector2T projectOnto)

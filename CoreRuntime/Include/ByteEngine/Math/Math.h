@@ -243,14 +243,12 @@ namespace ByteEngine::Math::Mathf
     constexpr double InfinityD = std::numeric_limits<double>::infinity();
     constexpr float NegativeInfinity = -std::numeric_limits<float>::infinity();
     constexpr double NegativeInfinityD = -std::numeric_limits<double>::infinity();
-    // NOLINTEND
 
     constexpr float PI = 3.141592654f;
     constexpr double PI_D = 3.141592653589793;
 
     constexpr float Epsilon = 1e-5f;
     constexpr double EpsilonD = 1e-8f;
-    // NOLINTBEGIN
     constexpr RadianF AngleEpsilon = RadianF(1e-4f);
     constexpr float UnitSizeEpsilon = 1e-4f;
     // NOLINTEND

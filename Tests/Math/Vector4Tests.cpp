@@ -74,8 +74,8 @@ TYPED_TEST(Vector4tFloatTypesTest, Interpolation)
     Vec4 start(0, 0, 0, 0);
     Vec4 end(10, 10, 10, 10);
 
-    EXPECT_EQ(Vec4::Lerp(start, end, 0.5), Vec4(5, 5, 5, 5));
-    EXPECT_EQ(Vec4::LerpClamped(start, end, 2.0), Vec4(10, 10, 10, 10));
+    EXPECT_EQ(Vec4::LerpUnclamped(start, end, 0.5), Vec4(5, 5, 5, 5));
+    EXPECT_EQ(Vec4::Lerp(start, end, 2.0), Vec4(10, 10, 10, 10));
 
     Vec4 current(0, 0, 0, 0);
     Vec4 target(5, 0, 0, 0);
