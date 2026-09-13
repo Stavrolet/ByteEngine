@@ -889,16 +889,6 @@ TEST(ColorTConversionTest, DoubleToFloatConversion)
     EXPECT_NEAR(f.a, 0.4f, 1e-5f);
 }
 
-TEST(ColorTConversionTest, ToVector4)
-{
-    ColorT<float> c(0.1f, 0.2f, 0.3f, 0.4f);
-    Vector4T<float> v = static_cast<Vector4T<float>>(c);
-    EXPECT_NEAR(v.x, 0.1f, kEpsF);
-    EXPECT_NEAR(v.y, 0.2f, kEpsF);
-    EXPECT_NEAR(v.z, 0.3f, kEpsF);
-    EXPECT_NEAR(v.w, 0.4f, kEpsF);
-}
-
 // ─────────────────────────────────────────────
 // Robustness / edge cases
 // ─────────────────────────────────────────────

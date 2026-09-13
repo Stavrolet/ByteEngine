@@ -50,6 +50,11 @@ namespace ByteEngine::Math
             r(arr[0] / T(255)), g(arr[1] / T(255)), b(arr[2] / T(255)), a(arr[3] / T(255))
         { }
 
+        template <std::floating_point U>
+        explicit constexpr ColorT(ColorT<U> other) :
+            r(static_cast<T>(other.r)), g(static_cast<T>(other.g)), b(static_cast<T>(other.b)), a(static_cast<T>(other.a))
+        { }
+
         constexpr void ToLinear()
         {
             r = Mathf::GammaToLinearSpace(r);
@@ -398,16 +403,6 @@ namespace ByteEngine::Math
             BE_DEBUG_CHECK(index >= 0 && index < 4);
             return data[index];
         }
-
-        template <std::floating_point U>
-            requires(!std::is_same_v<T, U>)
-        [[nodiscard]] explicit constexpr operator ColorT<U>() const
-        {
-            return ColorT<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a));
-        }
-
-        template <std::floating_point U>
-        [[nodiscard]] explicit constexpr operator Vector4T<U>() const { return Vector4T<U>(static_cast<U>(r), static_cast<U>(g), static_cast<U>(b), static_cast<U>(a)); }
     };
 
     using ColorF = ColorT<float>;
