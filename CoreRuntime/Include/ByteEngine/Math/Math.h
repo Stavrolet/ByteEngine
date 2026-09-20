@@ -399,7 +399,7 @@ namespace ByteEngine::Math::Mathf
     }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(static_cast<Details::FloatT<T>>(value)); }
+    [[nodiscard]] inline auto Sqrt(T value) { return std::sqrt(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
     [[nodiscard]] inline T Abs(T value) noexcept { return std::abs(value); }
@@ -469,19 +469,19 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] inline T Fract(T value) noexcept { return value - Floor(value); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(static_cast<Details::FloatT<T>>(value)); }
+    [[nodiscard]] inline auto Exp(T value) noexcept { return std::exp(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto Pow(T value, U power) noexcept { return std::pow(static_cast<std::common_type_t<T, U>>(value), static_cast<std::common_type_t<T, U>>(power)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Ln(T value) noexcept { return std::log(static_cast<Details::FloatT<T>>(value)); }
+    [[nodiscard]] inline auto Ln(T value) noexcept { return std::log(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Log10(T value) noexcept { return std::log10(static_cast<Details::FloatT<T>>(value)); }
+    [[nodiscard]] inline auto Log10(T value) noexcept { return std::log10(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Log2(T value) noexcept { return std::log2(static_cast<Details::FloatT<T>>(value)); }
+    [[nodiscard]] inline auto Log2(T value) noexcept { return std::log2(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto LogN(T value, U base) noexcept
@@ -643,7 +643,7 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] constexpr std::ranges::range_value_t<R> Max(const R& range) { return std::ranges::max(range); }
 
     template <Arithmetic T>
-    [[nodiscard]] constexpr T LinearToGammaSpace(T value)
+    [[nodiscard]] constexpr auto LinearToGammaSpace(T value)
     {
         using Float = Details::FloatT<T>;
         Float valueF = static_cast<Details::FloatT<T>>(value);
@@ -655,7 +655,7 @@ namespace ByteEngine::Math::Mathf
     }
 
     template <Arithmetic T>
-    [[nodiscard]] constexpr T GammaToLinearSpace(T value)
+    [[nodiscard]] constexpr auto GammaToLinearSpace(T value)
     {
         using Float = Details::FloatT<T>;
         Float valueF = static_cast<Details::FloatT<T>>(value);
