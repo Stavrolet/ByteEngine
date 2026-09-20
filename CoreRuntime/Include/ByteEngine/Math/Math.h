@@ -39,15 +39,12 @@ namespace ByteEngine::Math
         constexpr RadianT operator-() const { return RadianT(-value); }
 
         constexpr RadianT operator+(RadianT other) const { return RadianT(value + other.value); }
-        constexpr RadianT operator+(T other) const { return RadianT(value + other); }
         constexpr RadianT operator-(RadianT other) const { return RadianT(value - other.value); }
-        constexpr RadianT operator-(T other) const { return RadianT(value - other); }
 
-        constexpr RadianT operator*(RadianT other) const { return RadianT(value * other.value); }
         constexpr RadianT operator*(T other) const { return RadianT(value * other); }
         friend constexpr RadianT operator*(T other, RadianT rad) { return RadianT(rad.value * other); }
 
-        constexpr RadianT operator/(RadianT other) const { return RadianT(value / other.value); }
+        constexpr T operator/(RadianT other) const { return value / other.value; }
         constexpr RadianT operator/(T other) const { return RadianT(value / other); }
         friend constexpr RadianT operator/(T other, RadianT rad) { return RadianT(other / rad.value); }
 
@@ -57,39 +54,15 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr RadianT& operator+=(T other)
-        {
-            value += other;
-            return *this;
-        }
-
         constexpr RadianT& operator-=(RadianT other)
         {
             value -= other.value;
             return *this;
         }
 
-        constexpr RadianT& operator-=(T other)
-        {
-            value -= other;
-            return *this;
-        }
-
-        constexpr RadianT& operator*=(RadianT other)
-        {
-            value *= other.value;
-            return *this;
-        }
-
         constexpr RadianT& operator*=(T other)
         {
             value *= other;
-            return *this;
-        }
-
-        constexpr RadianT& operator/=(RadianT other)
-        {
-            value /= other.value;
             return *this;
         }
 
@@ -126,15 +99,12 @@ namespace ByteEngine::Math
         constexpr DegreeT operator-() const { return DegreeT(-value); }
 
         constexpr DegreeT operator+(DegreeT other) const { return DegreeT(value + other.value); }
-        constexpr DegreeT operator+(T other) const { return DegreeT(value + other); }
         constexpr DegreeT operator-(DegreeT other) const { return DegreeT(value - other.value); }
-        constexpr DegreeT operator-(T other) const { return DegreeT(value - other); }
 
-        constexpr DegreeT operator*(DegreeT other) const { return DegreeT(value * other.value); }
         constexpr DegreeT operator*(T other) const { return DegreeT(value * other); }
         friend constexpr DegreeT operator*(T other, DegreeT deg) { return DegreeT(deg.value * other); }
 
-        constexpr DegreeT operator/(DegreeT other) const { return DegreeT(value / other.value); }
+        constexpr T operator/(DegreeT other) const { return value / other.value; }
         constexpr DegreeT operator/(T other) const { return DegreeT(value / other); }
         friend constexpr DegreeT operator/(T other, DegreeT deg) { return DegreeT(other / deg.value); }
 
@@ -144,39 +114,15 @@ namespace ByteEngine::Math
             return *this;
         }
 
-        constexpr DegreeT& operator+=(T other)
-        {
-            value += other;
-            return *this;
-        }
-
         constexpr DegreeT& operator-=(DegreeT other)
         {
             value -= other.value;
             return *this;
         }
 
-        constexpr DegreeT& operator-=(T other)
-        {
-            value -= other;
-            return *this;
-        }
-
-        constexpr DegreeT& operator*=(DegreeT other)
-        {
-            value *= other.value;
-            return *this;
-        }
-
         constexpr DegreeT& operator*=(T other)
         {
             value *= other;
-            return *this;
-        }
-
-        constexpr DegreeT& operator/=(DegreeT other)
-        {
-            value /= other.value;
             return *this;
         }
 
@@ -191,9 +137,11 @@ namespace ByteEngine::Math
 
     using RadianF = RadianT<float>;
     using RadianD = RadianT<double>;
+    using Radian = RadianF;
 
     using DegreeF = DegreeT<float>;
     using DegreeD = DegreeT<double>;
+    using Degree = DegreeF;
 
     namespace Literals
     {
