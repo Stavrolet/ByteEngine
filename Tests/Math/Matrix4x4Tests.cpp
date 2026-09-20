@@ -683,7 +683,7 @@ TYPED_TEST(Matrix4x4tTest, Rotation180DegAroundXFlipsYZ)
     using Vec4 = TestFixture::Vec4;
     using Quat = TestFixture::Quat;
     using RadianT = TestFixture::RadianT;
-    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D)), Vec3::Right());
+    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI)), Vec3::Right());
     Mat4 m = Mat4::Rotation(q);
     Vec3 v = (m * Vec4(0, 1, 0, 0)).template xyz<TypeParam>();
     EXPECT_NEAR(v.x, 0, 1e-4);
@@ -735,7 +735,7 @@ TYPED_TEST(Matrix4x4tTest, PerspectiveDiagonalElementsAreFiniteAndPositive)
     using Mat4 = TestFixture::Mat4;
     using RadianT = TestFixture::RadianT;
     Mat4 m = Mat4::PerspectiveProjection(
-        RadianT(static_cast<TypeParam>(Mathf::PI_D) / static_cast<TypeParam>(2)),
+        RadianT(static_cast<TypeParam>(Mathf::PI) / static_cast<TypeParam>(2)),
         static_cast<TypeParam>(16) / static_cast<TypeParam>(9),
         static_cast<TypeParam>(0.1),
         static_cast<TypeParam>(1000)
@@ -750,8 +750,8 @@ TYPED_TEST(Matrix4x4tTest, PerspectiveNarrowFovHasLargerM11)
 {
     using Mat4 = TestFixture::Mat4;
     using RadianT = TestFixture::RadianT;
-    Mat4 wide = Mat4::PerspectiveProjection(RadianT(static_cast<TypeParam>(Mathf::PI_D) / static_cast<TypeParam>(2)), static_cast<TypeParam>(1), static_cast<TypeParam>(0.1), static_cast<TypeParam>(100));
-    Mat4 narrow = Mat4::PerspectiveProjection(RadianT(static_cast<TypeParam>(Mathf::PI_D) / static_cast<TypeParam>(4)), static_cast<TypeParam>(1), static_cast<TypeParam>(0.1), static_cast<TypeParam>(100));
+    Mat4 wide = Mat4::PerspectiveProjection(RadianT(static_cast<TypeParam>(Mathf::PI) / static_cast<TypeParam>(2)), static_cast<TypeParam>(1), static_cast<TypeParam>(0.1), static_cast<TypeParam>(100));
+    Mat4 narrow = Mat4::PerspectiveProjection(RadianT(static_cast<TypeParam>(Mathf::PI) / static_cast<TypeParam>(4)), static_cast<TypeParam>(1), static_cast<TypeParam>(0.1), static_cast<TypeParam>(100));
     EXPECT_GT(narrow.m11, wide.m11);
 }
 

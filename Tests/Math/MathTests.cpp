@@ -8,7 +8,7 @@ using namespace ByteEngine::Math::Literals;
 TEST(MathTest, ConstantsAndConversions)
 {
     EXPECT_NEAR(static_cast<RadianF>(180_df).value, Mathf::PI, 1e-5f);
-    EXPECT_NEAR(RadianD(Mathf::PI_D).ToDegree().value, 180.0, 1e-5);
+    EXPECT_NEAR(DegreeD(RadianD(Mathf::PI)).value, 180.0, 1e-5);
 }
 
 TEST(MathTest, Trigonometry)

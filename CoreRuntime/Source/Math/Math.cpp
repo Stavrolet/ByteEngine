@@ -7,7 +7,7 @@ namespace ByteEngine::Math::Mathf
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarASin
-    RadianF Asin(float value) noexcept
+    RadianF Asin(float value)
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -31,7 +31,7 @@ namespace ByteEngine::Math::Mathf
 
     // Acos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarACos
-    RadianF Acos(float value) noexcept
+    RadianF Acos(float value)
     {
         // Clamp input to [-1,1].
         bool nonnegative = (value >= 0.0f);
@@ -52,22 +52,4 @@ namespace ByteEngine::Math::Mathf
     }
 
     RadianD Acos(double value) { return RadianD(std::acos(value)); }
-
-    RadianF AngleDifference(RadianF from, RadianF to) noexcept
-    {
-        float difference = Fmod(to.value - from.value, 2.0f * PI);
-        return RadianF(Fmod(2.0f * difference, 2.0f * PI) - difference);
-    }
-
-    RadianD AngleDifference(RadianD from, RadianD to) noexcept
-    {
-        double difference = Fmod(to.value - from.value, 2.0 * PI_D);
-        return RadianD(Fmod(2.0 * difference, 2.0 * PI_D) - difference);
-    }
-
-    RadianF LerpAngle(RadianF from, RadianF to, float t) noexcept { return from + AngleDifference(from, to) * t; }
-    RadianD LerpAngle(RadianD from, RadianD to, double t) noexcept { return from + AngleDifference(from, to) * t; }
-
-    RadianF LerpAngleClamped(RadianF from, RadianF to, float t) noexcept { return LerpAngle(from, to, Clamp(t)); }
-    RadianD LerpAngleClamped(RadianD from, RadianD to, double t) noexcept { return LerpAngle(from, to, Clamp(t)); }
 }

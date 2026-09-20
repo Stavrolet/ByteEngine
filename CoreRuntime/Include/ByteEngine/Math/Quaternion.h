@@ -42,10 +42,10 @@ namespace ByteEngine::Math
     };
 
     template <std::floating_point T>
-    constexpr EulerDegT<T> EulerRadT<T>::ToDeg() const { return EulerDegT<T>(pitch.ToDegree(), yaw.ToDegree(), roll.ToDegree()); }
+    constexpr EulerDegT<T> EulerRadT<T>::ToDeg() const { return EulerDegT<T>(DegreeT<T>(pitch), DegreeT<T>(yaw), DegreeT<T>(roll)); }
 
     template <std::floating_point T>
-    constexpr EulerRadT<T> EulerDegT<T>::ToRad() const { return EulerRadT<T>(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
+    constexpr EulerRadT<T> EulerDegT<T>::ToRad() const { return EulerRadT<T>(RadianT<T>(pitch), RadianT<T>(yaw), RadianT<T>(roll)); }
 
     using EulerRadF = EulerRadT<float>;
     using EulerRadD = EulerRadT<double>;
@@ -135,7 +135,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximetly(LengthSquared(), T(1), T(Mathf::UnitSizeEpsilon)); }
+        [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximetly(LengthSquared(), T(1), T(Mathf::Epsilon)); }
 
         constexpr void InverseUnsafe()
         {
@@ -246,7 +246,7 @@ namespace ByteEngine::Math
             return FromAngleAxisUnsafe(angle, axis);
         }
 
-        [[nodiscard]] static QuaternionT FromAngleAxis(DegreeT<T> angle, Vector3T<T> axis) { return FromAngleAxis(angle.ToRadian(), axis); }
+        [[nodiscard]] static QuaternionT FromAngleAxis(DegreeT<T> angle, Vector3T<T> axis) { return FromAngleAxis(RadianT<T>(angle), axis); }
 
         [[nodiscard]] static QuaternionT FromEuler(RadianT<T> pitch, RadianT<T> yaw, RadianT<T> roll)
         {
@@ -257,7 +257,10 @@ namespace ByteEngine::Math
             return qYaw * qPitch * qRoll;
         }
 
-        [[nodiscard]] static QuaternionT FromEuler(DegreeT<T> pitch, DegreeT<T> yaw, DegreeT<T> roll) { return FromEuler(pitch.ToRadian(), yaw.ToRadian(), roll.ToRadian()); }
+        [[nodiscard]] static QuaternionT FromEuler(DegreeT<T> pitch, DegreeT<T> yaw, DegreeT<T> roll)
+        {
+            return FromEuler(RadianT<T>(pitch), RadianT<T>(yaw), RadianT<T>(roll));
+        }
 
         [[nodiscard]] static QuaternionT FromLookDirectionUnsafe(Vector3T<T> direction, Vector3T<T> worldUp = Vector3T<T>::Up())
         {
@@ -322,7 +325,7 @@ namespace ByteEngine::Math
             if (Mathf::IsEqualApproximetly(dot, T(1)) || Mathf::IsEqualApproximetly(dot, T(0)))
                 return Identity();
             else if (Mathf::IsEqualApproximetly(dot, T(-1)))
-                return FromAngleAxisUnsafe(RadianT<T>(static_cast<T>(Mathf::PI_D)), Vector3T<T>::Up());
+                return FromAngleAxisUnsafe(RadianT<T>(static_cast<T>(Mathf::PI)), Vector3T<T>::Up());
 
             Vector3T<T> axis = Vector3T<T>::Cross(from, to);
             T root = Mathf::Sqrt((T(1) + dot) * T(2));

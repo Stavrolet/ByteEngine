@@ -101,7 +101,7 @@ namespace ByteEngine::Math
         bool IsNormalized() const
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Mathf::UnitSizeEpsilon));
+            return Mathf::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Mathf::Epsilon));
         }
 
         void LimitLength(FloatT maxLength = 1)

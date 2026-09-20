@@ -58,7 +58,7 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 
-    v.RotateBy(RadianT(Mathf::PI_D / 2.0f), axis);
+    v.RotateBy(RadianT(Mathf::PI / 2.0f), axis);
 
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);
@@ -249,11 +249,11 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
     zero.Normalize();
     EXPECT_TRUE(zero.x == 0 && zero.y == 0 && zero.z == 0);
 
-    Vec3 inf(Mathf::Infinity, Mathf::Infinity, Mathf::Infinity);
+    Vec3 inf(Mathf::Infinity<>, Mathf::Infinity<>, Mathf::Infinity<>);
     inf.Normalize();
     EXPECT_TRUE(std::isnan(inf.x) && std::isnan(inf.y) && std::isnan(inf.z));
 
-    Vec3 mixed(Mathf::Infinity, 1213, 0);
+    Vec3 mixed(Mathf::Infinity<>, 1213, 0);
     mixed.Normalize();
     EXPECT_TRUE(std::isnan(mixed.x) && mixed.y == 0 && mixed.z == 0);
 
@@ -269,7 +269,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
     Vec3 zeroAxis(0.0, 0.0, 0.0);
 
     if constexpr (std::is_same_v<decltype(v.x), double>)
-        v.RotateBy(RadianD(Mathf::PI_D / 2.0), zeroAxis);
+        v.RotateBy(RadianD(Mathf::PI / 2.0), zeroAxis);
     else
         v.RotateBy(RadianF(Mathf::PI / 2.0f), zeroAxis);
 
@@ -285,7 +285,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
 
-    Vec3 rotated1 = v.RotatedBy(RadianT(Mathf::PI_D * 2.0f * 10000), axis);
+    Vec3 rotated1 = v.RotatedBy(RadianT(Mathf::PI * 2.0f * 10000), axis);
 
     EXPECT_NEAR(rotated1.x, 1.0f, 1.4e-2f);
     EXPECT_NEAR(rotated1.y, 0.0f, 1.4e-2f);

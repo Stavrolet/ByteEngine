@@ -97,7 +97,7 @@ namespace ByteEngine::Math
         bool IsNormalized() const
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::UnitSizeEpsilon));
+            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::Epsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md

@@ -201,7 +201,7 @@ TYPED_TEST(QuaterniontTest, GetAxis)
     using Quat = TestFixture::Quat;
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
-    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Vec3 axis = q.GetAxis();
     EXPECT_NEAR(axis.x, 0.0, 1e-5);
     EXPECT_NEAR(std::abs(axis.y), 1.0, 1e-5);
@@ -213,9 +213,9 @@ TYPED_TEST(QuaterniontTest, GetAngle)
     using Quat = TestFixture::Quat;
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
-    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     RadianT angle = q.GetAngle();
-    EXPECT_NEAR(angle.value, static_cast<double>(Mathf::PI_D) / 2.0, 1e-5);
+    EXPECT_NEAR(angle.value, static_cast<double>(Mathf::PI) / 2.0, 1e-5);
 }
 
 TYPED_TEST(QuaterniontTest, Dot)
@@ -387,7 +387,7 @@ TYPED_TEST(QuaterniontTest, SlerpAtZero)
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
     Quat q1 = Quat::FromAngleAxis(RadianT(TypeParam(0)), Vec3(0.0, 1.0, 0.0));
-    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Quat result = Quat::Slerp(q1, q2, TypeParam(0));
     EXPECT_NEAR(result.x, q1.x, 1e-5);
     EXPECT_NEAR(result.y, q1.y, 1e-5);
@@ -401,7 +401,7 @@ TYPED_TEST(QuaterniontTest, SlerpAtOne)
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
     Quat q1 = Quat::FromAngleAxis(RadianT(TypeParam(0)), Vec3(0.0, 1.0, 0.0));
-    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Quat result = Quat::Slerp(q1, q2, TypeParam(1));
     EXPECT_NEAR(result.x, q2.x, 1e-5);
     EXPECT_NEAR(result.y, q2.y, 1e-5);
@@ -415,7 +415,7 @@ TYPED_TEST(QuaterniontTest, SlerpClampedAtZero)
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
     Quat q1 = Quat::FromAngleAxis(RadianT(TypeParam(0)), Vec3(0.0, 1.0, 0.0));
-    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Quat result = Quat::SlerpClamped(q1, q2, TypeParam(0));
     EXPECT_NEAR(result.x, q1.x, 1e-5);
     EXPECT_NEAR(result.y, q1.y, 1e-5);
@@ -429,7 +429,7 @@ TYPED_TEST(QuaterniontTest, SlerpClampedAtOne)
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
     Quat q1 = Quat::FromAngleAxis(RadianT(TypeParam(0)), Vec3(0.0, 1.0, 0.0));
-    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Quat result = Quat::SlerpClamped(q1, q2, TypeParam(1));
     EXPECT_NEAR(result.x, q2.x, 1e-5);
     EXPECT_NEAR(result.y, q2.y, 1e-5);
@@ -443,7 +443,7 @@ TYPED_TEST(QuaterniontTest, SlerpClampedClamps)
     using Vec3 = TestFixture::Vec3;
     using RadianT = TestFixture::RadianT;
     Quat q1 = Quat::FromAngleAxis(RadianT(TypeParam(0)), Vec3(0.0, 1.0, 0.0));
-    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI_D) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
+    Quat q2 = Quat::FromAngleAxis(RadianT(static_cast<TypeParam>(Mathf::PI) / TypeParam(2)), Vec3(0.0, 1.0, 0.0));
     Quat result = Quat::SlerpClamped(q1, q2, TypeParam(1.5));
     EXPECT_NEAR(result.x, q2.x, 1e-5);
     EXPECT_NEAR(result.y, q2.y, 1e-5);
