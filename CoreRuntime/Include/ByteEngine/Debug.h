@@ -75,7 +75,8 @@ namespace ByteEngine
             ::ByteEngine::Application::GetInstance().FatalCrash( \
                 "Condition failed: " #condition "\n"             \
                 "Message: " fmt,                                 \
-                ##__VA_ARGS__);                                  \
+                ##__VA_ARGS__                                    \
+            );                                                   \
         }                                                        \
     } while (false)
 
@@ -101,13 +102,14 @@ namespace ByteEngine
                 {                                                                  \
                     const std::stacktrace backtrace = std::stacktrace::current(1); \
                     std::string backtraceString;                                   \
-                    backtraceString.reserve(backtrace.size() * 20);                \
+                    backtraceString.reserve(backtrace.size() * 40);                \
                     for (auto& el : backtrace)                                     \
                         backtraceString.append('\t' + std::to_string(el) + '\n');  \
                     BE_LOG_ERROR(                                                  \
                         "Condition failed: " #condition "\n"                       \
                         "Backtrace: \n{}\n",                                       \
-                        backtraceString);                                          \
+                        backtraceString                                            \
+                    );                                                             \
                 }                                                                  \
             }                                                                      \
             ::ByteEngine::Debug::BreakpointIfDebuggerAttached();                   \
@@ -127,14 +129,15 @@ namespace ByteEngine
                 {                                                                  \
                     const std::stacktrace backtrace = std::stacktrace::current(1); \
                     std::string backtraceString;                                   \
-                    backtraceString.reserve(backtrace.size() * 20);                \
+                    backtraceString.reserve(backtrace.size() * 40);                \
                     for (auto& el : backtrace)                                     \
                         backtraceString.append('\t' + std::to_string(el) + '\n');  \
                     BE_LOG_ERROR(                                                  \
                         "Condition failed: " #condition "\n"                       \
                         "Message: " fmt "\n"                                       \
                         "Backtrace: \n{}\n",                                       \
-                        ##__VA_ARGS__, backtraceString);                           \
+                        ##__VA_ARGS__, backtraceString                             \
+                    );                                                             \
                 }                                                                  \
             }                                                                      \
             return conditionResult;                                                \
@@ -147,13 +150,14 @@ namespace ByteEngine
             {                                                                  \
                 const std::stacktrace backtrace = std::stacktrace::current(1); \
                 std::string backtraceString;                                   \
-                backtraceString.reserve(backtrace.size() * 20);                \
+                backtraceString.reserve(backtrace.size() * 40);                \
                 for (auto& el : backtrace)                                     \
                     backtraceString.append('\t' + std::to_string(el) + '\n');  \
                 BE_LOG_ERROR(                                                  \
                     "Condition failed: " #condition "\n"                       \
                     "Backtrace: \n{}\n",                                       \
-                    backtraceString);                                          \
+                    backtraceString                                            \
+                );                                                             \
             }                                                                  \
             ::ByteEngine::Debug::BreakpointIfDebuggerAttached();               \
             return conditionResult;                                            \
@@ -166,14 +170,15 @@ namespace ByteEngine
             {                                                                  \
                 const std::stacktrace backtrace = std::stacktrace::current(1); \
                 std::string backtraceString;                                   \
-                backtraceString.reserve(backtrace.size() * 20);                \
+                backtraceString.reserve(backtrace.size() * 40);                \
                 for (auto& el : backtrace)                                     \
                     backtraceString.append('\t' + std::to_string(el) + '\n');  \
                 BE_LOG_ERROR(                                                  \
                     "Condition failed: " #condition "\n"                       \
                     "Message: " fmt "\n"                                       \
                     "Backtrace: \n{}\n",                                       \
-                    ##__VA_ARGS__, backtraceString);                           \
+                    ##__VA_ARGS__, backtraceString                             \
+                );                                                             \
             }                                                                  \
             ::ByteEngine::Debug::BreakpointIfDebuggerAttached();               \
             return conditionResult;                                            \

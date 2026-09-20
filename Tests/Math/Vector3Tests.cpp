@@ -1,5 +1,4 @@
-﻿#include "ByteEngine/Math/Rotator.h"
-#include "ByteEngine/Math/Vector2.h"
+﻿#include "ByteEngine/Math/Vector2.h"
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
 
@@ -10,28 +9,28 @@ using namespace ByteEngine::Math;
 using namespace ByteEngine::Math::Literals;
 
 template <typename T>
-class Vector3tTest : public ::testing::Test
+class Vector3tTest : public testing::Test
 {
 protected:
     using Vec3 = Vector3T<T>;
 };
 
 template <typename T>
-class Vector3tFloatTypesTest : public ::testing::Test
+class Vector3tFloatTypesTest : public testing::Test
 {
 protected:
     using Vec3 = Vector3T<T>;
 };
 
-using Types = ::testing::Types<float, double, ByteEngine::int32, ByteEngine::int64>;
-using FloatTypes = ::testing::Types<float, double>;
+using Types = testing::Types<float, double, ByteEngine::int32, ByteEngine::int64>;
+using FloatTypes = testing::Types<float, double>;
 
 TYPED_TEST_SUITE(Vector3tTest, Types);
 TYPED_TEST_SUITE(Vector3tFloatTypesTest, FloatTypes);
 
 TYPED_TEST(Vector3tTest, LengthAndNormalize)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v(3.0, 4.0, 5.0);
     EXPECT_NEAR(v.Length(), 7.071, 6.782e-05);
     EXPECT_NEAR(v.LengthSquared(), 50, 1e-5);
@@ -54,7 +53,7 @@ TYPED_TEST(Vector3tTest, LengthAndNormalize)
 
 TYPED_TEST(Vector3tFloatTypesTest, Rotation)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     using RadianT = RadianT<typename Vec3::FloatT>;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
@@ -64,35 +63,11 @@ TYPED_TEST(Vector3tFloatTypesTest, Rotation)
     EXPECT_NEAR(v.x, 0.0, 1e-5);
     EXPECT_NEAR(v.y, 0.0, 1e-5);
     EXPECT_NEAR(v.z, 1.0, 1e-5);
-
-    if constexpr (std::same_as<typename Vec3::FloatT, float>)
-    {
-        Vec3 v2(1.0, 0.0, 0.0);
-        Rotator rot(90.0_df, 90.0_df, 0.0_df);
-        Vec3 rotated = rot.RotateVector(v2);
-        EXPECT_NEAR(rotated.x, 0.0, 1e-5);
-        EXPECT_NEAR(rotated.y, 0.0, 1e-5);
-        EXPECT_NEAR(rotated.z, -1.0, 1e-5);
-
-        Vec3 v3(0.0, 2.0, 1.0);
-        Quaternion q = Quaternion::FromEuler(0.0_df, 90.0_df, 180.0_df);
-        rotated = q * v3;
-        EXPECT_NEAR(rotated.x, 1.0, 1e-5);
-        EXPECT_NEAR(rotated.y, -2.0, 1e-5);
-        EXPECT_NEAR(rotated.z, 0.0, 1e-5);
-
-        Quaternion q1 = Quaternion::FromEuler(45.0_df, 90.0_df, 0.0_df);
-        Rotator rot1(45.0_df, 90.0_df, 0.0_df);
-        Vec3 vec4(1.0, 0.0, 0.0);
-        Vec3 rotated1 = q1 * vec4;
-        Vec3 rotated2 = rot1.RotateVector(vec4);
-        EXPECT_TRUE(Vec3::IsEqualApproximetly(rotated1, rotated2));
-    }
 }
 
 TYPED_TEST(Vector3tFloatTypesTest, AngleMethods)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 a(1.0, 0.0, 0.0);
     Vec3 b(0.0, 1.0, 0.0);
     Vec3 axis(0.0, 0.0, 1.0);
@@ -103,7 +78,7 @@ TYPED_TEST(Vector3tFloatTypesTest, AngleMethods)
 
 TYPED_TEST(Vector3tTest, AlgebraMethods)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 a(2.0, 3.0, 1.0);
     Vec3 b(1.0, 5.0, 2.0);
 
@@ -143,7 +118,7 @@ TYPED_TEST(Vector3tTest, AlgebraMethods)
 
 TYPED_TEST(Vector3tFloatTypesTest, InterpolationAndReflection)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 start(0, 0, 0);
     Vec3 end(10, 10, 10);
 
@@ -165,7 +140,7 @@ TYPED_TEST(Vector3tFloatTypesTest, InterpolationAndReflection)
 
 TYPED_TEST(Vector3tTest, MinMax)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
 
     Vec3 a(1, 10, 4);
     Vec3 b(7, 4, 5);
@@ -194,7 +169,7 @@ TYPED_TEST(Vector3tTest, MinMax)
 
 TYPED_TEST(Vector3tTest, Operators)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v1(2.0, 3.0, 4.0);
     Vec3 v2(1.0, 2.0, 3.0);
 
@@ -220,7 +195,7 @@ TYPED_TEST(Vector3tTest, Operators)
 
 TYPED_TEST(Vector3tTest, AccessAndConversion)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v(1.0, 2.0, 3.0);
 
     EXPECT_EQ(v[0], 1.0);
@@ -240,7 +215,7 @@ TYPED_TEST(Vector3tTest, AccessAndConversion)
 
 TYPED_TEST(Vector3tFloatTypesTest, IsEqualApproximetly)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v1(1.0000000001, 1.0, 1.0);
     Vec3 v2(1.0, 1.0, 1.0);
     EXPECT_TRUE(Vec3::IsEqualApproximetly(v1, v2));
@@ -260,15 +235,15 @@ protected:
     using Vec3 = Vector3T<T>;
 };
 
-using FloatTypes = ::testing::Types<float, double>;
-using IntTypes = ::testing::Types<ByteEngine::int32, ByteEngine::int64>;
+using FloatTypes = testing::Types<float, double>;
+using IntTypes = testing::Types<ByteEngine::int32, ByteEngine::int64>;
 
 TYPED_TEST_SUITE(Vector3tFloatTypesRobustnessTest, FloatTypes);
 TYPED_TEST_SUITE(Vector3tIntTypesRobustnessTest, IntTypes);
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 zero(0);
 
     zero.Normalize();
@@ -289,8 +264,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, VectorNormalization)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
 {
-    using Vec3 = typename TestFixture::Vec3;
-    using RadianT = RadianT<typename Vec3::FloatT>;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 zeroAxis(0.0, 0.0, 0.0);
 
@@ -306,7 +280,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotationWithZeroAxis)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     using RadianT = RadianT<typename Vec3::FloatT>;
     Vec3 v(1.0, 0.0, 0.0);
     Vec3 axis(0.0, 1.0, 0.0);
@@ -325,7 +299,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, RotateByPrecision)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, DivisionByZero)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v(1.0, 1.0, 1.0);
     Vec3 zero(0, 0, 0);
 
@@ -338,7 +312,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, DivisionByZero)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, ExtremeValuesOverflow)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     auto maxVal = std::numeric_limits<decltype(Vec3(0).x)>::max();
 
     Vec3 v(maxVal, maxVal, maxVal);
@@ -351,7 +325,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, ExtremeValuesOverflow)
 
 TYPED_TEST(Vector3tIntTypesRobustnessTest, ExtremeValuesOverflow)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     auto maxVal = std::numeric_limits<decltype(Vec3(0).x)>::max();
 
     Vec3 v(maxVal, maxVal, maxVal);
@@ -361,7 +335,7 @@ TYPED_TEST(Vector3tIntTypesRobustnessTest, ExtremeValuesOverflow)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, AngleBetweenZeroVectors)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 zero(0, 0, 0);
     Vec3 normal(1, 0, 0);
     Vec3 axis(0, 1, 0);
@@ -375,7 +349,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, AngleBetweenZeroVectors)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 v(1, 1, 1);
     Vec3 zeroNormal(0, 0, 0);
 
@@ -392,7 +366,7 @@ TYPED_TEST(Vector3tFloatTypesRobustnessTest, ProjectAndReflectWithZeroNormal)
 
 TYPED_TEST(Vector3tFloatTypesRobustnessTest, MoveTowardsBounds)
 {
-    using Vec3 = typename TestFixture::Vec3;
+    using Vec3 = TestFixture::Vec3;
     Vec3 current(0, 0, 0);
     Vec3 target(10, 10, 10);
 

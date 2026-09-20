@@ -333,7 +333,7 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] double Cos(RadianD rad);
 
     template <Arithmetic T>
-    [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad); }
+    [[nodiscard]] T Tan(RadianT<T> rad) { return std::tan(rad.value); }
 
     // Asin implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarASin
@@ -348,7 +348,7 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] RadianD Acos(double value);
 
     template <Arithmetic T>
-    [[nodiscard]] RadianT<T> Atan(T value) { return std::atan(value); }
+    [[nodiscard]] RadianT<T> Atan(T value) { return RadianT<T>(std::atan(value)); }
 
     // SinCos implementation adapted from DirectXMath (MIT License). See THIRDPARTY.md
     // Source: DirectX::XMScalarSinCos

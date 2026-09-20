@@ -51,6 +51,7 @@ namespace ByteEngine::Math
         { }
 
         template <std::floating_point U>
+            requires(!std::is_same_v<T, U>)
         explicit constexpr ColorT(ColorT<U> other) :
             r(static_cast<T>(other.r)), g(static_cast<T>(other.g)), b(static_cast<T>(other.b)), a(static_cast<T>(other.a))
         { }
