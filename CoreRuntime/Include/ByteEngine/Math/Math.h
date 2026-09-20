@@ -11,15 +11,13 @@
 #undef min
 #undef max
 
-namespace
-{
-    template <ByteEngine::Math::Arithmetic T>
-    using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
-}
-
 namespace ByteEngine::Math
 {
-    // not type aliases for type safety
+    namespace Details
+    {
+        template <Arithmetic T>
+        using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
+    }
 
     template <std::floating_point T>
     struct DegreeT;
@@ -396,12 +394,12 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] auto Atan2(T x, U y)
     {
-        using Float = FloatT<std::common_type_t<T, U>>;
+        using Float = Details::FloatT<std::common_type_t<T, U>>;
         return RadianT<std::common_type_t<T, U>>(std::atan2(static_cast<Float>(x), static_cast<Float>(y)));
     }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(static_cast<FloatT<T>>(value)); }
+    [[nodiscard]] inline T Sqrt(T value) { return std::sqrt(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
     [[nodiscard]] inline T Abs(T value) noexcept { return std::abs(value); }
@@ -471,24 +469,24 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] inline T Fract(T value) noexcept { return value - Floor(value); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(static_cast<FloatT<T>>(value)); }
+    [[nodiscard]] inline T Exp(T value) noexcept { return std::exp(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto Pow(T value, U power) noexcept { return std::pow(static_cast<std::common_type_t<T, U>>(value), static_cast<std::common_type_t<T, U>>(power)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Ln(T value) noexcept { return std::log(static_cast<FloatT<T>>(value)); }
+    [[nodiscard]] inline T Ln(T value) noexcept { return std::log(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Log10(T value) noexcept { return std::log10(static_cast<FloatT<T>>(value)); }
+    [[nodiscard]] inline T Log10(T value) noexcept { return std::log10(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T>
-    [[nodiscard]] inline T Log2(T value) noexcept { return std::log2(static_cast<FloatT<T>>(value)); }
+    [[nodiscard]] inline T Log2(T value) noexcept { return std::log2(static_cast<Details::FloatT<T>>(value)); }
 
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto LogN(T value, U base) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U>>;
+        using Float = Details::FloatT<std::common_type_t<T, U>>;
         return Ln(static_cast<Float>(value)) / Ln(static_cast<Float>(base));
     }
 
@@ -523,7 +521,7 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U>
     [[nodiscard]] inline auto PingPong(T t, U length) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U>>;
+        using Float = Details::FloatT<std::common_type_t<T, U>>;
         Float lengthF = static_cast<Float>(length);
         Float tF = static_cast<Float>(t);
         return (lengthF != 0.0f) ? Abs(Fract((tF - lengthF) / (lengthF * 2.0f)) * lengthF * 2.0f - lengthF) : 0.0f;
@@ -535,7 +533,7 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] constexpr auto Lerp(T from, U to, V t) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U, V>>;
+        using Float = Details::FloatT<std::common_type_t<T, U, V>>;
         return static_cast<Float>(from) + (static_cast<Float>(to) - static_cast<Float>(from)) * static_cast<Float>(t);
     }
 
@@ -548,7 +546,7 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] constexpr auto InverseLerp(T from, U to, V t) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U, V>>;
+        using Float = Details::FloatT<std::common_type_t<T, U, V>>;
         return (static_cast<Float>(t) - static_cast<Float>(from)) / (static_cast<Float>(to) - static_cast<Float>(from));
     }
 
@@ -561,7 +559,7 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] inline auto MoveTowards(T current, U target, V maxDelta) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U, V>>;
+        using Float = Details::FloatT<std::common_type_t<T, U, V>>;
         Float currentF = static_cast<Float>(current);
         Float targetF = static_cast<Float>(target);
         Float maxDeltaF = static_cast<Float>(maxDelta);
@@ -575,7 +573,7 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T, Arithmetic U, Arithmetic V>
     [[nodiscard]] inline auto SmoothStep(T edge0, U edge1, V x) noexcept
     {
-        using Float = FloatT<std::common_type_t<T, U, V>>;
+        using Float = Details::FloatT<std::common_type_t<T, U, V>>;
 
         if (IsEqualApproximetly(static_cast<Float>(edge0), static_cast<Float>(edge1)))
             return Float(0);
@@ -647,8 +645,8 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T>
     [[nodiscard]] constexpr T LinearToGammaSpace(T value)
     {
-        using Float = FloatT<T>;
-        Float valueF = static_cast<FloatT<T>>(value);
+        using Float = Details::FloatT<T>;
+        Float valueF = static_cast<Details::FloatT<T>>(value);
 
         if (valueF <= Float(0.0031308))
             return valueF * Float(12.92);
@@ -659,8 +657,8 @@ namespace ByteEngine::Math::Mathf
     template <Arithmetic T>
     [[nodiscard]] constexpr T GammaToLinearSpace(T value)
     {
-        using Float = FloatT<T>;
-        Float valueF = static_cast<FloatT<T>>(value);
+        using Float = Details::FloatT<T>;
+        Float valueF = static_cast<Details::FloatT<T>>(value);
 
         if (valueF <= Float(0.04045))
             return valueF / Float(12.92);

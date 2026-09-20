@@ -66,6 +66,21 @@ namespace ByteEngine::Math
         // clang-format on
         { }
 
+        explicit constexpr Matrix4x4T(T v) :
+            // clang-format off
+            m00(v), m10(v), m20(v), m30(v),
+            m01(v), m11(v), m21(v), m31(v),
+            m02(v), m12(v), m22(v), m32(v),
+            m03(v), m13(v), m23(v), m33(v)
+        // clang-format on
+        { }
+
+        template <std::floating_point U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr Matrix4x4T(Matrix4x4T<U> matrix) :
+            column0(matrix.column0), column1(matrix.column1), column2(matrix.column2), column3(matrix.column3)
+        { }
+
         [[nodiscard]] constexpr Vector4T<T> GetRow(int32 row) const
         {
             BE_DEBUG_CHECK(row >= 0 && row < ROW_COUNT);

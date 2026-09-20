@@ -56,9 +56,6 @@ namespace ByteEngine::Math
     using EulerDeg = EulerDegF;
 
     template <std::floating_point T>
-    struct RotatorT;
-
-    template <std::floating_point T>
     struct QuaternionT
     {
         union
@@ -87,8 +84,6 @@ namespace ByteEngine::Math
         explicit constexpr QuaternionT(const T arr[4]) :
             x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         { }
-
-        explicit constexpr QuaternionT(RotatorT<T> rotation);
 
         template <std::floating_point U>
             requires(!std::is_same_v<T, U>)
