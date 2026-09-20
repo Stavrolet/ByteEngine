@@ -111,7 +111,7 @@ namespace ByteEngine::Math
         constexpr void InverseUnsafe()
         {
             T det = Determinant();
-            BE_DEBUG_CHECK(!Mathf::IsEqualApproximetly(det, T(0)));
+            BE_DEBUG_CHECK(!Mathf::IsEqualApproximately(det, T(0)));
 
             T a2323 = m22 * m33 - m23 * m32;
             T a1323 = m21 * m33 - m23 * m31;
@@ -144,7 +144,7 @@ namespace ByteEngine::Math
 
         void Inverse()
         {
-            if (Mathf::IsEqualApproximetly(Determinant(), T(0)))
+            if (Mathf::IsEqualApproximately(Determinant(), T(0)))
                 *this = Identity();
             else
                 InverseUnsafe();

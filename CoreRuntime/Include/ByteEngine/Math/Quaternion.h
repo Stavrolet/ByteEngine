@@ -22,7 +22,40 @@ namespace ByteEngine::Math
             pitch(pitch), yaw(yaw), roll(roll)
         { }
 
-        [[nodiscard]] constexpr EulerDegT<T> ToDeg() const;
+        template <std::floating_point U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr EulerRadT(EulerRadT<U> other) :
+            pitch(static_cast<T>(other.pitch)), yaw(static_cast<T>(other.yaw)), roll(static_cast<T>(other.roll))
+        { }
+
+        template <std::floating_point U>
+        explicit constexpr EulerRadT(EulerDegT<U> other);
+
+        constexpr bool IsEqualApproximately(EulerRadT other, T tolerance = Mathf::Epsilon)
+        {
+            return Mathf::IsEqualApproximately(pitch, other.pitch, tolerance) &&
+                   Mathf::IsEqualApproximately(yaw, other.yaw, tolerance) &&
+                   Mathf::IsEqualApproximately(roll, other.roll, tolerance);
+        }
+
+        constexpr EulerRadT operator+() const { return EulerRadT(+pitch, +yaw, +roll); }
+        constexpr EulerRadT operator-() const { return EulerRadT(-pitch, -yaw, -roll); }
+
+        constexpr EulerRadT operator+(EulerRadT other) const { return EulerRadT(pitch + other.pitch, yaw + other.yaw, roll + other.roll); }
+        constexpr EulerRadT operator-(EulerRadT other) const { return EulerRadT(pitch - other.pitch, yaw - other.yaw, roll - other.roll); }
+
+        constexpr EulerRadT operator*(T scalar) const { return EulerRadT(pitch * scalar, yaw * scalar, roll * scalar); }
+        friend constexpr EulerRadT operator*(T scalar, EulerRadT euler) { return euler * scalar; }
+        constexpr EulerRadT operator/(T scalar) const { return EulerRadT(pitch / scalar, yaw / scalar, roll / scalar); }
+
+        constexpr EulerRadT& operator+=(EulerRadT other) { return *this = *this + other; }
+        constexpr EulerRadT& operator-=(EulerRadT other) { return *this = *this - other; }
+
+        constexpr EulerRadT& operator*=(T scalar) { return *this = *this * scalar; }
+        constexpr EulerRadT& operator/=(T scalar) { return *this = *this / scalar; }
+
+        constexpr bool operator==(EulerRadT other) const { return pitch == other.pitch && yaw == other.yaw && roll == other.roll; }
+        constexpr bool operator!=(EulerRadT other) const { return !(*this == other); }
     };
 
     template <std::floating_point T>
@@ -34,18 +67,53 @@ namespace ByteEngine::Math
 
         constexpr EulerDegT() = default;
 
-        constexpr EulerDegT(DegreeT<T> pitch, DegreeT<T> yaw, DegreeT<T> roll) :
-            pitch(pitch), yaw(yaw), roll(roll)
+        template <std::floating_point U>
+            requires(!std::is_same_v<T, U>)
+        explicit constexpr EulerDegT(EulerDegT<U> other) :
+            pitch(static_cast<T>(other.pitch)), yaw(static_cast<T>(other.yaw)), roll(static_cast<T>(other.roll))
         { }
 
-        [[nodiscard]] constexpr EulerRadT<T> ToRad() const;
+        template <std::floating_point U>
+        explicit constexpr EulerDegT(EulerRadT<U> other);
+
+        constexpr bool IsEqualApproximately(EulerDegT other, T tolerance = Mathf::Epsilon)
+        {
+            return Mathf::IsEqualApproximately(pitch, other.pitch, tolerance) &&
+                   Mathf::IsEqualApproximately(yaw, other.yaw, tolerance) &&
+                   Mathf::IsEqualApproximately(roll, other.roll, tolerance);
+        }
+
+        constexpr EulerDegT operator+() const { return EulerDegT(+pitch, +yaw, +roll); }
+        constexpr EulerDegT operator-() const { return EulerDegT(-pitch, -yaw, -roll); }
+
+        constexpr EulerDegT operator+(EulerDegT other) const { return EulerDegT(pitch + other.pitch, yaw + other.yaw, roll + other.roll); }
+        constexpr EulerDegT operator-(EulerDegT other) const { return EulerDegT(pitch - other.pitch, yaw - other.yaw, roll - other.roll); }
+
+        constexpr EulerDegT operator*(T scalar) const { return EulerDegT(pitch * scalar, yaw * scalar, roll * scalar); }
+        friend constexpr EulerDegT operator*(T scalar, EulerDegT euler) { return euler * scalar; }
+        constexpr EulerDegT operator/(T scalar) const { return EulerDegT(pitch / scalar, yaw / scalar, roll / scalar); }
+
+        constexpr EulerDegT& operator+=(EulerDegT other) { return *this = *this + other; }
+        constexpr EulerDegT& operator-=(EulerDegT other) { return *this = *this - other; }
+
+        constexpr EulerDegT& operator*=(T scalar) { return *this = *this * scalar; }
+        constexpr EulerDegT& operator/=(T scalar) { return *this = *this / scalar; }
+
+        constexpr bool operator==(EulerDegT other) const { return pitch == other.pitch && yaw == other.yaw && roll == other.roll; }
+        constexpr bool operator!=(EulerDegT other) const { return !(*this == other); }
     };
 
     template <std::floating_point T>
-    constexpr EulerDegT<T> EulerRadT<T>::ToDeg() const { return EulerDegT<T>(DegreeT<T>(pitch), DegreeT<T>(yaw), DegreeT<T>(roll)); }
+    template <std::floating_point U>
+    constexpr EulerRadT<T>::EulerRadT(EulerDegT<U> other) :
+        pitch(RadianT<T>(other.pitch)), yaw(RadianT<T>(other.yaw)), roll(RadianT<T>(other.roll))
+    { }
 
     template <std::floating_point T>
-    constexpr EulerRadT<T> EulerDegT<T>::ToRad() const { return EulerRadT<T>(RadianT<T>(pitch), RadianT<T>(yaw), RadianT<T>(roll)); }
+    template <std::floating_point U>
+    constexpr EulerDegT<T>::EulerDegT(EulerRadT<U> other) :
+        pitch(DegreeT<T>(other.pitch)), yaw(DegreeT<T>(other.yaw)), roll(DegreeT<T>(other.roll))
+    { }
 
     using EulerRadF = EulerRadT<float>;
     using EulerRadD = EulerRadT<double>;
@@ -135,7 +203,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximetly(LengthSquared(), T(1), T(Mathf::Epsilon)); }
+        [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximately(LengthSquared(), T(1), T(Mathf::Epsilon)); }
 
         constexpr void InverseUnsafe()
         {
@@ -188,14 +256,14 @@ namespace ByteEngine::Math
             return EulerRadT<T>(Mathf::Asin(sinp), Mathf::Atan2(siny, cosy), Mathf::Atan2(sinr, cosr));
         }
 
-        [[nodiscard]] EulerDegT<T> GetEulerUnsafe() const { return GetEulerInRadiansUnsafe().ToDeg(); }
-        [[nodiscard]] EulerDegT<T> GetEuler() { return GetEulerInRadians().ToDeg(); }
+        [[nodiscard]] EulerDegT<T> GetEulerUnsafe() const { return EulerDegT<T>(GetEulerInRadiansUnsafe()); }
+        [[nodiscard]] EulerDegT<T> GetEuler() { return EulerDegT<T>(GetEulerInRadians()); }
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
         [[nodiscard]] Vector3T<T> GetAxisUnsafe() const
         {
-            BE_DEBUG_CHECK(!Mathf::IsEqualApproximetly(Mathf::Abs(w), T(1)));
+            BE_DEBUG_CHECK(!Mathf::IsEqualApproximately(Mathf::Abs(w), T(1)));
 
             T invRoot = T(1) / Mathf::Sqrt(T(1) - w * w);
             return Vector3T<T>(x * invRoot, y * invRoot, z * invRoot);
@@ -203,7 +271,7 @@ namespace ByteEngine::Math
 
         [[nodiscard]] Vector3T<T> GetAxis() const
         {
-            if (Mathf::IsEqualApproximetly(Mathf::Abs(w), T(1)))
+            if (Mathf::IsEqualApproximately(Mathf::Abs(w), T(1)))
                 return Vector3T<T>(x, y, z);
 
             return GetAxisUnsafe();
@@ -304,7 +372,7 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static QuaternionT FromLookDirection(Vector3T<T> direction, Vector3T<T> worldUp = Vector3T<T>::Up())
         {
-            if (Mathf::IsEqualApproximetly(direction.LengthSquared(), T(0)))
+            if (Mathf::IsEqualApproximately(direction.LengthSquared(), T(0)))
                 return Identity();
 
             direction.Normalize();
@@ -322,9 +390,9 @@ namespace ByteEngine::Math
 
             T dot = Mathf::Clamp(Vector3T<T>::Dot(from, to), T(-1), T(1));
 
-            if (Mathf::IsEqualApproximetly(dot, T(1)) || Mathf::IsEqualApproximetly(dot, T(0)))
+            if (Mathf::IsEqualApproximately(dot, T(1)) || Mathf::IsEqualApproximately(dot, T(0)))
                 return Identity();
-            else if (Mathf::IsEqualApproximetly(dot, T(-1)))
+            else if (Mathf::IsEqualApproximately(dot, T(-1)))
                 return FromAngleAxisUnsafe(RadianT<T>(static_cast<T>(Mathf::PI)), Vector3T<T>::Up());
 
             Vector3T<T> axis = Vector3T<T>::Cross(from, to);
@@ -364,7 +432,7 @@ namespace ByteEngine::Math
                 to1 = to;
             }
 
-            if (!Mathf::IsEqualApproximetly(cosom, T(1)))
+            if (!Mathf::IsEqualApproximately(cosom, T(1)))
             {
                 omega = Mathf::Acos(cosom);
                 sinom = Mathf::Sin(omega);
@@ -394,9 +462,9 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static QuaternionT SlerpClamped(QuaternionT from, QuaternionT to, T t) { return Slerp(from, to, Mathf::Clamp(t)); }
 
-        [[nodiscard]] static bool IsEqualApproximetly(QuaternionT a, QuaternionT b, T tolerance = Mathf::Epsilon)
+        [[nodiscard]] static bool IsEqualApproximately(QuaternionT a, QuaternionT b, T tolerance = Mathf::Epsilon)
         {
-            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance) && Mathf::IsEqualApproximetly(a.w, b.w, tolerance);
+            return Mathf::IsEqualApproximately(a.x, b.x, tolerance) && Mathf::IsEqualApproximately(a.y, b.y, tolerance) && Mathf::IsEqualApproximately(a.z, b.z, tolerance) && Mathf::IsEqualApproximately(a.w, b.w, tolerance);
         }
 
         [[nodiscard]] static constexpr QuaternionT Identity() { return QuaternionT(T(0), T(0), T(0), T(1)); }

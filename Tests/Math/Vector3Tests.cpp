@@ -213,12 +213,12 @@ TYPED_TEST(Vector3tTest, AccessAndConversion)
     EXPECT_EQ(v4.w, 0.0);
 }
 
-TYPED_TEST(Vector3tFloatTypesTest, IsEqualApproximetly)
+TYPED_TEST(Vector3tFloatTypesTest, IsEqualApproximately)
 {
     using Vec3 = TestFixture::Vec3;
     Vec3 v1(1.0000000001, 1.0, 1.0);
     Vec3 v2(1.0, 1.0, 1.0);
-    EXPECT_TRUE(Vec3::IsEqualApproximetly(v1, v2));
+    EXPECT_TRUE(Vec3::IsEqualApproximately(v1, v2));
 }
 
 template <typename T>

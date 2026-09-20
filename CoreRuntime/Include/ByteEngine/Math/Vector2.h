@@ -97,7 +97,7 @@ namespace ByteEngine::Math
         bool IsNormalized() const
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::Epsilon));
+            return Mathf::IsEqualApproximately(FloatT(1), LengthSquared(), FloatT(Mathf::Epsilon));
         }
 
         // RotateBy implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
@@ -246,7 +246,7 @@ namespace ByteEngine::Math
             FloatT startLength = from.LengthSquared();
             FloatT endLength = to.LengthSquared();
 
-            if (Mathf::IsEqualApproximetly(startLength, FloatT(0)) || Mathf::IsEqualApproximetly(endLength, FloatT(0)))
+            if (Mathf::IsEqualApproximately(startLength, FloatT(0)) || Mathf::IsEqualApproximately(endLength, FloatT(0)))
                 return Lerp(from, to, t);
 
             startLength = Mathf::Sqrt(startLength);
@@ -307,10 +307,10 @@ namespace ByteEngine::Math
             return ReflectUnsafe(vec, normal);
         }
 
-        static bool IsEqualApproximetly(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon)
+        static bool IsEqualApproximately(Vector2T a, Vector2T b, FloatT tolerance = Mathf::Epsilon)
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance);
+            return Mathf::IsEqualApproximately(a.x, b.x, tolerance) && Mathf::IsEqualApproximately(a.y, b.y, tolerance);
         }
 
         static constexpr Vector2T Min(Vector2T a, Vector2T b) { return Vector2T(Mathf::Min(a.x, b.x), Mathf::Min(a.y, b.y)); }

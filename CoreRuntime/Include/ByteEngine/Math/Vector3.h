@@ -104,13 +104,13 @@ namespace ByteEngine::Math
         bool IsNormalized() const
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(FloatT(1), LengthSquared(), FloatT(Mathf::Epsilon));
+            return Mathf::IsEqualApproximately(FloatT(1), LengthSquared(), FloatT(Mathf::Epsilon));
         }
 
         bool IsZero() const
         {
             if constexpr (std::floating_point<T>)
-                return Mathf::IsEqualApproximetly(LengthSquared(), 0);
+                return Mathf::IsEqualApproximately(LengthSquared(), 0);
             else
                 return LengthSquared() == 0;
         }
@@ -283,13 +283,13 @@ namespace ByteEngine::Math
         {
             FloatT startLengthSq = from.LengthSquared();
             FloatT endLengthSq = to.LengthSquared();
-            if (Mathf::IsEqualApproximetly(startLengthSq, FloatT(0)) || Mathf::IsEqualApproximetly(endLengthSq, FloatT(0)))
+            if (Mathf::IsEqualApproximately(startLengthSq, FloatT(0)) || Mathf::IsEqualApproximately(endLengthSq, FloatT(0)))
                 return Lerp(from, to, t);
 
             Vector3T axis = Cross(from, to);
             FloatT axisLengthSq = axis.LengthSquared();
 
-            if (Mathf::IsEqualApproximetly(axisLengthSq, FloatT(0)))
+            if (Mathf::IsEqualApproximately(axisLengthSq, FloatT(0)))
                 return Lerp(from, to, t);
 
             axis *= FloatT(1) / Mathf::Sqrt(axisLengthSq);
@@ -349,10 +349,10 @@ namespace ByteEngine::Math
             return ReflectUnsafe(vec, normal);
         }
 
-        static bool IsEqualApproximetly(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon)
+        static bool IsEqualApproximately(Vector3T a, Vector3T b, FloatT tolerance = Mathf::Epsilon)
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance);
+            return Mathf::IsEqualApproximately(a.x, b.x, tolerance) && Mathf::IsEqualApproximately(a.y, b.y, tolerance) && Mathf::IsEqualApproximately(a.z, b.z, tolerance);
         }
 
         static constexpr Vector3T Min(Vector3T a, Vector3T b)

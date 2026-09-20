@@ -214,12 +214,12 @@ TYPED_TEST(Vector2tTest, Access)
     EXPECT_EQ(v[0], 100.0);
 }
 
-TYPED_TEST(Vector2tFloatTypesTest, IsEqualApproximetly)
+TYPED_TEST(Vector2tFloatTypesTest, IsEqualApproximately)
 {
     using Vec2 = typename TestFixture::Vec2;
     Vec2 v1(1.0000000001, 1.0);
     Vec2 v2(1.0, 1.0);
-    EXPECT_TRUE(Vec2::IsEqualApproximetly(v1, v2));
+    EXPECT_TRUE(Vec2::IsEqualApproximately(v1, v2));
 }
 
 TYPED_TEST(Vector2tTest, TypeConversionOperator)

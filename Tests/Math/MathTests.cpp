@@ -82,7 +82,7 @@ TEST(MathTest, RangeFunctions)
 
 TEST(MathTest, EqualApproximetly)
 {
-    EXPECT_TRUE(Mathf::IsEqualApproximetly(1.0000001f, 1.0f, 0.0001f));
+    EXPECT_TRUE(Mathf::IsEqualApproximately(1.0000001f, 1.0f, 0.0001f));
 }
 
 TEST(MathTest, Average)

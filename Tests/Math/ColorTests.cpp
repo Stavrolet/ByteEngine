@@ -321,7 +321,7 @@ TYPED_TEST(ColorTTest, IsEqualApproximately)
         static_cast<TypeParam>(0.2),
         static_cast<TypeParam>(0.3),
         static_cast<TypeParam>(0.4));
-    EXPECT_TRUE(Color::IsEqualApproximetly(a, b));
+    EXPECT_TRUE(Color::IsEqualApproximately(a, b));
 }
 
 TYPED_TEST(ColorTTest, IsEqualApproximatelyFalseWhenFarApart)
@@ -331,7 +331,7 @@ TYPED_TEST(ColorTTest, IsEqualApproximatelyFalseWhenFarApart)
         static_cast<TypeParam>(0.3), static_cast<TypeParam>(0.4));
     Color b(static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.2),
         static_cast<TypeParam>(0.3), static_cast<TypeParam>(0.4));
-    EXPECT_FALSE(Color::IsEqualApproximetly(a, b));
+    EXPECT_FALSE(Color::IsEqualApproximately(a, b));
 }
 
 TYPED_TEST(ColorTTest, IsEqualApproximatelyCustomTolerance)
@@ -341,8 +341,8 @@ TYPED_TEST(ColorTTest, IsEqualApproximatelyCustomTolerance)
         static_cast<TypeParam>(0.3), static_cast<TypeParam>(0.4));
     Color b(static_cast<TypeParam>(0.15), static_cast<TypeParam>(0.2),
         static_cast<TypeParam>(0.3), static_cast<TypeParam>(0.4));
-    EXPECT_TRUE(Color::IsEqualApproximetly(a, b, static_cast<TypeParam>(0.1)));
-    EXPECT_FALSE(Color::IsEqualApproximetly(a, b, static_cast<TypeParam>(0.01)));
+    EXPECT_TRUE(Color::IsEqualApproximately(a, b, static_cast<TypeParam>(0.1)));
+    EXPECT_FALSE(Color::IsEqualApproximately(a, b, static_cast<TypeParam>(0.01)));
 }
 
 // ─────────────────────────────────────────────
@@ -942,7 +942,7 @@ TYPED_TEST(ColorTRobustnessTest, IsEqualApproximelyWithNan)
     Color a(nan, static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.5), static_cast<TypeParam>(1.0));
     Color b(nan, static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.5), static_cast<TypeParam>(1.0));
     // NaN != NaN by IEEE 754; approximate comparison should return false
-    EXPECT_FALSE(Color::IsEqualApproximetly(a, b));
+    EXPECT_FALSE(Color::IsEqualApproximately(a, b));
 }
 
 TYPED_TEST(ColorTRobustnessTest, ClampWithInfinity)

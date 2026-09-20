@@ -70,13 +70,13 @@ TYPED_TEST(QuaterniontTest, IsNormalized)
     EXPECT_FALSE(notNormalized.IsNormalized());
 }
 
-TYPED_TEST(QuaterniontTest, IsEqualApproximetly)
+TYPED_TEST(QuaterniontTest, IsEqualApproximately)
 {
     using Quat = TestFixture::Quat;
     Quat q1(1.00001, 2.00001, 3.00001, 4.00001);
     Quat q2(1.00002, 2.00002, 3.00002, 4.00002);
-    EXPECT_TRUE(Quat::IsEqualApproximetly(q1, q2, static_cast<TypeParam>(0.0001)));
-    EXPECT_FALSE(Quat::IsEqualApproximetly(q1, q2, static_cast<TypeParam>(0.000001)));
+    EXPECT_TRUE(Quat::IsEqualApproximately(q1, q2, static_cast<TypeParam>(0.0001)));
+    EXPECT_FALSE(Quat::IsEqualApproximately(q1, q2, static_cast<TypeParam>(0.000001)));
 }
 
 TYPED_TEST(QuaterniontTest, Inverse)

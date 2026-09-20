@@ -206,10 +206,10 @@ TYPED_TEST(Vector4tFloatTypesRobustnessTest, ExtremeValues)
     EXPECT_TRUE(std::isinf(v.LengthSquared()));
 }
 
-TYPED_TEST(Vector4tFloatTypesRobustnessTest, IsEqualApproximetly)
+TYPED_TEST(Vector4tFloatTypesRobustnessTest, IsEqualApproximately)
 {
     using Vec4 = typename TestFixture::Vec4;
     Vec4 v1(1.0000000001, 1.0, 1.0, 1.0);
     Vec4 v2(1.0, 1.0, 1.0, 1.0);
-    EXPECT_TRUE(Vec4::IsEqualApproximetly(v1, v2));
+    EXPECT_TRUE(Vec4::IsEqualApproximately(v1, v2));
 }

@@ -101,7 +101,7 @@ namespace ByteEngine::Math
         bool IsNormalized() const
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Mathf::Epsilon));
+            return Mathf::IsEqualApproximately(static_cast<FloatT>(1), LengthSquared(), static_cast<FloatT>(Mathf::Epsilon));
         }
 
         void LimitLength(FloatT maxLength = 1)
@@ -248,10 +248,10 @@ namespace ByteEngine::Math
                 return current + direction / distance * maxDelta;
         }
 
-        static bool IsEqualApproximetly(Vector4T a, Vector4T b, FloatT tolerance = Mathf::Epsilon)
+        static bool IsEqualApproximately(Vector4T a, Vector4T b, FloatT tolerance = Mathf::Epsilon)
             requires std::floating_point<T>
         {
-            return Mathf::IsEqualApproximetly(a.x, b.x, tolerance) && Mathf::IsEqualApproximetly(a.y, b.y, tolerance) && Mathf::IsEqualApproximetly(a.z, b.z, tolerance) && Mathf::IsEqualApproximetly(a.w, b.w, tolerance);
+            return Mathf::IsEqualApproximately(a.x, b.x, tolerance) && Mathf::IsEqualApproximately(a.y, b.y, tolerance) && Mathf::IsEqualApproximately(a.z, b.z, tolerance) && Mathf::IsEqualApproximately(a.w, b.w, tolerance);
         }
 
         static constexpr Vector4T Min(Vector4T a, Vector4T b)

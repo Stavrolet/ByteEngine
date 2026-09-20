@@ -177,7 +177,7 @@ namespace ByteEngine::Math
             }
             else
             {
-                h = Mathf::IsEqualApproximetly(h, T(360)) ? 0 : h / T(60);
+                h = Mathf::IsEqualApproximately(h, T(360)) ? 0 : h / T(60);
 
                 int32 i = static_cast<int32>(Mathf::Floor(h));
 
@@ -300,9 +300,9 @@ namespace ByteEngine::Math
             return LerpUnclamped(from, to, Mathf::Clamp(t));
         }
 
-        [[nodiscard]] static constexpr bool IsEqualApproximetly(ColorT a, ColorT b, T tolerance = Mathf::Epsilon)
+        [[nodiscard]] static constexpr bool IsEqualApproximately(ColorT a, ColorT b, T tolerance = Mathf::Epsilon)
         {
-            return Mathf::IsEqualApproximetly(a.r, b.r, tolerance) && Mathf::IsEqualApproximetly(a.g, b.g, tolerance) && Mathf::IsEqualApproximetly(a.b, b.b, tolerance) && Mathf::IsEqualApproximetly(a.a, b.a, tolerance);
+            return Mathf::IsEqualApproximately(a.r, b.r, tolerance) && Mathf::IsEqualApproximately(a.g, b.g, tolerance) && Mathf::IsEqualApproximately(a.b, b.b, tolerance) && Mathf::IsEqualApproximately(a.a, b.a, tolerance);
         }
 
         [[nodiscard]] static constexpr ColorT Min(ColorT a, ColorT b)

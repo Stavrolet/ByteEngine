@@ -417,7 +417,7 @@ namespace ByteEngine::Math::Mathf
     [[nodiscard]] auto Fmod(T x, U y)  { return std::fmod(x, y); }
 
     template <Arithmetic T, Arithmetic U>
-    [[nodiscard]] bool IsEqualApproximetly(T right, U left, Details::FloatT<std::common_type_t<T, U>> tolerance = Epsilon)
+    [[nodiscard]] bool IsEqualApproximately(T right, U left, Details::FloatT<std::common_type_t<T, U>> tolerance = Epsilon)
     {
         return Abs<Details::FloatT<std::common_type_t<T, U>>>(left - right) < tolerance;
     }
@@ -512,7 +512,7 @@ namespace ByteEngine::Math::Mathf
     {
         using Float = Details::FloatT<std::common_type_t<T, U, V>>;
 
-        if (IsEqualApproximetly(static_cast<Float>(edge0), static_cast<Float>(edge1)))
+        if (IsEqualApproximately(static_cast<Float>(edge0), static_cast<Float>(edge1)))
             return Float(0);
 
         if (x <= edge0)
