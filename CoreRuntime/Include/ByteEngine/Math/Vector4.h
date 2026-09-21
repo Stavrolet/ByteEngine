@@ -15,7 +15,7 @@ namespace ByteEngine::Math
     template <Arithmetic T>
     struct Vector4T
     {
-        using FloatT = std::conditional_t<sizeof(T) <= sizeof(float), float, double>;
+        using FloatT = Details::FloatT<T>;
 
         union
         {
