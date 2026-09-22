@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "ByteEngine/Core/Input/KeyCode.h"
 #include "ByteEngine/Math/Concepts.h"
 
 #include <cmath>
@@ -79,6 +80,12 @@ namespace ByteEngine::Math
         }
 
         constexpr auto operator<=>(const RadianT&) const = default;
+
+        static constexpr RadianT PI();
+        static constexpr RadianT PI2() { return PI() * 2; }
+        static constexpr RadianT PI_DIV_2() { return PI() / 2; }
+        static constexpr RadianT PI_DIV_3() { return PI() / 3; }
+        static constexpr RadianT PI_DIV_6() { return PI() / 6; }
     };
 
     template <std::floating_point T>
@@ -617,4 +624,10 @@ namespace ByteEngine::Math
     constexpr DegreeT<T>::DegreeT(RadianT<U> other) :
         value(static_cast<T>(other.value) * 180.0f / Mathf::PI)
     { }
+
+    template <std::floating_point T>
+    constexpr RadianT<T> RadianT<T>::PI()
+    {
+        return RadianT(Mathf::PI);
+    }
 } // namespace ByteEngine::Math
