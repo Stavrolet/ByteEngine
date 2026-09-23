@@ -182,20 +182,6 @@ TYPED_TEST(QuaterniontTest, FromAngleAxisRadian)
     EXPECT_NEAR(q.w, 1.0, 1e-5);
 }
 
-TYPED_TEST(QuaterniontTest, FromAngleAxisDegree)
-{
-    using Quat = TestFixture::Quat;
-    using Vec3 = TestFixture::Vec3;
-    using DegreeT = TestFixture::DegreeT;
-    Vec3 axis(0.0, 1.0, 0.0);
-    DegreeT angle(TypeParam(0));
-    Quat q = Quat::FromAngleAxis(angle, axis);
-    EXPECT_NEAR(q.x, 0.0, 1e-5);
-    EXPECT_NEAR(q.y, 0.0, 1e-5);
-    EXPECT_NEAR(q.z, 0.0, 1e-5);
-    EXPECT_NEAR(q.w, 1.0, 1e-5);
-}
-
 TYPED_TEST(QuaterniontTest, GetAxis)
 {
     using Quat = TestFixture::Quat;

@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
@@ -482,5 +481,5 @@ namespace ByteEngine::Math
     using Vector3F = Vector3T<float>;
     using Vector3D = Vector3T<double>;
     using Vector3I = Vector3T<int32>;
-    using Vector3 = Vector3F;
+    using Vector3 = Vector3T<real>;
 } // namespace ByteEngine::Math

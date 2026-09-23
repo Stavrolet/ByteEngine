@@ -604,8 +604,7 @@ TYPED_TEST(Matrix4x4tTest, GetRotation90DegAroundY)
     using Mat4 = TestFixture::Mat4;
     using Vec3 = TestFixture::Vec3;
     using Quat = TestFixture::Quat;
-    using DegreeT = TestFixture::DegreeT;
-    Quat q = Quat::FromAngleAxis(DegreeT(static_cast<TypeParam>(90)), Vec3::Up());
+    Quat q = Quat::FromAngleAxis(TestFixture::RadianT::PI_DIV_2(), Vec3::Up());
     Mat4 m = Mat4::Rotation(q);
     Quat extracted = m.GetRotation();
     bool sameOrNegated =

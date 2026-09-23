@@ -437,5 +437,5 @@ namespace ByteEngine::Math
 
     using Matrix4x4F = Matrix4x4T<float>;
     using Matrix4x4D = Matrix4x4T<double>;
-    using Matrix4x4 = Matrix4x4F;
+    using Matrix4x4 = Matrix4x4T<real>;
 } // namespace ByteEngine::Math

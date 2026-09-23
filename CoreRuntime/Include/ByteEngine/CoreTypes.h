@@ -11,4 +11,9 @@ namespace ByteEngine
     using uint16 = unsigned short;
     using uint32 = unsigned int;
     using uint64 = unsigned long long;
-}
+#ifdef BE_LARGE_WORLD_COORDS
+    using real = double;
+#else
+    using real = float;
+#endif
+} // namespace ByteEngine

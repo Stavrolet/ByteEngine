@@ -246,7 +246,7 @@ namespace ByteEngine::Math
             T sinr = T(2) * (w * z + x * y);
             T cosr = T(1) - T(2) * (x * x + z * z);
 
-            return EulerDegT<T>(DegreeT<T>(Asin(sinp)), DegreeT<T>(Atan2(siny, cosy)), DegreeT<T>(Atan2(sinr, cosr)));
+            return EulerDegT<T>(DegreeT<T>(Mathf::Asin(sinp)), DegreeT<T>(Mathf::Atan2(siny, cosy)), DegreeT<T>(Mathf::Atan2(sinr, cosr)));
         }
 
         [[nodiscard]] EulerDegT<T> GetEuler()
@@ -534,5 +534,5 @@ namespace ByteEngine::Math
 
     using QuaternionF = QuaternionT<float>;
     using QuaternionD = QuaternionT<double>;
-    using Quaternion = QuaternionF;
+    using Quaternion = QuaternionT<real>;
 } // namespace ByteEngine::Math

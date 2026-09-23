@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "ByteEngine/Core/Input/KeyCode.h"
+#include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Math/Concepts.h"
 
 #include <cmath>
@@ -150,11 +150,11 @@ namespace ByteEngine::Math
 
     using RadianF = RadianT<float>;
     using RadianD = RadianT<double>;
-    using Radian = RadianF;
+    using Radian = RadianT<real>;
 
     using DegreeF = DegreeT<float>;
     using DegreeD = DegreeT<double>;
-    using Degree = DegreeF;
+    using Degree = DegreeT<real>;
 
     namespace Literals
     {
