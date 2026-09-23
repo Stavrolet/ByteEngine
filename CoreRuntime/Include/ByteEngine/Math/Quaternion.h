@@ -67,6 +67,10 @@ namespace ByteEngine::Math
 
         constexpr EulerDegT() = default;
 
+        constexpr EulerDegT(DegreeT<T> pitch, DegreeT<T> yaw, DegreeT<T> roll) :
+            pitch(pitch), yaw(yaw), roll(roll)
+        { }
+
         template <std::floating_point U>
             requires(!std::is_same_v<T, U>)
         explicit constexpr EulerDegT(EulerDegT<U> other) :
@@ -159,25 +163,8 @@ namespace ByteEngine::Math
             x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), z(static_cast<T>(other.z)), w(static_cast<T>(other.w))
         { }
 
-        [[nodiscard]] T Length() const
-        {
-            return Mathf::Sqrt(LengthSquared());
-        }
+        [[nodiscard]] T Length() const { return Mathf::Sqrt(LengthSquared()); }
         [[nodiscard]] constexpr T LengthSquared() const { return x * x + y * y + z * z + w * w; }
-
-        void Normalize()
-        {
-            T length = LengthSquared();
-
-            if (length > Mathf::Epsilon)
-            {
-                T invLength = T(1) / Mathf::Sqrt(length);
-                x *= invLength;
-                y *= invLength;
-                z *= invLength;
-                w *= invLength;
-            }
-        }
 
         void NormalizeUnsafe()
         {
@@ -196,11 +183,18 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        [[nodiscard]] QuaternionT NormalizedUnsafe() const
+        void Normalize()
         {
-            QuaternionT copy = *this;
-            copy.NormalizeUnsafe();
-            return copy;
+            T length = LengthSquared();
+
+            if (length > Mathf::Epsilon)
+            {
+                T invLength = T(1) / Mathf::Sqrt(length);
+                x *= invLength;
+                y *= invLength;
+                z *= invLength;
+                w *= invLength;
+            }
         }
 
         [[nodiscard]] bool IsNormalized() const { return Mathf::IsEqualApproximately(LengthSquared(), T(1), T(Mathf::Epsilon)); }
@@ -211,6 +205,13 @@ namespace ByteEngine::Math
             x = -x;
             y = -y;
             z = -z;
+        }
+
+        [[nodiscard]] QuaternionT NormalizedUnsafe() const
+        {
+            QuaternionT copy = *this;
+            copy.NormalizeUnsafe();
+            return copy;
         }
 
         void Inverse()
@@ -233,15 +234,7 @@ namespace ByteEngine::Math
             return copy;
         }
 
-        [[nodiscard]] EulerRadT<T> GetEulerInRadians()
-        {
-            if (!IsNormalized())
-                Normalize();
-
-            return GetEulerInRadiansUnsafe();
-        }
-
-        [[nodiscard]] EulerRadT<T> GetEulerInRadiansUnsafe() const
+        [[nodiscard]] EulerDegT<T> GetEulerUnsafe() const
         {
             BE_DEBUG_CHECK(IsNormalized());
 
@@ -253,11 +246,16 @@ namespace ByteEngine::Math
             T sinr = T(2) * (w * z + x * y);
             T cosr = T(1) - T(2) * (x * x + z * z);
 
-            return EulerRadT<T>(Mathf::Asin(sinp), Mathf::Atan2(siny, cosy), Mathf::Atan2(sinr, cosr));
+            return EulerDegT<T>(DegreeT<T>(Asin(sinp)), DegreeT<T>(Atan2(siny, cosy)), DegreeT<T>(Atan2(sinr, cosr)));
         }
 
-        [[nodiscard]] EulerDegT<T> GetEulerUnsafe() const { return EulerDegT<T>(GetEulerInRadiansUnsafe()); }
-        [[nodiscard]] EulerDegT<T> GetEuler() { return EulerDegT<T>(GetEulerInRadians()); }
+        [[nodiscard]] EulerDegT<T> GetEuler()
+        {
+            if (!IsNormalized())
+                Normalize();
+
+            return GetEulerUnsafe();
+        }
 
         // GetAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::get_axis
@@ -285,7 +283,7 @@ namespace ByteEngine::Math
 
         // FromAngleAxis implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Quaternion::Quaternion(const Vector3f &p_axis, real_t p_angle)
-        [[nodiscard]] static QuaternionT FromAngleAxisUnsafe(RadianT<T> angle, Vector3T<T> axis)
+        [[nodiscard]] static constexpr QuaternionT FromAngleAxisUnsafe(RadianT<T> angle, Vector3T<T> axis)
         {
             BE_DEBUG_CHECK(axis.IsNormalized());
 
@@ -314,8 +312,6 @@ namespace ByteEngine::Math
             return FromAngleAxisUnsafe(angle, axis);
         }
 
-        [[nodiscard]] static QuaternionT FromAngleAxis(DegreeT<T> angle, Vector3T<T> axis) { return FromAngleAxis(RadianT<T>(angle), axis); }
-
         [[nodiscard]] static QuaternionT FromEuler(RadianT<T> pitch, RadianT<T> yaw, RadianT<T> roll)
         {
             QuaternionT qYaw = FromAngleAxisUnsafe(yaw, Vector3T<T>::Up());
@@ -328,6 +324,16 @@ namespace ByteEngine::Math
         [[nodiscard]] static QuaternionT FromEuler(DegreeT<T> pitch, DegreeT<T> yaw, DegreeT<T> roll)
         {
             return FromEuler(RadianT<T>(pitch), RadianT<T>(yaw), RadianT<T>(roll));
+        }
+
+        [[nodiscard]] static constexpr QuaternionT FromEuler(EulerRadT<T> angles)
+        {
+            return FromEuler(angles.pitch, angles.yaw, angles.roll);
+        }
+
+        [[nodiscard]] static constexpr QuaternionT FromEuler(EulerDegT<T> angles)
+        {
+            return FromEuler(angles.pitch, angles.yaw, angles.roll);
         }
 
         [[nodiscard]] static QuaternionT FromLookDirectionUnsafe(Vector3T<T> direction, Vector3T<T> worldUp = Vector3T<T>::Up())

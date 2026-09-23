@@ -141,7 +141,7 @@ namespace ByteEngine::Math
                 cos = Mathf::Cos(-angle);
             }
 
-            *this = *this * cos + Cross(rotationAxis, *this) * sin + rotationAxis * Dot(rotationAxis, *this) * (1 - cos);
+            *this = *this * cos + Cross(rotationAxis, *this) * sin + Dot(rotationAxis, *this) * (1 - cos) * rotationAxis;
         }
 
         void RotateBy(RadianT<FloatT> angle, Vector3T rotationAxis = Up())
@@ -208,7 +208,7 @@ namespace ByteEngine::Math
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
-        static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis)
+        static RadianT<FloatT> AngleBetweenUnsafe(Vector3T from, Vector3T to, Vector3T rotationAxis)
             requires std::floating_point<T>
         {
             BE_DEBUG_CHECK(rotationAxis.IsNormalized());
@@ -219,7 +219,7 @@ namespace ByteEngine::Math
             return sign < 0 ? RadianT(-unsignedAngle) : RadianT(unsignedAngle);
         }
 
-        static RadianT<FloatT> AngleBetweenUnsafe(Vector3T from, Vector3T to, Vector3T rotationAxis)
+        static RadianT<FloatT> AngleBetween(Vector3T from, Vector3T to, Vector3T rotationAxis)
             requires std::floating_point<T>
         {
             Vector3T cross = Cross(from, to);
