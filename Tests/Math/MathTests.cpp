@@ -60,7 +60,7 @@ TEST(MathTest, Interpolation)
     EXPECT_NEAR(Mathf::Lerp(0.0f, 10.0f, 0.5f), 5.0f, 1e-5f);
     EXPECT_NEAR(Mathf::InverseLerp(0.0f, 10.0f, 5.0f), 0.5f, 1e-5f);
 
-    EXPECT_NEAR(Mathf::LerpAngle(0.0_rf, Mathf::PI / 2.0_rf + Mathf::PI * 2_rf, 0.5f).value, 0.7853981f, 1e-4f);
+    EXPECT_NEAR(Mathf::LerpAngle(0.0_rf, RadianF::PI() / 2.0 + RadianF::PI2(), 0.5f).value, 0.7853981f, 1e-4f);
 
     EXPECT_NEAR(Mathf::MoveTowards(0.0f, 10.0f, 2.0f), 2.0f, 1e-5f);
     EXPECT_NEAR(Mathf::MoveTowards(0.0f, 1.0f, 2.0f), 1.0f, 1e-5f);

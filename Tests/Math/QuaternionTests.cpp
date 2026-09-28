@@ -7,7 +7,7 @@ using namespace ByteEngine::Math;
 using namespace ByteEngine::Math::Literals;
 
 template <typename T>
-class QuaterniontTest : public ::testing::Test
+class QuaterniontTest : public testing::Test
 {
 protected:
     using Quat = QuaternionT<T>;

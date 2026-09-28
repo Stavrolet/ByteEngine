@@ -31,11 +31,13 @@ namespace ByteEngine::Math
         template <std::floating_point U>
         explicit constexpr EulerRadT(EulerDegT<U> other);
 
-        constexpr bool IsEqualApproximately(EulerRadT other, T tolerance = Mathf::Epsilon)
+        [[nodiscard]] std::string ToString() const;
+
+        static constexpr bool IsEqualApproximately(EulerRadT a, EulerRadT b, T tolerance = Mathf::Epsilon)
         {
-            return Mathf::IsEqualApproximately(pitch, other.pitch, tolerance) &&
-                   Mathf::IsEqualApproximately(yaw, other.yaw, tolerance) &&
-                   Mathf::IsEqualApproximately(roll, other.roll, tolerance);
+            return Mathf::IsEqualApproximately(a.pitch, b.pitch, tolerance) &&
+                   Mathf::IsEqualApproximately(a.yaw, b.yaw, tolerance) &&
+                   Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
         }
 
         constexpr EulerRadT operator+() const { return EulerRadT(+pitch, +yaw, +roll); }
@@ -80,11 +82,13 @@ namespace ByteEngine::Math
         template <std::floating_point U>
         explicit constexpr EulerDegT(EulerRadT<U> other);
 
-        constexpr bool IsEqualApproximately(EulerDegT other, T tolerance = Mathf::Epsilon)
+        [[nodiscard]] std::string ToString() const;
+
+        static constexpr bool IsEqualApproximately(EulerDegT a, EulerDegT b, T tolerance = Mathf::Epsilon)
         {
-            return Mathf::IsEqualApproximately(pitch, other.pitch, tolerance) &&
-                   Mathf::IsEqualApproximately(yaw, other.yaw, tolerance) &&
-                   Mathf::IsEqualApproximately(roll, other.roll, tolerance);
+            return Mathf::IsEqualApproximately(a.pitch, b.pitch, tolerance) &&
+                   Mathf::IsEqualApproximately(a.yaw, b.yaw, tolerance) &&
+                   Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
         }
 
         constexpr EulerDegT operator+() const { return EulerDegT(+pitch, +yaw, +roll); }
@@ -276,6 +280,8 @@ namespace ByteEngine::Math
         }
 
         [[nodiscard]] RadianT<T> GetAngle() const { return 2 * Mathf::Acos(w); }
+
+        [[nodiscard]] std::string ToString() const;
 
         [[nodiscard]] static constexpr T Dot(QuaternionT a, QuaternionT b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 
@@ -536,3 +542,69 @@ namespace ByteEngine::Math
     using QuaternionD = QuaternionT<double>;
     using Quaternion = QuaternionT<real>;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::EulerRadT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::EulerRadT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "EulerRad({:.3f}, {:.3f}, {:.3f})", value.pitch, value.yaw, value.roll);
+        }
+    };
+
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::EulerDegT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::EulerDegT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "EulerDeg({:.3f}, {:.3f}, {:.3f})", value.pitch, value.yaw, value.roll);
+        }
+    };
+
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::QuaternionT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::QuaternionT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "Quaternion({:.3f}, {:.3f}, {:.3f}, {:.3f})", value.x, value.y, value.z, value.w);
+        }
+    };
+} // namespace fmt
+
+namespace ByteEngine::Math
+{
+    template <std::floating_point T>
+    std::string EulerRadT<T>::ToString() const
+    {
+        return std::format("{}", *this);
+    }
+
+    template <std::floating_point T>
+    std::string EulerDegT<T>::ToString() const
+    {
+        return std::format("{}", *this);
+    }
+
+    template <std::floating_point T>
+    std::string QuaternionT<T>::ToString() const
+    {
+        return std::format("{}", *this);
+    }
+}

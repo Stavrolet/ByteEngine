@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#define NOMINMAX
 
 #include "ByteEngine/Core/Base/Application.h"
 #include "ByteEngine/Core/Base/Singleton.h"

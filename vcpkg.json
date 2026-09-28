@@ -9,6 +9,7 @@
     },
     "gtest",
     "quill",
+    "fmt",
     {
       "name": "wil",
       "platform": "windows"

@@ -9,6 +9,7 @@ if(WIN32)
 endif()
 
 find_package(quill CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_library(CoreRuntime STATIC 
 	"Include/ByteEngine/Core/Base/Application.h"
@@ -48,7 +49,7 @@ add_library(CoreRuntime STATIC
 )
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
-target_link_libraries(CoreRuntime PUBLIC quill::quill)
+target_link_libraries(CoreRuntime PUBLIC quill::quill fmt::fmt)
 target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include")
 target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 target_compile_definitions(CoreRuntime PRIVATE $<$<PLATFORM_ID:Windows>:UNICODE;_UNICODE> QUILL_DISABLE_NON_PREFIXED_MACROS)

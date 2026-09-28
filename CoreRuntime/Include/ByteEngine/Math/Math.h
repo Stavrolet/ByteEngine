@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <fmt/format.h>
 #include <ranges>
 #include <type_traits>
 
@@ -42,6 +43,8 @@ namespace ByteEngine::Math
         template <std::floating_point U>
         explicit constexpr RadianT(DegreeT<U> other);
 
+        [[nodiscard]] std::string ToString() const;
+
         constexpr RadianT operator+() const { return RadianT(+value); }
         constexpr RadianT operator-() const { return RadianT(-value); }
 
@@ -53,7 +56,6 @@ namespace ByteEngine::Math
 
         constexpr T operator/(RadianT other) const { return value / other.value; }
         constexpr RadianT operator/(T other) const { return RadianT(value / other); }
-        friend constexpr RadianT operator/(T other, RadianT rad) { return RadianT(other / rad.value); }
 
         constexpr RadianT& operator+=(RadianT other)
         {
@@ -108,6 +110,8 @@ namespace ByteEngine::Math
         template <std::floating_point U>
         explicit constexpr DegreeT(RadianT<U> other);
 
+        [[nodiscard]] std::string ToString() const;
+
         constexpr DegreeT operator+() const { return DegreeT(+value); }
         constexpr DegreeT operator-() const { return DegreeT(-value); }
 
@@ -119,7 +123,6 @@ namespace ByteEngine::Math
 
         constexpr T operator/(DegreeT other) const { return value / other.value; }
         constexpr DegreeT operator/(T other) const { return DegreeT(value / other); }
-        friend constexpr DegreeT operator/(T other, DegreeT deg) { return DegreeT(other / deg.value); }
 
         constexpr DegreeT& operator+=(DegreeT other)
         {
@@ -631,3 +634,49 @@ namespace ByteEngine::Math
         return RadianT(Mathf::PI);
     }
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::RadianT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::RadianT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "{:.3f}", value.value);
+        }
+    };
+
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::DegreeT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::DegreeT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "{:.3f}", value.value);
+        }
+    };
+}
+
+namespace ByteEngine::Math
+{
+    template <std::floating_point T>
+    std::string RadianT<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+
+    template <std::floating_point T>
+    std::string DegreeT<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}
