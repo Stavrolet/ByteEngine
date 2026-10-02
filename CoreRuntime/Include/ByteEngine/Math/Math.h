@@ -6,6 +6,7 @@
 #include <cmath>
 #include <concepts>
 #include <fmt/format.h>
+#include <quill/DeferredFormatCodec.h>
 #include <ranges>
 #include <type_traits>
 
@@ -664,7 +665,31 @@ namespace fmt
             return format_to(ctx.out(), "{:.3f}", value.value);
         }
     };
-}
+} // namespace fmt
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::RadianT<T>> : fmt::formatter<ByteEngine::Math::RadianT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::DegreeT<T>> : fmt::formatter<ByteEngine::Math::DegreeT<T>>
+    {
+    };
+} // namespace fmtquill
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::RadianT<T>> : DeferredFormatCodec<ByteEngine::Math::RadianT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::DegreeT<T>> : DeferredFormatCodec<ByteEngine::Math::DegreeT<T>>
+    {
+    };
+} // namespace quill
 
 namespace ByteEngine::Math
 {
@@ -679,4 +704,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
+} // namespace ByteEngine::Math

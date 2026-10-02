@@ -2,6 +2,8 @@
 
 #include "ByteEngine/Math/Vector3.h"
 
+#include <quill/DeferredFormatCodec.h>
+
 namespace ByteEngine::Math
 {
     using namespace ByteEngine::Math::Literals;
@@ -588,6 +590,38 @@ namespace fmt
     };
 } // namespace fmt
 
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::EulerRadT<T>> : fmt::formatter<ByteEngine::Math::EulerRadT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::EulerDegT<T>> : fmt::formatter<ByteEngine::Math::EulerDegT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::QuaternionT<T>> : fmt::formatter<ByteEngine::Math::QuaternionT<T>>
+    {
+    };
+} // namespace fmtquill
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::EulerRadT<T>> : DeferredFormatCodec<ByteEngine::Math::EulerRadT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::EulerDegT<T>> : DeferredFormatCodec<ByteEngine::Math::EulerDegT<T>>
+    {
+    };
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::QuaternionT<T>> : DeferredFormatCodec<ByteEngine::Math::QuaternionT<T>>
+    {
+    };
+} // namespace quill
+
 namespace ByteEngine::Math
 {
     template <std::floating_point T>
@@ -607,4 +641,4 @@ namespace ByteEngine::Math
     {
         return std::format("{}", *this);
     }
-}
+} // namespace ByteEngine::Math

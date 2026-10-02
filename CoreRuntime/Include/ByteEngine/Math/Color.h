@@ -6,8 +6,8 @@
 #include <charconv>
 #include <concepts>
 #include <optional>
-#include <string>
 #include <quill/DeferredFormatCodec.h>
+#include <string>
 
 namespace ByteEngine::Math
 {
@@ -379,19 +379,23 @@ namespace fmt
             return format_to(ctx.out(), "Color({:.3f}, {:.3f}, {:.3f}, {:.3f})", value.r, value.b, value.g, value.a);
         }
     };
-}
+} // namespace fmt
 
 namespace fmtquill
 {
     template <std::floating_point T>
-    struct formatter<ByteEngine::Math::ColorT<T>> : fmt::formatter<ByteEngine::Math::ColorT<T>> { };
-}
+    struct formatter<ByteEngine::Math::ColorT<T>> : fmt::formatter<ByteEngine::Math::ColorT<T>>
+    {
+    };
+} // namespace fmtquill
 
 namespace quill
 {
     template <std::floating_point T>
-    struct Codec<ByteEngine::Math::ColorT<T>> : DeferredFormatCodec<ByteEngine::Math::ColorT<T>> {};
-}
+    struct Codec<ByteEngine::Math::ColorT<T>> : DeferredFormatCodec<ByteEngine::Math::ColorT<T>>
+    {
+    };
+} // namespace quill
 
 namespace ByteEngine::Math
 {
@@ -400,4 +404,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
+} // namespace ByteEngine::Math

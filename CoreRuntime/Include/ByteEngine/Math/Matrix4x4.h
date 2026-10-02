@@ -481,7 +481,9 @@ namespace fmtquill
 namespace quill
 {
     template <std::floating_point T>
-    struct Codec<ByteEngine::Math::Matrix4x4T<T>> : DeferredFormatCodec<ByteEngine::Math::Matrix4x4T<T>> { };
+    struct Codec<ByteEngine::Math::Matrix4x4T<T>> : DeferredFormatCodec<ByteEngine::Math::Matrix4x4T<T>>
+    {
+    };
 }
 
 namespace ByteEngine::Math

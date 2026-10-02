@@ -208,6 +208,8 @@ namespace ByteEngine::Math
         constexpr Vector3T<U> wzy() const { return Vector3T<U>(static_cast<U>(w), static_cast<U>(z), static_cast<U>(y)); }
 #pragma endregion
 
+        [[nodiscard]] std::string ToString() const;
+
         static FloatT Distcance(Vector4T a, Vector4T b) { return Mathf::Sqrt(DistcanceSquared(a, b)); }
         static constexpr FloatT DistcanceSquared(Vector4T a, Vector4T b) { return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z); }
 
@@ -384,3 +386,45 @@ namespace ByteEngine::Math
     using Vector4I = Vector4T<int32>;
     using Vector4 = Vector4T<real>;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector4T<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::Vector4T<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "Vector4({:.3f}, {:.3f}, {:.3f}, {:.3f})", value.x, value.y, value.z, value.w);
+        }
+    };
+} // namespace fmt
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector4T<T>> : fmt::formatter<ByteEngine::Math::Vector4T<T>>
+    {
+    };
+} // namespace fmtquill
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::Vector4T<T>> : DeferredFormatCodec<ByteEngine::Math::Vector4T<T>>
+    {
+    };
+} // namespace quill
+
+namespace ByteEngine::Math
+{
+    template <Arithmetic T>
+    std::string Vector4T<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}

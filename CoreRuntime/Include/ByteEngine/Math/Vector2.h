@@ -4,6 +4,8 @@
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
+#include <quill/DeferredFormatCodec.h>
+
 namespace ByteEngine::Math
 {
     template <Arithmetic T>
@@ -161,6 +163,8 @@ namespace ByteEngine::Math
         {
             return Vector2T<U>(Mathf::Floor<U>(x), Mathf::Floor<U>(y));
         }
+
+        [[nodiscard]] std::string ToString() const;
 
         static RadianT<FloatT> AngleBetween(Vector2T from, Vector2T to)
             requires std::floating_point<T>
@@ -417,3 +421,45 @@ namespace ByteEngine::Math
     using Vector2I = Vector2T<int32>;
     using Vector2 = Vector2T<real>;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector2T<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::Vector2T<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "Vector2({:.3f}, {:.3f})", value.x, value.y);
+        }
+    };
+} // namespace fmt
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector2T<T>> : fmt::formatter<ByteEngine::Math::Vector2T<T>>
+    {
+    };
+} // namespace fmtquill
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::Vector2T<T>> : DeferredFormatCodec<ByteEngine::Math::Vector2T<T>>
+    {
+    };
+} // namespace quill
+
+namespace ByteEngine::Math
+{
+    template <Arithmetic T>
+    std::string Vector2T<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}

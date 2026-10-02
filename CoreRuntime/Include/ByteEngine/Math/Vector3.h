@@ -4,6 +4,8 @@
 #include "ByteEngine/Math/Concepts.h"
 #include "ByteEngine/Math/Math.h"
 
+#include <quill/DeferredFormatCodec.h>
+
 namespace ByteEngine::Math
 {
     template <Arithmetic T>
@@ -204,6 +206,8 @@ namespace ByteEngine::Math
         template <Arithmetic U = T>
         constexpr Vector2T<U> zy() const { return Vector2T<U>(static_cast<U>(z), static_cast<U>(y)); }
 #pragma endregion
+
+        [[nodiscard]] std::string ToString() const;
 
         // AngleBetween implementation adapted from Godot Engine (MIT License). See THIRDPARTY.md
         // Source: Vector3::signed_angle_to
@@ -483,3 +487,45 @@ namespace ByteEngine::Math
     using Vector3I = Vector3T<int32>;
     using Vector3 = Vector3T<real>;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector3T<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::Vector3T<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "Vector3({:.3f}, {:.3f}, {:.3f})", value.x, value.y, value.z);
+        }
+    };
+} // namespace fmt
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Vector3T<T>> : fmt::formatter<ByteEngine::Math::Vector3T<T>>
+    {
+    };
+} // namespace fmtquill
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::Vector3T<T>> : DeferredFormatCodec<ByteEngine::Math::Vector3T<T>>
+    {
+    };
+} // namespace quill
+
+namespace ByteEngine::Math
+{
+    template <Arithmetic T>
+    std::string Vector3T<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}
