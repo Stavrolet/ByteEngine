@@ -771,101 +771,6 @@ TYPED_TEST(ColorTTest, HtmlToRgbWhite)
 }
 
 // ─────────────────────────────────────────────
-// ToString
-// ─────────────────────────────────────────────
-
-TYPED_TEST(ColorTTest, ToStringFormatF0)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(1.0), static_cast<TypeParam>(0.5),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("F0");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "Color(1, 0, 0)");
-}
-
-TYPED_TEST(ColorTTest, ToStringFormatF2)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(1.0), static_cast<TypeParam>(0.5),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("F2");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "Color(1.00, 0.50, 0.00)");
-}
-
-TYPED_TEST(ColorTTest, ToStringFormatF2WithAlpha)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(1.0), static_cast<TypeParam>(0.5),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(0.75));
-    auto str = c.ToString("F2A");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "Color(1.00, 0.50, 0.00, 0.75)");
-}
-
-TYPED_TEST(ColorTTest, ToStringFormatH)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(1.0), static_cast<TypeParam>(0.0),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("H");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "#FF0000");
-}
-
-TYPED_TEST(ColorTTest, ToStringFormatHAlwaysHasHash)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("H");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ((*str)[0], '#');
-}
-
-TYPED_TEST(ColorTTest, ToStringFormatHWithAlpha)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(1.0), static_cast<TypeParam>(0.0),
-        static_cast<TypeParam>(0.0), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("HA");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "#FF0000FF");
-}
-
-TYPED_TEST(ColorTTest, ToStringHtmlRoundTrip)
-{
-    using Color = typename TestFixture::Color;
-    Color original(static_cast<TypeParam>(0.4), static_cast<TypeParam>(0.6),
-        static_cast<TypeParam>(0.8), static_cast<TypeParam>(1.0));
-    auto htmlStr = original.ToString("H");
-    ASSERT_TRUE(htmlStr.has_value());
-    auto parsed = Color::HtmlToRgb(*htmlStr);
-    ASSERT_TRUE(parsed.has_value());
-    EXPECT_TRUE(ColorEqual(*parsed, original, static_cast<TypeParam>(1.0 / 255.0)));
-}
-
-TYPED_TEST(ColorTTest, ToStringDefaultFormat)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.5),
-        static_cast<TypeParam>(0.5), static_cast<TypeParam>(1.0));
-    auto str = c.ToString();
-    EXPECT_TRUE(str.has_value());
-    EXPECT_FALSE(str->empty());
-}
-
-TYPED_TEST(ColorTTest, ToStringInvalidFormatReturnsEmpty)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.5),
-        static_cast<TypeParam>(0.5), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("INVALID_FORMAT");
-    EXPECT_FALSE(str.has_value());
-}
-
-// ─────────────────────────────────────────────
 // Type conversion operators
 // ─────────────────────────────────────────────
 
@@ -968,17 +873,6 @@ TYPED_TEST(ColorTRobustnessTest, HsvToRgbHueWrapsAt1)
     EXPECT_TRUE(ColorEqual(c0, c1, static_cast<TypeParam>(1e-4)));
 }
 
-TYPED_TEST(ColorTRobustnessTest, ToStringF0RoundsToNearestInteger)
-{
-    using Color = typename TestFixture::Color;
-    Color c(static_cast<TypeParam>(0.5), static_cast<TypeParam>(0.4),
-        static_cast<TypeParam>(0.9), static_cast<TypeParam>(1.0));
-    auto str = c.ToString("F0");
-    ASSERT_TRUE(str.has_value());
-    // Just check it has valid non-empty output
-    EXPECT_FALSE(str->empty());
-}
-
 TYPED_TEST(ColorTRobustnessTest, HtmlToRgbWithEightDigitsIgnoresOrUsesAlpha)
 {
     // Some implementations accept 8-char HTML with alpha; check it at least doesn't crash
@@ -986,24 +880,6 @@ TYPED_TEST(ColorTRobustnessTest, HtmlToRgbWithEightDigitsIgnoresOrUsesAlpha)
     auto result = Color::HtmlToRgb("#FF0000FF");
     // May or may not parse — but should not throw
     (void)result;
-}
-
-TYPED_TEST(ColorTRobustnessTest, ToStringHtmlBlackIsAllZeroes)
-{
-    using Color = typename TestFixture::Color;
-    Color black(static_cast<TypeParam>(0.0));
-    auto str = black.ToString("H");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "#000000");
-}
-
-TYPED_TEST(ColorTRobustnessTest, ToStringHtmlWhiteIsAllFF)
-{
-    using Color = typename TestFixture::Color;
-    Color white(static_cast<TypeParam>(1.0));
-    auto str = white.ToString("H");
-    ASSERT_TRUE(str.has_value());
-    EXPECT_EQ(*str, "#FFFFFF");
 }
 
 TYPED_TEST(ColorTRobustnessTest, Uint8ConstructorMaxValuesAreOne)

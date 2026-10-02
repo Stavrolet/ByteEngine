@@ -2,11 +2,9 @@
 
 #include "ByteEngine/Debug.h"
 #include "ByteEngine/Math/Math.h"
-#include "ByteEngine/Math/Vector4.h"
 
 #include <charconv>
 #include <concepts>
-#include <format>
 #include <optional>
 #include <string>
 
@@ -110,63 +108,17 @@ namespace ByteEngine::Math
 
         [[nodiscard]] constexpr T MaxColorComponent() const { return Mathf::Max(r, g, b); }
 
-        [[nodiscard]] std::optional<std::string> ToString() const
+        [[nodiscard]] std::string ToString() const;
+
+        [[nodiscard]] std::string ToHtmlString() const
         {
-            return ToString("F5A");
-        }
-
-        [[nodiscard]] std::optional<std::string> ToString(std::string_view format) const
-        {
-            if (format[0] == 'H')
-            {
-                uint8 r8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(r * 255, 0, 255)));
-                uint8 g8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(g * 255, 0, 255)));
-                uint8 b8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(b * 255, 0, 255)));
-                uint8 a8 = static_cast<uint8>(Mathf::Round(Mathf::Clamp(a * 255, 0, 255)));
-
-                if (format.size() > 1 && format[1] == 'A')
-                    return std::format("#{0:02X}{1:02X}{2:02X}{3:02X}", r8, g8, b8, a8);
-                else
-                    return std::format("#{0:02X}{1:02X}{2:02X}", r8, g8, b8);
-            }
-            else if (format[0] == 'F')
-            {
-                if (format.size() > 1 && format[format.size() - 1] == 'A')
-                {
-                    int32 precision = 0;
-                    auto result = std::from_chars(format.data() + 1, format.data() + format.size() - 1, precision);
-
-                    if (result.ec != std::errc())
-                        return std::nullopt;
-
-                    return std::format(
-                        "Color({:.{}f}, {:.{}f}, {:.{}f}, {:.{}f})",
-                        r, precision,
-                        g, precision,
-                        b, precision,
-                        a, precision
-                    );
-                }
-                else
-                {
-                    int32 precision = 0;
-                    auto result = std::from_chars(format.data() + 1, format.data() + format.size(), precision);
-
-                    if (result.ec != std::errc())
-                        return std::nullopt;
-
-                    return std::format(
-                        "Color({:.{}f}, {:.{}f}, {:.{}f})",
-                        r, precision,
-                        g, precision,
-                        b, precision
-                    );
-                }
-            }
-            else
-            {
-                return std::nullopt;
-            }
+            return fmt::format(
+                "#{:02X}{:02X}{:02X}{:02X}",
+                static_cast<uint32>(Mathf::Clamp(r * 255)),
+                static_cast<uint32>(Mathf::Clamp(g * 255)),
+                static_cast<uint32>(Mathf::Clamp(b * 255)),
+                static_cast<uint32>(Mathf::Clamp(a * 255))
+            );
         }
 
         [[nodiscard]] static ColorT HsvToRgb(T h, T s, T v, T a = 1)
@@ -183,8 +135,8 @@ namespace ByteEngine::Math
 
                 T f = h - i;
                 T p = v * (T(1) - s);
-                T q = v * (T(1) - (s * f));
-                T t = v * (T(1) - (s * (T(1) - f)));
+                T q = v * (T(1) - s * f);
+                T t = v * (T(1) - s * (T(1) - f));
 
                 switch (i)
                 {
@@ -410,3 +362,29 @@ namespace ByteEngine::Math
     using ColorD = ColorT<double>;
     using Color = ColorF;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::ColorT<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::DegreeT<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(), "Color({:.3f}, {:.3f}, {:.3f}, {:.3f})", value.r, value.b, value.g, value.a);
+        }
+    };
+}
+
+namespace ByteEngine::Math
+{
+    template <std::floating_point T>
+    std::string ColorT<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}
