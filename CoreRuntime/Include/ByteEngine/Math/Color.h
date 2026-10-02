@@ -7,6 +7,7 @@
 #include <concepts>
 #include <optional>
 #include <string>
+#include <quill/DeferredFormatCodec.h>
 
 namespace ByteEngine::Math
 {
@@ -373,11 +374,23 @@ namespace fmt
             return ctx.begin();
         }
 
-        auto format(const ByteEngine::Math::DegreeT<T>& value, const format_context& ctx) const
+        auto format(const ByteEngine::Math::ColorT<T>& value, const format_context& ctx) const
         {
             return format_to(ctx.out(), "Color({:.3f}, {:.3f}, {:.3f}, {:.3f})", value.r, value.b, value.g, value.a);
         }
     };
+}
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::ColorT<T>> : fmt::formatter<ByteEngine::Math::ColorT<T>> { };
+}
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::ColorT<T>> : DeferredFormatCodec<ByteEngine::Math::ColorT<T>> {};
 }
 
 namespace ByteEngine::Math

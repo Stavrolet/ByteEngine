@@ -5,6 +5,8 @@
 #include "ByteEngine/Math/Vector3.h"
 #include "ByteEngine/Math/Vector4.h"
 
+#include <quill/DeferredFormatCodec.h>
+
 namespace ByteEngine::Math
 {
     template <std::floating_point T>
@@ -219,6 +221,8 @@ namespace ByteEngine::Math
         {
             return Vector3T<T>(Vector3T<T>(m00, m10, m20).Length(), Vector3T<T>(m01, m11, m21).Length(), Vector3T<T>(m02, m12, m22).Length());
         }
+
+        [[nodiscard]] std::string ToString() const;
 
         [[nodiscard]] static constexpr Matrix4x4T Translation(Vector3T<T> translation)
         {
@@ -439,3 +443,52 @@ namespace ByteEngine::Math
     using Matrix4x4D = Matrix4x4T<double>;
     using Matrix4x4 = Matrix4x4T<real>;
 } // namespace ByteEngine::Math
+
+namespace fmt
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Matrix4x4T<T>>
+    {
+        constexpr auto parse(const format_parse_context& ctx) const
+        {
+            return ctx.begin();
+        }
+
+        auto format(const ByteEngine::Math::Matrix4x4T<T>& value, const format_context& ctx) const
+        {
+            return format_to(ctx.out(),
+                "Matrix4x4("
+                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                    "{:.3f}, {:.3f}, {:.3f}, {:.3f}"
+                ")",
+                value.m00, value.m10, value.m20, value.m30,
+                value.m01, value.m11, value.m21, value.m31,
+                value.m02, value.m12, value.m22, value.m32,
+                value.m03, value.m13, value.m23, value.m33
+            );
+        }
+    };
+}
+
+namespace fmtquill
+{
+    template <std::floating_point T>
+    struct formatter<ByteEngine::Math::Matrix4x4T<T>> : fmt::formatter<ByteEngine::Math::Matrix4x4T<T>> { };
+}
+
+namespace quill
+{
+    template <std::floating_point T>
+    struct Codec<ByteEngine::Math::Matrix4x4T<T>> : DeferredFormatCodec<ByteEngine::Math::Matrix4x4T<T>> { };
+}
+
+namespace ByteEngine::Math
+{
+    template <std::floating_point T>
+    std::string Matrix4x4T<T>::ToString() const
+    {
+        return fmt::format("{}", *this);
+    }
+}
