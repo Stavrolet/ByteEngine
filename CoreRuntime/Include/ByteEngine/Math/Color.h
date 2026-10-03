@@ -8,12 +8,15 @@
 #include <optional>
 #include <quill/DeferredFormatCodec.h>
 #include <string>
+#include <rapidhash.h>
 
 namespace ByteEngine::Math
 {
     template <std::floating_point T>
     struct ColorT
     {
+        static constexpr uint32 ELEMENT_COUNT = 4;
+
         union
         {
             struct
@@ -405,3 +408,19 @@ namespace ByteEngine::Math
         return fmt::format("{}", *this);
     }
 } // namespace ByteEngine::Math
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::ColorT<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::ColorT<T>& value) const
+        {
+            T cleanBuffer[value.ELEMENT_COUNT];
+            for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+        }
+    };
+}

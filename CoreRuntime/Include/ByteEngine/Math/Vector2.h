@@ -5,6 +5,7 @@
 #include "ByteEngine/Math/Math.h"
 
 #include <quill/DeferredFormatCodec.h>
+#include <rapidhash.h>
 
 namespace ByteEngine::Math
 {
@@ -12,6 +13,8 @@ namespace ByteEngine::Math
     struct Vector2T
     {
         using FloatT = Details::FloatT<T>;
+
+        static constexpr uint32 ELEMENT_COUNT = 2;
 
         union
         {
@@ -462,4 +465,27 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
+}
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::Vector2T<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::Vector2T<T>& value) const
+        {
+            if constexpr (std::floating_point<T>)
+            {
+                T cleanBuffer[value.ELEMENT_COUNT];
+                for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                    cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+                return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+            }
+            else
+            {
+                return rapidhashMicro(value.data, sizeof(value.data));
+            }
+        }
+    };
 }

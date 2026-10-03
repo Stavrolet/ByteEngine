@@ -705,3 +705,16 @@ namespace ByteEngine::Math
         return fmt::format("{}", *this);
     }
 } // namespace ByteEngine::Math
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::RadianT<T>> : hash<T>
+    {
+    };
+
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::DegreeT<T>> : hash<T>
+    {
+    };
+} // namespace std

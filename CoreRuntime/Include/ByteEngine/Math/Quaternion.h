@@ -14,9 +14,19 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct EulerRadT
     {
-        RadianT<T> pitch;
-        RadianT<T> yaw;
-        RadianT<T> roll;
+        static constexpr uint32 ELEMENT_COUNT = 3;
+
+        union
+        {
+            struct
+            {
+                RadianT<T> pitch;
+                RadianT<T> yaw;
+                RadianT<T> roll;
+            };
+
+            RadianT<T> data[ELEMENT_COUNT];
+        };
 
         constexpr EulerRadT() = default;
 
@@ -60,14 +70,36 @@ namespace ByteEngine::Math
 
         constexpr bool operator==(EulerRadT other) const { return pitch == other.pitch && yaw == other.yaw && roll == other.roll; }
         constexpr bool operator!=(EulerRadT other) const { return !(*this == other); }
+
+        [[nodiscard]] constexpr T operator[](uint32 index) const
+        {
+            BE_DEBUG_CHECK(index < ELEMENT_COUNT);
+            return data[index];
+        }
+
+        [[nodiscard]] constexpr T& operator[](uint32 index)
+        {
+            BE_DEBUG_CHECK(index < ELEMENT_COUNT);
+            return data[index];
+        }
     };
 
     template <std::floating_point T>
     struct EulerDegT
     {
-        DegreeT<T> pitch;
-        DegreeT<T> yaw;
-        DegreeT<T> roll;
+        static constexpr uint32 ELEMENT_COUNT = 3;
+
+        union
+        {
+            struct
+            {
+                DegreeT<T> pitch;
+                DegreeT<T> yaw;
+                DegreeT<T> roll;
+            };
+
+            DegreeT<T> data[ELEMENT_COUNT];
+        };
 
         constexpr EulerDegT() = default;
 
@@ -111,6 +143,18 @@ namespace ByteEngine::Math
 
         constexpr bool operator==(EulerDegT other) const { return pitch == other.pitch && yaw == other.yaw && roll == other.roll; }
         constexpr bool operator!=(EulerDegT other) const { return !(*this == other); }
+
+        [[nodiscard]] constexpr T operator[](uint32 index) const
+        {
+            BE_DEBUG_CHECK(index < ELEMENT_COUNT);
+            return data[index];
+        }
+
+        [[nodiscard]] constexpr T& operator[](uint32 index)
+        {
+            BE_DEBUG_CHECK(index < ELEMENT_COUNT);
+            return data[index];
+        }
     };
 
     template <std::floating_point T>
@@ -136,6 +180,8 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct QuaternionT
     {
+        static constexpr uint32 ELEMENT_COUNT = 4;
+
         union
         {
             struct
@@ -146,7 +192,7 @@ namespace ByteEngine::Math
                 T w;
             };
 
-            T data[4];
+            T data[ELEMENT_COUNT];
         };
 
         constexpr QuaternionT() = default;
@@ -642,3 +688,45 @@ namespace ByteEngine::Math
         return std::format("{}", *this);
     }
 } // namespace ByteEngine::Math
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::EulerRadT<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::EulerRadT<T>& value) const
+        {
+            T cleanBuffer[value.ELEMENT_COUNT];
+            for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+        }
+    };
+
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::EulerDegT<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::EulerDegT<T>& value) const
+        {
+            T cleanBuffer[value.ELEMENT_COUNT];
+            for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+        }
+    };
+
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::QuaternionT<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::QuaternionT<T>& value) const
+        {
+            T cleanBuffer[value.ELEMENT_COUNT];
+            for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+        }
+    };
+}

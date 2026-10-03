@@ -428,3 +428,26 @@ namespace ByteEngine::Math
         return fmt::format("{}", *this);
     }
 }
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::Vector4T<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::Vector4T<T>& value) const
+        {
+            if constexpr (std::floating_point<T>)
+            {
+                T cleanBuffer[value.ELEMENT_COUNT];
+                for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                    cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+                return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+            }
+            else
+            {
+                return rapidhashMicro(value.data, sizeof(value.data));
+            }
+        }
+    };
+}

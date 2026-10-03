@@ -12,9 +12,9 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct Matrix4x4T
     {
-        static constexpr int32 ROW_COUNT = 4;
-        static constexpr int32 COLOMN_COUNT = 4;
-        static constexpr int32 ELEMENT_COUNT = ROW_COUNT * COLOMN_COUNT;
+        static constexpr uint32 ROW_COUNT = 4;
+        static constexpr uint32 COLOMN_COUNT = 4;
+        static constexpr uint32 ELEMENT_COUNT = ROW_COUNT * COLOMN_COUNT;
 
         union
         {
@@ -493,4 +493,20 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
+}
+
+namespace std
+{
+    template <std::floating_point T>
+    struct hash<ByteEngine::Math::Matrix4x4T<T>>
+    {
+        std::size_t operator()(const ByteEngine::Math::Matrix4x4T<T>& value) const
+        {
+            alignas(16) T cleanBuffer[value.ELEMENT_COUNT];
+            for (int i = 0; i < value.ELEMENT_COUNT; i++)
+                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
+
+            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
+        }
+    };
 }

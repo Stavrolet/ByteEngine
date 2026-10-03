@@ -10,6 +10,7 @@
     "gtest",
     "quill",
     "fmt",
+    "rapidhash",
     {
       "name": "wil",
       "platform": "windows"
