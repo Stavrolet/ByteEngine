@@ -12,6 +12,8 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct Matrix4x4T
     {
+        using ElementType = T;
+
         static constexpr uint32 ROW_COUNT = 4;
         static constexpr uint32 COLOMN_COUNT = 4;
         static constexpr uint32 ELEMENT_COUNT = ROW_COUNT * COLOMN_COUNT;

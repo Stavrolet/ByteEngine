@@ -12,6 +12,7 @@ namespace ByteEngine::Math
     template <Arithmetic T>
     struct Vector2T
     {
+        using ElementType = T;
         using FloatT = Details::FloatT<T>;
 
         static constexpr uint32 ELEMENT_COUNT = 2;

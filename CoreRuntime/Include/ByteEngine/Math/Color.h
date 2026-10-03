@@ -15,6 +15,7 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct ColorT
     {
+        using ElementType = T;
         static constexpr uint32 ELEMENT_COUNT = 4;
 
         union

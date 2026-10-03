@@ -14,6 +14,7 @@ namespace ByteEngine::Math
     template <Arithmetic T>
     struct Vector4T
     {
+        using ElementType = T;
         using FloatT = Details::FloatT<T>;
 
         union

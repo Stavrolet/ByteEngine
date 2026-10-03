@@ -14,6 +14,7 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct EulerRadT
     {
+        using ElementType = T;
         static constexpr uint32 ELEMENT_COUNT = 3;
 
         union
@@ -87,6 +88,7 @@ namespace ByteEngine::Math
     template <std::floating_point T>
     struct EulerDegT
     {
+        using ElementType = T;
         static constexpr uint32 ELEMENT_COUNT = 3;
 
         union
