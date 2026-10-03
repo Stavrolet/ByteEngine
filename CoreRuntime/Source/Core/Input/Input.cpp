@@ -7,8 +7,7 @@
 
 namespace ByteEngine
 {
-    Input::Input() :
-        Singleton()
+    Input::Input()
     {
         actions = { { "test1", { KeyCode::A, KeyCode::MouseWheelDown, KeyCode::Aplha0, KeyCode::MouseMiddle, KeyCode::MouseWheelUp } } };
 
@@ -155,14 +154,14 @@ namespace ByteEngine
 
     bool Input::IsActionPressed(std::string_view actionName) const
     {
-        if (!actions.contains(actionName))
-            return false;
-
         const auto& it = actions.find(actionName);
+
+        if (it == actions.end())
+            return false;
 
         for (KeyCode keyCode : it->second)
         {
-            if (keysState.at(keyCode))
+            if (keysState[keyCode])
                 return true;
         }
 
@@ -171,14 +170,14 @@ namespace ByteEngine
 
     bool Input::IsActionJustPressed(std::string_view actionName) const
     {
-        if (!actions.contains(actionName))
-            return false;
-
         const auto& it = actions.find(actionName);
+
+        if (it == actions.end())
+            return false;
 
         for (KeyCode keyCode : it->second)
         {
-            if (!previousFrameKeysState.at(keyCode) && keysState.at(keyCode))
+            if (!previousFrameKeysState[keyCode] && keysState[keyCode])
                 return true;
         }
 
@@ -187,23 +186,23 @@ namespace ByteEngine
 
     bool Input::IsActionJustReleased(std::string_view actionName) const
     {
-        if (!actions.contains(actionName))
-            return false;
-
         const auto& it = actions.find(actionName);
+
+        if (it == actions.end())
+            return false;
 
         for (KeyCode keyCode : it->second)
         {
-            if (previousFrameKeysState.at(keyCode) && !keysState.at(keyCode))
+            if (previousFrameKeysState[keyCode] && !keysState[keyCode])
                 return true;
         }
 
         return false;
     }
 
-    bool Input::IsKeyPressed(KeyCode code) const { return keysState.at(code); }
-    bool Input::IsKeyJustPressed(KeyCode code) const { return !previousFrameKeysState.at(code) && keysState.at(code); }
-    bool Input::IsKeyJustReleased(KeyCode code) const { return previousFrameKeysState.at(code) && !keysState.at(code); }
+    bool Input::IsKeyPressed(KeyCode code) const { return keysState[code]; }
+    bool Input::IsKeyJustPressed(KeyCode code) const { return !previousFrameKeysState[code] && keysState[code]; }
+    bool Input::IsKeyJustReleased(KeyCode code) const { return previousFrameKeysState[code] && !keysState[code]; }
 
     Vector2I Input::GetMousePosition() const
     {

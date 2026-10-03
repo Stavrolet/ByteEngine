@@ -42,8 +42,8 @@ namespace ByteEngine
 
         std::unordered_map<std::string, std::vector<KeyCode>, StringHash, StringEqual> actions;
 
-        std::unordered_map<KeyCode, bool> keysState;
-        std::unordered_map<KeyCode, bool> previousFrameKeysState;
+        mutable std::unordered_map<KeyCode, bool> keysState;
+        mutable std::unordered_map<KeyCode, bool> previousFrameKeysState;
         bool isAnyKeyPressed = false;
 
         Vector2I mouseDelta;
