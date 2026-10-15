@@ -1,17 +1,14 @@
 ﻿#include "ByteEngine/Core/Input/Input.h"
 
-#include "ByteEngine/Core/Base/MainWindow.h"
+#include "ByteEngine/Core/MainWindow.h"
 #include "ByteEngine/Debug.h"
 
 #include <Windows.h>
 
 namespace ByteEngine
 {
-    Input::Input()
-    {
-        actions = { { "test1", { KeyCode::A, KeyCode::MouseWheelDown, KeyCode::Aplha0, KeyCode::MouseMiddle, KeyCode::MouseWheelUp } } };
-
-        keysState = {
+    Input::Input() :
+        keysState({
             { KeyCode::LeftCtrl, false },
             { KeyCode::RightCtrl, false },
             { KeyCode::LeftShift, false },
@@ -136,7 +133,9 @@ namespace ByteEngine
             { KeyCode::MouseWheelDown, false },
             { KeyCode::MouseWheelLeft, false },
             { KeyCode::MouseWheelRight, false },
-        };
+        })
+    {
+        actions = { { "test1", { KeyCode::A, KeyCode::MouseWheelDown, KeyCode::Aplha0, KeyCode::MouseMiddle, KeyCode::MouseWheelUp } } };
 
         MainWindow::GetInstance().KeyStateChanged().SubscribeLambda([this](KeyCode code, bool isPressed) {
             keysState[code] = isPressed;

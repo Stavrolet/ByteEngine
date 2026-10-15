@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "ByteEngine/Core/Base/Singleton.h"
+#include "ByteEngine/Core/Singleton.h"
 
 namespace ByteEngine::Graphics
 {

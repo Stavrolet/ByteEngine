@@ -1,15 +1,15 @@
-﻿set(DEBUG_COMPILER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/JMC;/RTC1>)
-set(RELEASE_COMPILER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/O2;/Oi;/GL;/Gy;/Zi>)
+﻿set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-set(COMMON_COMPILER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:
+set(DEBUG_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/JMC;/RTC1;/Od;/ZI>")
+set(RELEASE_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/O2;/Oi;/GL;/Gy;/Zi;/fp:fast>")
+
+set(COMMON_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:
     /utf-8;
     /sdl;
-    /W2;/WX-;
+    /W4;/WX-;
     /diagnostics:column;/GS;
     /Zc:wchar_t;/Zc:forScope;/Zc:inline;
-    /Gd;/nologo;/FC;
-    /errorReport:prompt;
-    /fp:fast;/arch:AVX2>
+    /Gd;/nologo;/FC;/arch:AVX2>"
 )
 
 set(WINDOWS_DEFINES 
@@ -20,31 +20,31 @@ set(WINDOWS_DEFINES
 )
 
 set(COMMON_DEFINES
-    $<$<PLATFORM_ID:Windows>:${WINDOWS_DEFINES}>
+    "$<$<PLATFORM_ID:Windows>:${WINDOWS_DEFINES}>"
     FMT_USE_EXCEPTIONS=0
     NOMINMAX
 )
 
-set(DEBUG_LINKER_FLAGS  )
-set(RELEASE_LINKER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/OPT:REF;/OPT:ICF;/LTCG:incremental>)
-set(COMMON_LINKER_FLAGS $<$<CXX_COMPILER_ID:MSVC>:/NOLOGO;/DYNAMICBASE;/NXCOMPAT;/ERRORREPORT:PROMPT>)
+set(DEBUG_LINKER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/DEBUG>")
+set(RELEASE_LINKER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/OPT:REF;/OPT:ICF;/LTCG:incremental>")
+set(COMMON_LINKER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/NOLOGO;/DYNAMICBASE;/NXCOMPAT>")
 
 add_library(project_options INTERFACE)
 
 target_compile_options(project_options INTERFACE
-    $<$<CONFIG:Debug>:${DEBUG_COMPILER_FLAGS}>
-    $<$<CONFIG:Release>:${RELEASE_COMPILER_FLAGS}>
+    "$<$<CONFIG:Debug>:${DEBUG_COMPILER_FLAGS}>"
+    "$<$<CONFIG:Release>:${RELEASE_COMPILER_FLAGS}>"
     ${COMMON_COMPILER_FLAGS}
 )
 
 target_compile_definitions(project_options INTERFACE
-    $<$<CONFIG:Debug>:_DEBUG;BE_DEBUG>
-    $<$<CONFIG:Release>:NDEBUG;BE_RELEASE>
+    "$<$<CONFIG:Debug>:_DEBUG;BE_DEBUG>"
+    "$<$<CONFIG:Release>:NDEBUG;BE_RELEASE>"
     ${COMMON_DEFINES}
 )
 
 target_link_options(project_options INTERFACE
-    $<$<CONFIG:Debug>:${DEBUG_LINKER_FLAGS}>
-    $<$<CONFIG:Release>:${RELEASE_LINKER_FLAGS}>
+    "$<$<CONFIG:Debug>:${DEBUG_LINKER_FLAGS}>"
+    "$<$<CONFIG:Release>:${RELEASE_LINKER_FLAGS}>"
     ${COMMON_LINKER_FLAGS}
 )

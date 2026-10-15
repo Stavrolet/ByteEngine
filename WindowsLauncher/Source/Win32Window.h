@@ -4,7 +4,7 @@
 #undef NOSYSMETRICS
 #undef NOVIRTUALKEYCODES
 
-#include "ByteEngine/Core/Base/MainWindow.h"
+#include "ByteEngine/Core/MainWindow.h"
 
 #include <Windows.h>
 #undef min
@@ -26,8 +26,7 @@ namespace ByteEngine::WindowsLauncher
     public:
         ~Win32Window() override;
 
-        void Initialize(std::string windowName, HINSTANCE hInstance);
-        void Close() override;
+        void Initialize(std::string windowName) override;
 
         void SetWindowMode(WindowMode modeToSet) override;
         void SetWindowTitle(std::string title) override;
@@ -38,6 +37,7 @@ namespace ByteEngine::WindowsLauncher
         void SetFocus() override;
 
     protected:
+        void Close() override;
         void PollEvents() override;
 
     private:

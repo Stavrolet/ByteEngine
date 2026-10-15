@@ -12,10 +12,12 @@
 
 namespace ByteEngine::WindowsLauncher
 {
-    Win32Window::~Win32Window() { Close(); }
+    Win32Window::~Win32Window() { Win32Window::Close(); }
 
-    void Win32Window::Initialize(std::string windowName, HINSTANCE hInstance)
+    void Win32Window::Initialize(std::string windowName)
     {
+        HINSTANCE hInstance = GetModuleHandle(nullptr);
+
         WNDCLASSEX winClass = { };
         winClass.cbSize = sizeof(WNDCLASSEX);
         winClass.style = CS_HREDRAW | CS_VREDRAW;

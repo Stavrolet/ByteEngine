@@ -1,8 +1,7 @@
 ﻿#pragma once
 
-
-#include "ByteEngine/Core/Base/Application.h"
-#include "ByteEngine/Core/Base/Singleton.h"
+#include "ByteEngine/Core/Application.h"
+#include "ByteEngine/Core/Singleton.h"
 
 #include <quill/LogMacros.h>
 #include <quill/Logger.h>

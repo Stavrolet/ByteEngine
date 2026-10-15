@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "ByteEngine/Core/Base/Singleton.h"
 #include "ByteEngine/Core/EventSystem/Delegate.h"
 #include "ByteEngine/CoreTypes.h"
+#include "ByteEngine/Core/Singleton.h"
 
 #include <format>
 #include <string>
@@ -50,5 +50,7 @@ namespace ByteEngine
         int32 Run();
 
         void FatalCrashImpl(std::string_view msg) const;
+
+        void CleanupSingletons() const;
     };
 } // namespace ByteEngine

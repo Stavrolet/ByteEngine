@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ByteEngine/Core/Base/Singleton.h"
+#include "ByteEngine/Core/Singleton.h"
 #include "ByteEngine/Core/Input/KeyCode.h"
 #include "ByteEngine/Math/Vector2.h"
 

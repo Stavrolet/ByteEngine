@@ -1,22 +1,26 @@
 ﻿#define BE_WINDOWS_MAIN
 
 #define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
 
 // clang-format off
 #include <Windows.h>
 // clang-format on
 
-#include "ByteEngine/Core/Base/Application.h"
+#include "ByteEngine/Core/Application.h"
+#include "ByteEngine/Core/Memory/Allocator.h"
 #include "Win32Window.h"
 
 using namespace ByteEngine;
+using namespace ByteEngine::Memory;
 using namespace ByteEngine::WindowsLauncher;
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
+    Allocator* allocator = static_cast<Allocator*>(std::malloc(sizeof(Allocator)));
+    new (allocator) Allocator();
+    Allocator::SetInstance(allocator);
+
     Win32Window window;
-    window.Initialize("ByteEnigne", hInstance);
     MainWindow::SetInstance(&window);
 
     Application app;
