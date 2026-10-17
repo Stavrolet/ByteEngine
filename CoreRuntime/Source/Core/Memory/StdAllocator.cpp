@@ -10,6 +10,9 @@ namespace ByteEngine::Memory
 
     void* Allocator::InternalAllocArr(size_t arrSize, size_t elementSize, size_t alignment, MemoryTag memoryTag, const std::source_location& location)
     {
+        if (arrSize > std::numeric_limits<size_t>::max() / elementSize)
+            return nullptr;
+
         const std::size_t total = arrSize * elementSize;
         void* const allocatedPtr = InternalAlloc(total, alignment, memoryTag, location);
         if (allocatedPtr == nullptr) [[unlikely]]
@@ -17,6 +20,11 @@ namespace ByteEngine::Memory
 
         arraySizes[allocatedPtr] = arrSize;
         return allocatedPtr;
+    }
+
+    void* Allocator::InternalRealloc(void* block, size_t newSize, size_t alignment) const
+    {
+        return _aligned_realloc(block, newSize, alignment);
     }
 
     void Allocator::InternalFree(void* ptr) const

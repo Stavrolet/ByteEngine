@@ -50,6 +50,7 @@ add_library(CoreRuntime STATIC
     Include/ByteEngine/Core/Memory/Allocator.h
     Source/Core/Memory/StdAllocator.cpp
     Source/Core/Memory/NewDeleteOverrides.cpp
+    Include/ByteEngine/Detail/Core/Memory/CustomContainerAllocator.h
 )
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})

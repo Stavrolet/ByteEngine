@@ -45,7 +45,7 @@ namespace ByteEngine::Memory
                 return static_cast<T*>(std::calloc(count, sizeof(T)));
             }
 
-            void deallocate(T* ptr, std::size_t count) noexcept
+            void deallocate(T* ptr, [[maybe_unused]] std::size_t count) noexcept
             {
                 std::free(ptr);
             }
@@ -66,9 +66,29 @@ namespace ByteEngine::Memory
             return GetInstance().InternalAlloc(size, alignment, memoryTag, location);
         }
 
+        [[nodiscard]] static void* Alloc(size_t size, MemoryTag memoryTag, const std::source_location& location = std::source_location::current())
+        {
+            return GetInstance().InternalAlloc(size, __STDCPP_DEFAULT_NEW_ALIGNMENT__, memoryTag, location);
+        }
+
         [[nodiscard]] static void* AllocArr(size_t arrSize, size_t elementSize, size_t alignment, MemoryTag memoryTag, const std::source_location& location = std::source_location::current())
         {
             return GetInstance().InternalAllocArr(arrSize, elementSize, alignment, memoryTag, location);
+        }
+
+        [[nodiscard]] static void* AllocArr(size_t arrSize, size_t elementSize, MemoryTag memoryTag, const std::source_location& location = std::source_location::current())
+        {
+            return GetInstance().InternalAllocArr(arrSize, elementSize, __STDCPP_DEFAULT_NEW_ALIGNMENT__, memoryTag, location);
+        }
+
+        [[nodiscard]] static void* Realloc(void* block, size_t newSize, size_t alignment)
+        {
+            return GetInstance().InternalRealloc(block, newSize, alignment);
+        }
+
+        [[nodiscard]] static void* Realloc(void* block, size_t arrSize)
+        {
+            return GetInstance().InternalRealloc(block, arrSize, __STDCPP_DEFAULT_NEW_ALIGNMENT__);
         }
 
         static void Free(void* ptr)
@@ -140,6 +160,8 @@ namespace ByteEngine::Memory
     private:
         [[nodiscard]] void* InternalAlloc(size_t size, size_t alignment, MemoryTag memoryTag, const std::source_location& location = std::source_location::current()) const;
         [[nodiscard]] void* InternalAllocArr(size_t arrSize, size_t elementSize, size_t alignment, MemoryTag memoryTag, const std::source_location& location = std::source_location::current());
+
+        [[nodiscard]] void* InternalRealloc(void* block, size_t newSize, size_t alignment) const;
 
         void InternalFree(void* ptr) const;
         void InternalFreeArr(void* ptr);
