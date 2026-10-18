@@ -11,6 +11,7 @@
     "quill",
     "fmt",
     "rapidhash",
+    "gtl",
     {
       "name": "wil",
       "platform": "windows"
