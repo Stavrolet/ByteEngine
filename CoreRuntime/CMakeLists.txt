@@ -60,6 +60,7 @@ add_library(CoreRuntime STATIC
     Include/ByteEngine/Containers/HashMap.h
     Include/ByteEngine/Detail/Containers/Hasher.h
     Include/ByteEngine/Containers/ConcurrentHashMap.h
+    Include/ByteEngine/Utilities/HashUtils.h
 )
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})

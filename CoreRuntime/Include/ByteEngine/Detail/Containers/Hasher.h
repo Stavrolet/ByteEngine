@@ -1,12 +1,14 @@
 #pragma once
 
+#include "ByteEngine/CoreTypes.h"
+
 #include <concepts>
 
 namespace ByteEngine::Details::Containers
 {
     template <typename T>
-    concept Hashable = requires(T a) {
-        a.GetHash();
+    concept Hashable = requires(const T& a) {
+        { GetHash(a) } -> std::convertible_to<uint64>;
     };
 
     template <typename T>
@@ -24,9 +26,9 @@ namespace ByteEngine::Details::Containers
         size_t operator()(const T& a) const
         {
             if constexpr (Hashable<T>)
-                return a.GetHash();
+                return GetHash(a);
             else
-                return std::hash<T> { }();
+                return std::hash<T>()(a);
         }
     };
 

@@ -2,6 +2,7 @@
 
 #include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Math/Concepts.h"
+#include "ByteEngine/Utilities/HashUtils.h"
 
 #include <cmath>
 #include <concepts>
@@ -47,6 +48,12 @@ namespace ByteEngine::Math
         explicit constexpr RadianT(DegreeT<U> other);
 
         [[nodiscard]] std::string ToString() const;
+
+        template <std::floating_point U>
+        friend uint64 GetHash(RadianT<U> value)
+        {
+            return HashUtils::GetHash(value.value);
+        }
 
         constexpr RadianT operator+() const { return RadianT(+value); }
         constexpr RadianT operator-() const { return RadianT(-value); }
@@ -116,6 +123,12 @@ namespace ByteEngine::Math
         explicit constexpr DegreeT(RadianT<U> other);
 
         [[nodiscard]] std::string ToString() const;
+
+        template <std::floating_point U>
+        friend uint64 GetHash(DegreeT<U> value)
+        {
+            return HashUtils::GetHash(value.value);
+        }
 
         constexpr DegreeT operator+() const { return DegreeT(+value); }
         constexpr DegreeT operator-() const { return DegreeT(-value); }
@@ -709,16 +722,3 @@ namespace ByteEngine::Math
         return fmt::format("{}", *this);
     }
 } // namespace ByteEngine::Math
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::RadianT<T>> : hash<T>
-    {
-    };
-
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::DegreeT<T>> : hash<T>
-    {
-    };
-} // namespace std

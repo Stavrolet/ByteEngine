@@ -259,7 +259,8 @@ namespace ByteEngine::Math
             return Vector3T(
                 a.y * b.z - a.z * b.y,
                 a.z * b.x - a.x * b.z,
-                a.x * b.y - a.y * b.x);
+                a.x * b.y - a.y * b.x
+            );
         }
 
         static constexpr FloatT Dot(Vector3T a, Vector3T b)
@@ -326,7 +327,8 @@ namespace ByteEngine::Math
 
         static constexpr Vector3T Project(Vector3T vec, Vector3T projectOnto)
             requires std::floating_point<T>
-        {FloatT lengthSq = projectOnto.LengthSquared();
+        {
+            FloatT lengthSq = projectOnto.LengthSquared();
             if (lengthSq < Mathf::Epsilon)
                 return Zero();
             return projectOnto * (Dot(vec, projectOnto) / lengthSq);
@@ -387,6 +389,21 @@ namespace ByteEngine::Math
         static constexpr Vector3T Right() { return Vector3T(1, 0, 0); }
         static constexpr Vector3T Forward() { return Vector3T(0, 0, 1); }
         static constexpr Vector3T Back() { return Vector3T(0, 0, -1); }
+
+        template <Arithmetic U>
+        friend uint64 GetHash(Vector3T<U> value)
+        {
+            if constexpr (std::floating_point<U>)
+            {
+                Vector3T<U> clean;
+                HashUtils::NormalizeFloatBuff(value.data, clean.data);
+                return HashUtils::HashStruct(clean);
+            }
+            else
+            {
+                return HashUtils::HashStruct(value);
+            }
+        }
 
         constexpr Vector3T operator+() const { return Vector3T(+x, +y, +z); }
         constexpr Vector3T operator-() const { return Vector3T(-x, -y, -z); }
@@ -529,27 +546,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::Vector3T<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::Vector3T<T>& value) const
-        {
-            if constexpr (std::floating_point<T>)
-            {
-                T cleanBuffer[value.ELEMENT_COUNT];
-                for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                    cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-                return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-            }
-            else
-            {
-                return rapidhashMicro(value.data, sizeof(value.data));
-            }
-        }
-    };
-}
+} // namespace ByteEngine::Math

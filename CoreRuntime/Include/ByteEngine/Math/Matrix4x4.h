@@ -324,6 +324,14 @@ namespace ByteEngine::Math
         [[nodiscard]] static constexpr Vector4T<T> IdentityColumn2() { return Vector4T<T>(T(0), T(0), T(1), T(0)); }
         [[nodiscard]] static constexpr Vector4T<T> IdentityColumn3() { return Vector4T<T>(T(0), T(0), T(0), T(1)); }
 
+        template <std::floating_point U>
+        friend uint64 GetHash(const Matrix4x4T<U>& value)
+        {
+            Matrix4x4T<U> clean;
+            HashUtils::NormalizeFloatBuff(value.elements, clean.elements);
+            return HashUtils::HashStruct(clean);
+        }
+
         [[nodiscard]] constexpr Matrix4x4T operator+(const Matrix4x4T& other) const
         {
             Matrix4x4T result;
@@ -458,27 +466,24 @@ namespace fmt
 
         auto format(const ByteEngine::Math::Matrix4x4T<T>& value, const format_context& ctx) const
         {
-            return format_to(ctx.out(),
-                "Matrix4x4("
-                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
-                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
-                    "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
-                    "{:.3f}, {:.3f}, {:.3f}, {:.3f}"
-                ")",
-                value.m00, value.m10, value.m20, value.m30,
-                value.m01, value.m11, value.m21, value.m31,
-                value.m02, value.m12, value.m22, value.m32,
-                value.m03, value.m13, value.m23, value.m33
-            );
+            return format_to(ctx.out(), "Matrix4x4("
+                                        "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                                        "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                                        "{:.3f}, {:.3f}, {:.3f}, {:.3f},"
+                                        "{:.3f}, {:.3f}, {:.3f}, {:.3f}"
+                                        ")",
+                             value.m00, value.m10, value.m20, value.m30, value.m01, value.m11, value.m21, value.m31, value.m02, value.m12, value.m22, value.m32, value.m03, value.m13, value.m23, value.m33);
         }
     };
-}
+} // namespace fmt
 
 namespace fmtquill
 {
     template <std::floating_point T>
-    struct formatter<ByteEngine::Math::Matrix4x4T<T>> : fmt::formatter<ByteEngine::Math::Matrix4x4T<T>> { };
-}
+    struct formatter<ByteEngine::Math::Matrix4x4T<T>> : fmt::formatter<ByteEngine::Math::Matrix4x4T<T>>
+    {
+    };
+} // namespace fmtquill
 
 namespace quill
 {
@@ -486,7 +491,7 @@ namespace quill
     struct Codec<ByteEngine::Math::Matrix4x4T<T>> : DeferredFormatCodec<ByteEngine::Math::Matrix4x4T<T>>
     {
     };
-}
+} // namespace quill
 
 namespace ByteEngine::Math
 {
@@ -495,20 +500,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::Matrix4x4T<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::Matrix4x4T<T>& value) const
-        {
-            alignas(16) T cleanBuffer[value.ELEMENT_COUNT];
-            for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-        }
-    };
-}
+} // namespace ByteEngine::Math

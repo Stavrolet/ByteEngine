@@ -333,6 +333,21 @@ namespace ByteEngine::Math
         static constexpr Vector2T Left() { return Vector2T(-1, 0); }
         static constexpr Vector2T Right() { return Vector2T(1, 0); }
 
+        template <Arithmetic U>
+        friend uint64 GetHash(Vector2T<U> value)
+        {
+            if constexpr (std::floating_point<U>)
+            {
+                Vector2T<U> clean;
+                HashUtils::NormalizeFloatBuff(value.data, clean.data);
+                return HashUtils::HashStruct(clean);
+            }
+            else
+            {
+                return HashUtils::HashStruct(value);
+            }
+        }
+
         constexpr Vector2T operator+() const { return Vector2T(+x, +y); }
         constexpr Vector2T operator-() const { return Vector2T(-x, -y); }
 
@@ -466,27 +481,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::Vector2T<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::Vector2T<T>& value) const
-        {
-            if constexpr (std::floating_point<T>)
-            {
-                T cleanBuffer[value.ELEMENT_COUNT];
-                for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                    cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-                return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-            }
-            else
-            {
-                return rapidhashMicro(value.data, sizeof(value.data));
-            }
-        }
-    };
-}
+} // namespace ByteEngine::Math

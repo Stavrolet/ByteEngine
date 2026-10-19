@@ -53,6 +53,14 @@ namespace ByteEngine::Math
                    Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
         }
 
+        template <std::floating_point U>
+        friend uint64 GetHash(EulerRadT<U> value)
+        {
+            EulerRadT<U> clean;
+            HashUtils::NormalizeFloatBuff(value.data, clean.data);
+            return HashUtils::HashStruct(clean);
+        }
+
         constexpr EulerRadT operator+() const { return EulerRadT(+pitch, +yaw, +roll); }
         constexpr EulerRadT operator-() const { return EulerRadT(-pitch, -yaw, -roll); }
 
@@ -125,6 +133,14 @@ namespace ByteEngine::Math
             return Mathf::IsEqualApproximately(a.pitch, b.pitch, tolerance) &&
                    Mathf::IsEqualApproximately(a.yaw, b.yaw, tolerance) &&
                    Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
+        }
+
+        template <std::floating_point U>
+        friend uint64 GetHash(EulerDegT<U> value)
+        {
+            EulerDegT<U> clean;
+            HashUtils::NormalizeFloatBuff(value.data, clean.data);
+            return HashUtils::HashStruct(clean);
         }
 
         constexpr EulerDegT operator+() const { return EulerDegT(+pitch, +yaw, +roll); }
@@ -531,6 +547,14 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static constexpr QuaternionT Identity() { return QuaternionT(T(0), T(0), T(0), T(1)); }
 
+        template <std::floating_point U>
+        friend uint64 GetHash(QuaternionT<U> value)
+        {
+            QuaternionT<U> clean;
+            HashUtils::NormalizeFloatBuff(value.data, clean.data);
+            return HashUtils::HashStruct(clean);
+        }
+
         [[nodiscard]] constexpr QuaternionT operator+() const { return QuaternionT(+x, +y, +z, +w); }
         [[nodiscard]] constexpr QuaternionT operator-() const { return QuaternionT(-x, -y, -z, -w); }
 
@@ -690,45 +714,3 @@ namespace ByteEngine::Math
         return std::format("{}", *this);
     }
 } // namespace ByteEngine::Math
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::EulerRadT<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::EulerRadT<T>& value) const
-        {
-            T cleanBuffer[value.ELEMENT_COUNT];
-            for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-        }
-    };
-
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::EulerDegT<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::EulerDegT<T>& value) const
-        {
-            T cleanBuffer[value.ELEMENT_COUNT];
-            for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-        }
-    };
-
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::QuaternionT<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::QuaternionT<T>& value) const
-        {
-            T cleanBuffer[value.ELEMENT_COUNT];
-            for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-            return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-        }
-    };
-}

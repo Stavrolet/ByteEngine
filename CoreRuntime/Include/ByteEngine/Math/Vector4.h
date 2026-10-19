@@ -279,6 +279,21 @@ namespace ByteEngine::Math
         static constexpr Vector4T Zero() { return Vector4T(0); }
         static constexpr Vector4T One() { return Vector4T(1); }
 
+        template <Arithmetic U>
+        friend uint64 GetHash(Vector4T<U> value)
+        {
+            if constexpr (std::floating_point<U>)
+            {
+                Vector4T<U> clean;
+                HashUtils::NormalizeFloatBuff(value.data, clean.data);
+                return HashUtils::HashStruct(clean);
+            }
+            else
+            {
+                return HashUtils::HashStruct(value);
+            }
+        }
+
         constexpr Vector4T operator+() const { return Vector4T(+x, +y, +z, +w); }
         constexpr Vector4T operator-() const { return Vector4T(-x, -y, -z, -w); }
 
@@ -428,27 +443,4 @@ namespace ByteEngine::Math
     {
         return fmt::format("{}", *this);
     }
-}
-
-namespace std
-{
-    template <std::floating_point T>
-    struct hash<ByteEngine::Math::Vector4T<T>>
-    {
-        std::size_t operator()(const ByteEngine::Math::Vector4T<T>& value) const
-        {
-            if constexpr (std::floating_point<T>)
-            {
-                T cleanBuffer[value.ELEMENT_COUNT];
-                for (int i = 0; i < value.ELEMENT_COUNT; i++)
-                    cleanBuffer[i] = value[i] == 0.0f ? 0.0f : value[i];
-
-                return rapidhashMicro(cleanBuffer, sizeof(cleanBuffer));
-            }
-            else
-            {
-                return rapidhashMicro(value.data, sizeof(value.data));
-            }
-        }
-    };
-}
+} // namespace ByteEngine::Math
