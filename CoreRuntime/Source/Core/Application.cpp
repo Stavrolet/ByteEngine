@@ -6,6 +6,7 @@
 #include "ByteEngine/Core/MainWindow.h"
 #include "ByteEngine/Core/Memory/Allocator.h"
 #include "ByteEngine/Debug.h"
+#include "ByteEngine/String/StringName.h"
 #include "Platform/Core/Graphics/GraphicsDeviceD3D11.h"
 
 #include <d3d11_1.h>
@@ -23,6 +24,8 @@ namespace ByteEngine
 
     Application::Error Application::Initialize()
     {
+        StringName::InitStringPool();
+
         SetInstance(this);
 
         Debug* debug = static_cast<Debug*>(std::malloc(sizeof(Debug)));

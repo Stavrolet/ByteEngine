@@ -20,10 +20,10 @@ namespace ByteEngine::Details::Memory
 
         [[nodiscard]] T* allocate(std::size_t count) noexcept
         {
-            return ByteEngine::Memory::Allocator::Alloc(sizeof(T) * count, ByteEngine::Memory::MemoryTag::Default);
+            return static_cast<T*>(ByteEngine::Memory::Allocator::Alloc(sizeof(T) * count, ByteEngine::Memory::MemoryTag::Default));
         }
 
-        void deallocate(T* ptr, [[maybe_unused]] std::size_t count) noexcept
+        void deallocate(T* ptr, std::size_t) noexcept
         {
             ByteEngine::Memory::Allocator::Free(ptr);
         }

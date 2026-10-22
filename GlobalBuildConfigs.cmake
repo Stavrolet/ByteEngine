@@ -12,6 +12,10 @@ set(COMMON_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:
     /Gd;/nologo;/FC;/arch:AVX2>"
 )
 
+set(DISABLED_WARNINGS "$<$<CXX_COMPILER_ID:MSVC>:
+    /wd4201;/wd4458>"
+)
+
 set(WINDOWS_DEFINES 
     _WINDOWS
     WIN32
@@ -35,6 +39,7 @@ target_compile_options(project_options INTERFACE
     "$<$<CONFIG:Debug>:${DEBUG_COMPILER_FLAGS}>"
     "$<$<CONFIG:Release>:${RELEASE_COMPILER_FLAGS}>"
     ${COMMON_COMPILER_FLAGS}
+    ${DISABLED_WARNINGS}
 )
 
 target_compile_definitions(project_options INTERFACE

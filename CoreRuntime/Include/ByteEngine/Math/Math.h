@@ -49,8 +49,7 @@ namespace ByteEngine::Math
 
         [[nodiscard]] std::string ToString() const;
 
-        template <std::floating_point U>
-        friend uint64 GetHash(RadianT<U> value)
+        friend uint64 GetHash(RadianT value)
         {
             return HashUtils::GetHash(value.value);
         }
@@ -124,8 +123,7 @@ namespace ByteEngine::Math
 
         [[nodiscard]] std::string ToString() const;
 
-        template <std::floating_point U>
-        friend uint64 GetHash(DegreeT<U> value)
+        friend uint64 GetHash(DegreeT value)
         {
             return HashUtils::GetHash(value.value);
         }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ByteEngine/Detail/Containers/Hasher.h"
-#include "ByteEngine/Detail/Core/Memory/CustomContainerAllocator.h"
+#include "ByteEngine/Details/Containers/Hasher.h"
+#include "ByteEngine/Details/Core/Memory/CustomContainerAllocator.h"
 
 #include <gtl/phmap.hpp>
 #include <initializer_list>

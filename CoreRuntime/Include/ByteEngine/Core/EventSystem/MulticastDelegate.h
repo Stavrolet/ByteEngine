@@ -2,7 +2,7 @@
 
 #include "ByteEngine/CoreTypes.h"
 #include "ByteEngine/Debug.h"
-#include "ByteEngine/Detail/Core/EventSystem/Subscriptions.h"
+#include "ByteEngine/Details/Core/EventSystem/Subscriptions.h"
 
 #include <algorithm>
 #include <iterator>

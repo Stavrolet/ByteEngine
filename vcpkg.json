@@ -7,14 +7,15 @@
       "name": "directxtk",
       "platform": "windows"
     },
+    {
+      "name": "wil",
+      "platform": "windows"
+    },
     "gtest",
     "quill",
     "fmt",
     "rapidhash",
     "gtl",
-    {
-      "name": "wil",
-      "platform": "windows"
-    }
+    "eastl"
   ]
 }

@@ -5,7 +5,6 @@
 #include "ByteEngine/Math/Math.h"
 
 #include <quill/DeferredFormatCodec.h>
-#include <rapidhash.h>
 
 namespace ByteEngine::Math
 {

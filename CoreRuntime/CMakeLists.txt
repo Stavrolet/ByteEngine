@@ -14,6 +14,7 @@ endif ()
 
 find_package(quill CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(EASTL CONFIG REQUIRED)
 
 find_path(RAPIDHASH_INCLUDE_DIRS "rapidhash.h")
 find_path(GTL_INCLUDE_DIRS "gtl/adv_utils.hpp")
@@ -26,7 +27,7 @@ add_library(CoreRuntime STATIC
     Include/ByteEngine/Core/EventSystem/MulticastDelegate.h
     Include/ByteEngine/Core/Input/Input.h
     Include/ByteEngine/Core/Input/KeyCode.h
-    Include/ByteEngine/Detail/Core/EventSystem/Subscriptions.h
+    Include/ByteEngine/Details/Core/EventSystem/Subscriptions.h
     Include/ByteEngine/Math/Math.h
     Include/ByteEngine/Math/Quaternion.h
     Include/ByteEngine/Math/Vector2.h
@@ -56,15 +57,21 @@ add_library(CoreRuntime STATIC
     Include/ByteEngine/Core/Memory/Allocator.h
     Source/Core/Memory/StdAllocator.cpp
     Source/Core/Memory/NewDeleteOverrides.cpp
-    Include/ByteEngine/Detail/Core/Memory/CustomContainerAllocator.h
+    Include/ByteEngine/Details/Core/Memory/CustomContainerAllocator.h
     Include/ByteEngine/Containers/HashMap.h
-    Include/ByteEngine/Detail/Containers/Hasher.h
+    Include/ByteEngine/Details/Containers/Hasher.h
     Include/ByteEngine/Containers/ConcurrentHashMap.h
     Include/ByteEngine/Utilities/HashUtils.h
+    Include/ByteEngine/String/StringName.h
+    Include/ByteEngine/String/String.h
+    Include/ByteEngine/Details/Core/Memory/CustomEastlAllocator.h
+    Source/Details/CustomEastlAllocator.cpp
+    Include/ByteEngine/Core/Memory/SmartPointers.h
+    Source/String/StringName.cpp
 )
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
-target_link_libraries(CoreRuntime PUBLIC quill::quill fmt::fmt)
+target_link_libraries(CoreRuntime PUBLIC quill::quill fmt::fmt EASTL)
 
 target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" ${RAPIDHASH_INCLUDE_DIRS} ${GTL_INCLUDE_DIRS})
 target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source")
