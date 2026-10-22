@@ -297,11 +297,14 @@ namespace ByteEngine::Math
         [[nodiscard]] static constexpr ColorT Green() { return ColorT(0.0, 1.0, 0.0); }
         [[nodiscard]] static constexpr ColorT Blue() { return ColorT(0.0, 0.0, 1.0); }
 
-        template <std::floating_point U>
-        friend uint64 GetHash(ColorT<U> value)
+        friend uint64 GetHash(ColorT value)
         {
-            HashUtils::NormalizeFloatBuff(value.data);
-            return HashUtils::HashStruct(value);
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.r),
+                HashUtils::GetHash(value.g),
+                HashUtils::GetHash(value.b),
+                HashUtils::GetHash(value.a)
+            );
         }
 
         [[nodiscard]] constexpr ColorT operator+() const { return ColorT { +r, +g, +b, +a }; }

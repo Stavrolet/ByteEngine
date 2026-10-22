@@ -390,19 +390,13 @@ namespace ByteEngine::Math
         static constexpr Vector3T Forward() { return Vector3T(0, 0, 1); }
         static constexpr Vector3T Back() { return Vector3T(0, 0, -1); }
 
-        template <Arithmetic U>
-        friend uint64 GetHash(Vector3T<U> value)
+        friend uint64 GetHash(Vector3T value)
         {
-            if constexpr (std::floating_point<U>)
-            {
-                Vector3T<U> clean;
-                HashUtils::NormalizeFloatBuff(value.data, clean.data);
-                return HashUtils::HashStruct(clean);
-            }
-            else
-            {
-                return HashUtils::HashStruct(value);
-            }
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.x),
+                HashUtils::GetHash(value.y),
+                HashUtils::GetHash(value.z)
+            );
         }
 
         constexpr Vector3T operator+() const { return Vector3T(+x, +y, +z); }

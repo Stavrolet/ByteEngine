@@ -332,19 +332,12 @@ namespace ByteEngine::Math
         static constexpr Vector2T Left() { return Vector2T(-1, 0); }
         static constexpr Vector2T Right() { return Vector2T(1, 0); }
 
-        template <Arithmetic U>
-        friend uint64 GetHash(Vector2T<U> value)
+        friend uint64 GetHash(Vector2T value)
         {
-            if constexpr (std::floating_point<U>)
-            {
-                Vector2T<U> clean;
-                HashUtils::NormalizeFloatBuff(value.data, clean.data);
-                return HashUtils::HashStruct(clean);
-            }
-            else
-            {
-                return HashUtils::HashStruct(value);
-            }
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.x),
+                HashUtils::GetHash(value.y)
+            );
         }
 
         constexpr Vector2T operator+() const { return Vector2T(+x, +y); }

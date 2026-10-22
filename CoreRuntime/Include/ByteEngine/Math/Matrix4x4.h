@@ -324,12 +324,14 @@ namespace ByteEngine::Math
         [[nodiscard]] static constexpr Vector4T<T> IdentityColumn2() { return Vector4T<T>(T(0), T(0), T(1), T(0)); }
         [[nodiscard]] static constexpr Vector4T<T> IdentityColumn3() { return Vector4T<T>(T(0), T(0), T(0), T(1)); }
 
-        template <std::floating_point U>
-        friend uint64 GetHash(const Matrix4x4T<U>& value)
+        friend uint64 GetHash(const Matrix4x4T& value)
         {
-            Matrix4x4T<U> clean;
-            HashUtils::NormalizeFloatBuff(value.elements, clean.elements);
-            return HashUtils::HashStruct(clean);
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.column0),
+                HashUtils::GetHash(value.column1),
+                HashUtils::GetHash(value.column2),
+                HashUtils::GetHash(value.column3)
+            );
         }
 
         [[nodiscard]] constexpr Matrix4x4T operator+(const Matrix4x4T& other) const

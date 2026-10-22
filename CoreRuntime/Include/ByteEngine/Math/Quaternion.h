@@ -53,12 +53,13 @@ namespace ByteEngine::Math
                    Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
         }
 
-        template <std::floating_point U>
-        friend uint64 GetHash(EulerRadT<U> value)
+        friend uint64 GetHash(EulerRadT value)
         {
-            EulerRadT<U> clean;
-            HashUtils::NormalizeFloatBuff(value.data, clean.data);
-            return HashUtils::HashStruct(clean);
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.pitch),
+                HashUtils::GetHash(value.roll),
+                HashUtils::GetHash(value.yaw)
+            );
         }
 
         constexpr EulerRadT operator+() const { return EulerRadT(+pitch, +yaw, +roll); }
@@ -135,12 +136,13 @@ namespace ByteEngine::Math
                    Mathf::IsEqualApproximately(a.roll, b.roll, tolerance);
         }
 
-        template <std::floating_point U>
-        friend uint64 GetHash(EulerDegT<U> value)
+        friend uint64 GetHash(EulerDegT value)
         {
-            EulerDegT<U> clean;
-            HashUtils::NormalizeFloatBuff(value.data, clean.data);
-            return HashUtils::HashStruct(clean);
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.pitch),
+                HashUtils::GetHash(value.roll),
+                HashUtils::GetHash(value.yaw)
+            );
         }
 
         constexpr EulerDegT operator+() const { return EulerDegT(+pitch, +yaw, +roll); }
@@ -547,12 +549,14 @@ namespace ByteEngine::Math
 
         [[nodiscard]] static constexpr QuaternionT Identity() { return QuaternionT(T(0), T(0), T(0), T(1)); }
 
-        template <std::floating_point U>
-        friend uint64 GetHash(QuaternionT<U> value)
+        friend uint64 GetHash(QuaternionT value)
         {
-            QuaternionT<U> clean;
-            HashUtils::NormalizeFloatBuff(value.data, clean.data);
-            return HashUtils::HashStruct(clean);
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.x),
+                HashUtils::GetHash(value.y),
+                HashUtils::GetHash(value.z),
+                HashUtils::GetHash(value.w)
+            );
         }
 
         [[nodiscard]] constexpr QuaternionT operator+() const { return QuaternionT(+x, +y, +z, +w); }

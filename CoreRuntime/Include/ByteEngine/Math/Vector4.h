@@ -279,19 +279,14 @@ namespace ByteEngine::Math
         static constexpr Vector4T Zero() { return Vector4T(0); }
         static constexpr Vector4T One() { return Vector4T(1); }
 
-        template <Arithmetic U>
-        friend uint64 GetHash(Vector4T<U> value)
+        friend uint64 GetHash(Vector4T value)
         {
-            if constexpr (std::floating_point<U>)
-            {
-                Vector4T<U> clean;
-                HashUtils::NormalizeFloatBuff(value.data, clean.data);
-                return HashUtils::HashStruct(clean);
-            }
-            else
-            {
-                return HashUtils::HashStruct(value);
-            }
+            return HashUtils::HashCombine(
+                HashUtils::GetHash(value.x),
+                HashUtils::GetHash(value.y),
+                HashUtils::GetHash(value.z),
+                HashUtils::GetHash(value.w)
+            );
         }
 
         constexpr Vector4T operator+() const { return Vector4T(+x, +y, +z, +w); }
