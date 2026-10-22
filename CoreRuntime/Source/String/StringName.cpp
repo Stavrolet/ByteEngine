@@ -19,6 +19,12 @@ namespace ByteEngine
         { }
     };
 
+    std::unique_ptr<gtl::parallel_node_hash_map<
+        uint64, StringName::StringPoolEntry,
+        StringName::MyHasher, std::equal_to<uint64>,
+        Details::Memory::CustomContainerAllocator<StringName::KeyValuePair>>>
+        StringName::stringPool = nullptr;
+
     StringName::StringName(const StringName& other)
     {
         BE_DEBUG_CHECK(stringPool != nullptr);
@@ -56,7 +62,7 @@ namespace ByteEngine
         BE_DEBUG_CHECK(stringPool != nullptr);
         size_t length;
         stringPool->if_contains(hash, [&length](const KeyValuePair& pair) {
-           length = pair.second.str.Length();
+            length = pair.second.str.Length();
         });
         return length;
     }
@@ -76,7 +82,7 @@ namespace ByteEngine
         BE_DEBUG_CHECK(stringPool != nullptr);
         char ch;
         stringPool->if_contains(hash, [&ch, index](const KeyValuePair& pair) {
-           ch = pair.second.str[index];
+            ch = pair.second.str[index];
         });
         return ch;
     }
@@ -87,6 +93,6 @@ namespace ByteEngine
         stringPool = MakeUnique<gtl::parallel_node_hash_map<
             uint64, StringPoolEntry,
             MyHasher, std::equal_to<uint64>,
-            Details::Memory::CustomContainerAllocator<uint64>>>();
+            Details::Memory::CustomContainerAllocator<KeyValuePair>>>();
     }
 } // namespace ByteEngine

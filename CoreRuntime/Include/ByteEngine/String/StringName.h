@@ -35,7 +35,7 @@ namespace ByteEngine
         static std::unique_ptr<gtl::parallel_node_hash_map<
             uint64, StringPoolEntry,
             MyHasher, std::equal_to<uint64>,
-            Details::Memory::CustomContainerAllocator<uint64>>>
+            ::ByteEngine::Details::Memory::CustomContainerAllocator<KeyValuePair>>>
             stringPool;
 
         uint64 hash = INVALID_HASH;

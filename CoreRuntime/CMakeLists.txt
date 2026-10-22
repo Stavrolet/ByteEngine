@@ -7,6 +7,16 @@ set(DEFINES
     QUILL_DISABLE_NON_PREFIXED_MACROS
 )
 
+include(FetchContent)
+
+FetchContent_Declare(
+    rapidhash_download
+    GIT_REPOSITORY https://github.com/Nicoshev/rapidhash
+    GIT_TAG        master
+)
+
+FetchContent_MakeAvailable(rapidhash_download)
+
 if (WIN32)
     find_package(wil CONFIG REQUIRED)
     find_package(directxtk CONFIG REQUIRED)
@@ -16,7 +26,6 @@ find_package(quill CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 
-find_path(RAPIDHASH_INCLUDE_DIRS "rapidhash.h")
 find_path(GTL_INCLUDE_DIRS "gtl/adv_utils.hpp")
 
 add_library(CoreRuntime STATIC
@@ -73,7 +82,7 @@ add_library(CoreRuntime STATIC
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
 target_link_libraries(CoreRuntime PUBLIC quill::quill fmt::fmt EASTL)
 
-target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" ${RAPIDHASH_INCLUDE_DIRS} ${GTL_INCLUDE_DIRS})
+target_include_directories(CoreRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Include" ${RAPIDHASH_INCLUDE_DIRS} ${GTL_INCLUDE_DIRS} ${rapidhash_download_SOURCE_DIR})
 target_include_directories(CoreRuntime PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 
 target_compile_definitions(CoreRuntime PRIVATE $<$<PLATFORM_ID:Windows>:UNICODE;_UNICODE>)

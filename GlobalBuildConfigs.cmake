@@ -1,4 +1,4 @@
-﻿set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+﻿set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 set(DEBUG_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/JMC;/RTC1;/Od;/ZI>")
 set(RELEASE_COMPILER_FLAGS "$<$<CXX_COMPILER_ID:MSVC>:/O2;/Oi;/GL;/Gy;/Zi;/fp:fast>")
