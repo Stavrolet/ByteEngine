@@ -77,6 +77,7 @@ add_library(CoreRuntime STATIC
     Source/Details/CustomEastlAllocator.cpp
     Include/ByteEngine/Core/Memory/SmartPointers.h
     Source/String/StringName.cpp
+    Include/ByteEngine/Containers/Vector.h
 )
 
 target_link_libraries(CoreRuntime PRIVATE project_options ${LIBS})
